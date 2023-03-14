@@ -4,11 +4,11 @@ import type { IFormItemProps } from '@/utils/createForm/types'
 
 export type CurrentStatus = 'folded' | 'unfolded'
 
-export interface SearchBarProps {
+export interface SearchBarProps<T = any> {
   loading?: boolean
-  form?: FormInstance
+  form?: FormInstance<T>
   onReset?: () => unknown
-  fields: IFormItemProps[]
+  fields: IFormItemProps<T>[]
   countEveryLine?: 2 | 3 | 4 | 6
   initialValues?: Record<string, unknown>
   buttonPosition?: 'left' | 'center' | 'right'

@@ -6,6 +6,7 @@ import Login from '@/page/login'
 import Tools from '../page/tools'
 import Tag from '../page/manage/tag'
 import Tool from '../page/manage/tool'
+import Ebook from '../page/manage/ebook'
 import Person from '@/page/client/person'
 import ClientTag from '@/page/client/tag'
 import LayoutClient from '../layoutClient'
@@ -18,7 +19,7 @@ import ClientArticle from '@/page/client/article/'
 import ClientArticleList from '@/page/client/articleList'
 import withTitleAndRedirect from '@/Hoc/withTitleAndRedirect'
 
-export interface MyRoute extends Omit<RouteObject, 'children' | 'element'> {
+export interface MyRoute extends Omit<RouteObject, 'children' | 'element' | 'index'> {
   element?: FC
   title?: string
   children?: MyRoute[]
@@ -52,6 +53,11 @@ const routers: MyRoute[] = [
         path: '/tool',
         element: Tool,
         title: '工具管理'
+      },
+      {
+        path: '/ebook',
+        element: Ebook,
+        title: '电子书管理'
       },
       {
         path: '/system',

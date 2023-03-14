@@ -5,17 +5,11 @@ import type { IComponentsConfig } from '@/utils/createForm/types'
 import Upload from '@/components/Upload'
 import { upload } from '@/service/common'
 
-const onlineEditName = '在线编辑器'
-
 const colums: TableColumnProps<Tool>[] = [
   {
     title: '工具名',
     dataIndex: 'title',
     render: (_, { id, title }) => {
-      if (title === onlineEditName) {
-        return <span style={{ color: '#999' }}>{title}</span>
-      }
-
       return (
         <a target="_blank" href={`/tools/?id=${id}#/`}>
           {title}
@@ -55,4 +49,4 @@ const drawerFormComponents: IComponentsConfig = [
   }
 ]
 
-export { colums, searchBarFields, drawerFormComponents, onlineEditName }
+export { colums, searchBarFields, drawerFormComponents }

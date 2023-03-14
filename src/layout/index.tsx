@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
 import type { MenuInfo } from 'rc-menu/lib/interface'
 
-import { Layout, Menu, Empty, message } from 'antd'
-import { useState, useEffect } from 'react'
+import { Layout, Menu, Empty } from 'antd'
+import { useState } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 
 import menuItems from './menuItems'

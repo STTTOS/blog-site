@@ -3,9 +3,10 @@ import type { MenuProps } from 'antd'
 import {
   TagsOutlined,
   FileOutlined,
-  SettingOutlined,
   UserOutlined,
-  ToolOutlined
+  ToolOutlined,
+  BookOutlined,
+  SettingOutlined
 } from '@ant-design/icons'
 
 type MenuItem = Required<MenuProps>['items'][number]
@@ -30,6 +31,11 @@ const menuItems: MenuItem[] = [
     key: 'tool',
     label: '工具管理',
     icon: <ToolOutlined />
+  },
+  {
+    key: 'ebook',
+    label: '电子书管理',
+    icon: <BookOutlined />
   },
   {
     key: 'system',

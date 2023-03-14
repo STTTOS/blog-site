@@ -7,8 +7,8 @@ import type { UploadFile } from 'antd/lib/upload/interface'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
 
 import { propEq, complement } from 'ramda'
-import { Upload, message, Button, Modal } from 'antd'
 import React, { useState, useEffect } from 'react'
+import { Upload, message, Button, Modal } from 'antd'
 import {
   LoadingOutlined,
   PlusOutlined,
@@ -41,7 +41,7 @@ const Index: React.FC<IUploadProps> = ({
   uploadText = '上传',
   showValue = false,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onChange = () => {},
+  onChange = () => { },
   accept = 'jpg,png,jpeg',
   uploadButtonText = '点击上传',
   // eslint-disable-next-line require-await
@@ -59,6 +59,13 @@ const Index: React.FC<IUploadProps> = ({
   const handleCancel = () => setPreviewVisible(false)
 
   const handlePreview = async (file: UploadFile) => {
+    if (listType === 'text' && value) {
+      const anchor = document.createElement('a')
+      anchor.target = '_blank'
+      anchor.href = value
+      anchor.click()
+      return
+    }
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as RcFile)
     }
