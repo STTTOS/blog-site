@@ -1,7 +1,9 @@
 import type { MyRoute } from '../router/index'
 
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react'
+
 import Redirect from '@/components/Redirect'
+import Loading from '@/components/Loading'
 
 type Props = Pick<MyRoute, 'element' | 'title' | 'redirect'> & {
   basePath: string
@@ -21,7 +23,11 @@ function withTitleAndRedirect({
       }
     }, [])
 
-    return redirect ? <Redirect to={basePath + redirect} /> : <Element />
+    return redirect ? <Redirect to={basePath + redirect} /> : (
+      <Suspense fallback={<Loading />}>
+        <Element />
+      </Suspense>
+    )
   }
   return <NewCmp />
 }

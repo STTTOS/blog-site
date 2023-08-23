@@ -30,7 +30,7 @@ async function betterRequest<R>(
       data,
       code,
       msg = '系統繁忙'
-    } = await request<Promise<ResBasic<R>>>(url, {
+    } = await request<Promise<ResBasic<R>>>(`/${url}`, {
       method: 'POST',
       headers: {
         code: localStorage.getItem('code') || ''

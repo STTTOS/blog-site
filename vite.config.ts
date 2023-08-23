@@ -8,10 +8,17 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://43.136.172.140/'
+        target: 'http://localhost:80/'
       },
       '/static': {
-        target: 'http://43.136.172.140/'
+        target: 'http://localhost:80/'
+      }
+    }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        experimentalMinChunkSize: 1024 * 30
       }
     }
   },

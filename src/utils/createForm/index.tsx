@@ -22,8 +22,6 @@ const useForm = ({
 
   const getKey = (key: number) => `key-${key}`
 
-  // const getSafeVal = compose(defaultTo(-), getFieldValue);
-
   const convertConfig = (config: IComponent, index: number) => {
     // string
     if (typeof config === 'string')
@@ -64,9 +62,9 @@ const useForm = ({
         </FormItem>
       ) : (
         <FormItem
-          require={localRequire}
-          label={label}
           name={name}
+          label={label}
+          require={localRequire}
           {...formItemProps}
         >
           {element && cloneElement(element, { placeholder })}

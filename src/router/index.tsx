@@ -1,30 +1,21 @@
-import type { FC } from 'react'
+import type { FC, LazyExoticComponent } from 'react'
 import type { RouteObject } from 'react-router-dom'
 
+import { lazy } from 'react'
+
 import Layout from '../layout'
-import Login from '@/page/login'
-import Tools from '../page/tools'
-import Tag from '../page/manage/tag'
-import Tool from '../page/manage/tool'
-import Ebook from '../page/manage/ebook'
-import Person from '@/page/client/person'
-import ClientTag from '@/page/client/tag'
+import Article from '@/page/manage/article'
 import LayoutClient from '../layoutClient'
-import Author from '../page/manage/author'
-import System from '../page/manage/system'
-import ClientHome from '@/page/client/home'
-import Article from '../page/manage/article'
-import Markdown from '../page/manage/markdown'
-import ClientArticle from '@/page/client/article/'
-import ClientArticleList from '@/page/client/articleList'
+import Home from '@/page/client/home'
 import withTitleAndRedirect from '@/Hoc/withTitleAndRedirect'
 
 export interface MyRoute extends Omit<RouteObject, 'children' | 'element' | 'index'> {
-  element?: FC
+  element?: LazyExoticComponent<() => JSX.Element> | FC
   title?: string
   children?: MyRoute[]
   redirect?: string
 }
+// const a = lazy(() => import('@/layout'))
 /**
  * 路由配置
  * @see http://react-guide.github.io/react-router-cn/docs/guides/basics/RouteConfiguration.html
@@ -36,12 +27,12 @@ const routers: MyRoute[] = [
     children: [
       {
         path: '/author',
-        element: Author,
+        element: lazy(() => import('@/page/manage/author')),
         title: '作者管理'
       },
       {
         path: '/tag',
-        element: Tag,
+        element: lazy(() => import('@/page/manage/tag')),
         title: '标签管理'
       },
       {
@@ -51,22 +42,22 @@ const routers: MyRoute[] = [
       },
       {
         path: '/tool',
-        element: Tool,
+        element: lazy(() => import('@/page/manage/tool')),
         title: '工具管理'
       },
       {
         path: '/ebook',
-        element: Ebook,
+        element: lazy(() => import('@/page/manage/ebook')),
         title: '电子书管理'
       },
       {
         path: '/system',
-        element: System,
+        element: lazy(() => import('@/page/manage/system')),
         title: '系统管理'
       },
       {
         path: '/markdown',
-        element: Markdown,
+        element: lazy(() => import('@/page/manage/markdown')),
         title: '编辑文章'
       },
       {
@@ -85,33 +76,33 @@ const routers: MyRoute[] = [
     children: [
       {
         path: '/',
-        element: ClientHome
+        element: Home
       },
       {
         path: '/article',
-        element: ClientArticle
+        element: lazy(() => import('@/page/client/article'))
       },
       {
         path: '/article/list',
-        element: ClientArticleList
+        element: lazy(() => import('@/page/client/articleList'))
       },
       {
         path: '/tag',
-        element: ClientTag
+        element: lazy(() => import('@/page/client/tag'))
       }
     ]
   },
   {
     path: '/tools',
-    element: Tools
+    element: lazy(() => import('@/page/tools'))
   },
   {
     path: '/login',
-    element: Login
+    element: lazy(() => import('@/page/login'))
   },
   {
     path: '/person',
-    element: Person
+    element: lazy(() => import('@/page/client/person'))
   },
   {
     path: '*',

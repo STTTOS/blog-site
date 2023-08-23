@@ -1,3 +1,4 @@
+
 import { compose, split, last, toLower, prop, map, join } from 'ramda'
 
 export const getFileType = compose(toLower, last, split('.'))

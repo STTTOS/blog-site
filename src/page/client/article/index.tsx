@@ -18,6 +18,7 @@ import {
   getArticleDetail,
   getSimilarArticles
 } from '@/service/article'
+import Comments from '@/components/Comments'
 
 const Index: React.FC = () => {
   const navigate = useNavigate()
@@ -108,6 +109,7 @@ const Index: React.FC = () => {
 
               <Viewer value={content} />
             </div>
+            <Comments articleId={id}/>
           </Skeleton>
         }
         left={

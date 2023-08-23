@@ -8,7 +8,7 @@
     "dev:mock": "npm run dev & npm run server:mock",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "prettier": "prettier --write **/*.{js,jsx,tsx,ts,less,md,json}",
+    "prettier": "prettier --write **/*.{js,tsx,ts,less,md,json}",
     "lint:ci": "npm run eslint:ci && npm run stylelint:ci",
     "eslint:ci": "eslint --cache --ext .tsx,.ts,.js ./src",
     "eslint:fix": "eslint --cache --ext .tsx,.ts,.js ./src --fix",
@@ -78,7 +78,7 @@
     "stylelint-order": "^5.0.0",
     "ts-node": "^10.8.1",
     "typescript": "^4.6.3",
-    "vite": "^2.9.9"
+    "vite": "^4.2.0"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": "npm run eslint:ci",

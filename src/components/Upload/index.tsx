@@ -40,13 +40,11 @@ const Index: React.FC<IUploadProps> = ({
   maxCount = 1,
   uploadText = '上传',
   showValue = false,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onChange = () => { },
+  onChange = () => void 0,
   accept = 'jpg,png,jpeg',
-  uploadButtonText = '点击上传',
-  // eslint-disable-next-line require-await
   request = async () => '',
-  listType = 'picture-card'
+  listType = 'picture-card',
+  uploadButtonText = '点击上传'
 }) => {
   const [previewVisible, setPreviewVisible] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
@@ -82,7 +80,7 @@ const Index: React.FC<IUploadProps> = ({
     limitWidth?: number,
     limitHeight?: number
   ): Promise<boolean> => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const reader = new FileReader()
       reader.readAsDataURL(file)
 
@@ -91,28 +89,29 @@ const Index: React.FC<IUploadProps> = ({
         img.src = reader.result as string
 
         img.onload = () => {
-          const [msg, res] = (() => {
+          const [error, res] = (() => {
             if (
               limitWidth &&
               limitHeight &&
               img.width !== limitWidth &&
               img.height !== limitHeight
-            ) {
-              return [
-                `请上传宽高等于${limitWidth}*${limitHeight}的图片`,
-                false
-              ] as const
-            }
-            if (limitWidth && img.width !== limitWidth)
-              return [`请上传宽度等于${limitWidth}的图片`, false] as const
-            if (limitHeight && img.height !== limitHeight)
-              return [`请上传高度等于${limitHeight}的图片`, false] as const
+            ) return [`请上传宽高等于${limitWidth}*${limitHeight}的图片`, false]
 
-            return ['', true] as const
+            if (limitWidth && img.width !== limitWidth)
+              return [`请上传宽度等于${limitWidth}的图片`, false]
+
+            if (limitHeight && img.height !== limitHeight)
+              return [`请上传高度等于${limitHeight}的图片`, false]
+
+            return [null, true]
           })()
 
-          if (msg) message.error(msg)
-          resolve(res)
+          if (error) {
+            message.error(error)
+            reject(error)
+          } else {
+            resolve(res)
+          }
         }
       }
     })

@@ -31,8 +31,8 @@ interface IProps {
 const FormEditor: React.FC<IProps> = ({
   height = 400,
   value,
-  onChange = () => {},
-  upload = () => {}
+  onChange = () => { },
+  upload = () => { }
 }) => {
   const [editor, setEditor] = useState<IDomEditor | null>(null)
 
