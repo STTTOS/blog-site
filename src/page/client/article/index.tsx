@@ -44,11 +44,13 @@ const Index: React.FC = () => {
     content,
     authorId,
     tags = [],
+    isOrigin,
     viewCount,
     createdAt,
     readingTime,
     backgroundUrl,
-    desc: articleDesc
+    desc: articleDesc,
+    private: isPrivate
   } = detail || {}
   const { avatar, desc, github, email, name, totalViewCount } = authorInfo || {}
 
@@ -84,6 +86,12 @@ const Index: React.FC = () => {
               <div className={styles.header}>
                 <div className={mergeClassName(styles.title, 'text-ellipsis')}>
                   {title}
+                  <span className={styles.articleType}>
+                    {isOrigin ? '原创' : '转载'}
+                  </span>
+                  {isPrivate && (
+                    <span className={styles.private}>仅我可见</span>
+                  )}
                 </div>
 
                 <div className={styles.subTitle}>

@@ -3,19 +3,25 @@ import type { Article } from '@/service/article/types'
 import type { IFormItemProps } from '@/utils/createForm/types'
 
 import { Tag, Select } from 'antd'
+import { EyeInvisibleOutlined } from '@ant-design/icons'
 
 import styles from './index.module.less'
 import { SelectProps } from 'rc-select/lib/Select'
 import randomTagColor from '@/utils/randomTagColor'
 
-const colums: (userOptions: SelectProps['options']) => TableColumnProps<Article>[] = (userOptions) => [
+const colums: (
+  userOptions: SelectProps['options']
+) => TableColumnProps<Article>[] = (userOptions) => [
   {
     title: '标题',
     dataIndex: 'title',
-    render: (_, { id, title }) => (
-      <a href={`/article?id=${id}`} target="_blank">
-        {title}
-      </a>
+    render: (_, { id, title, private: isPrivate }) => (
+      <div>
+        {isPrivate && <EyeInvisibleOutlined className={styles.private} />}
+        <a href={`/article?id=${id}`} target="_blank">
+          {title}
+        </a>
+      </div>
     )
   },
   {
@@ -48,10 +54,13 @@ const colums: (userOptions: SelectProps['options']) => TableColumnProps<Article>
   {
     title: '协同编辑作者',
     dataIndex: 'coAuthorIds',
-    render: (_, { coAuthorIds }) => coAuthorIds
-      ?.split(',')
-      .map((id) => userOptions?.find(({ value }) => value == Number(id))?.label)
-      .join(',')
+    render: (_, { coAuthorIds }) =>
+      coAuthorIds
+        ?.split(',')
+        .map(
+          (id) => userOptions?.find(({ value }) => value == Number(id))?.label
+        )
+        .join(',')
   },
   {
     title: '发布时间',

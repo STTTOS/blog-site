@@ -56,7 +56,15 @@ interface Article {
   /**
    * 协同编辑者
    */
-   coAuthorIds?: string
+  coAuthorIds?: string
+  /**
+   * 是否仅自己可见
+   */
+  private: boolean
+  /**
+   * 是否为原创, 默认为true, 否则为转载
+   */
+  isOrigin: boolean
 }
 
 export type { Article }
