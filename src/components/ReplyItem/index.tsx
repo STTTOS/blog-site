@@ -9,8 +9,9 @@ import Reply from '../Reply'
 interface ReplyItemProps extends Comment {
   articleId: number;
   onRelied?: () => void;
+  selfAvatar?: string;
 }
-const ReplyItem:FC<ReplyItemProps> = ({ onRelied, content, id, articleId, createdAt, avatar, replies = [], name, isContributor }) => {
+const ReplyItem:FC<ReplyItemProps> = ({ selfAvatar, onRelied, content, id, articleId, createdAt, avatar, replies = [], name, isContributor }) => {
   const [showReplay, setShowReply] = useState(false)
   const renderChildrenReplies = (list: Comment[]) => {
     return list.map( data => <SubReply {...data} key={data.id}/>)
@@ -37,7 +38,7 @@ const ReplyItem:FC<ReplyItemProps> = ({ onRelied, content, id, articleId, create
         <span className={styles.reply} onClick={handleReplyClick}>回复</span>
       </div>
       {renderChildrenReplies(replies)}
-      {showReplay && <Reply articleId={articleId} parentCommentId={id} placeholder={`@${name}: `} className={styles.replyComponent} onReplied={handleReplied}/>}
+      {showReplay && <Reply avatar={selfAvatar} articleId={articleId} parentCommentId={id} placeholder={`@${name}:  `} className={styles.replyComponent} onReplied={handleReplied}/>}
       <Divider/>
     </div>
   </div>

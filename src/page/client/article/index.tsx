@@ -19,12 +19,14 @@ import {
   getSimilarArticles
 } from '@/service/article'
 import Comments from '@/components/Comments'
+import useUserInfo from '@/hooks/userUserInfo'
 
 const Index: React.FC = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
 
   const id = Number(searchParams.get('id'))
+  const user = useUserInfo()
   const { value: detail, loading } = useAsync(getArticleDetail, {
     params: { id }
   })
@@ -109,7 +111,8 @@ const Index: React.FC = () => {
 
               <Viewer value={content} />
             </div>
-            <Comments articleId={id}/>
+
+            <Comments articleId={id} avatar={user?.avatar} />
           </Skeleton>
         }
         left={

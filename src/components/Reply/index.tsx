@@ -2,10 +2,11 @@ import type { FC } from 'react'
 import type { Comment } from '@/service/comments/types'
 
 import styles from './index.module.less'
-import { Avatar, Button, Form } from 'antd'
+import { Avatar, Button, Form, message } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
 import { addComment } from '@/service/comments'
 import { useRequest } from 'ahooks'
+import Cookies from 'js-cookie'
 
 interface ReplyProps {
   articleId: number;
@@ -13,18 +14,24 @@ interface ReplyProps {
   className?: string;
   placeholder?: string;
   onReplied?: () => void;
+  avatar?: string;
 }
-const Reply:FC<ReplyProps> = ({ articleId, parentCommentId, className = '', placeholder = '下面我简单喵两句', onReplied }) => {
+const Reply:FC<ReplyProps> = ({ articleId, avatar, parentCommentId, className = '', placeholder = '下面我简单喵两句', onReplied }) => {
   const [form] = Form.useForm()
   const { loading, runAsync } = useRequest(addComment, { manual: true })
   const handleSubmit = async ({ content }: Comment) => {
+    const isLogin = Boolean(Cookies.get('token'))
+    if (!isLogin) {
+      message.warn('先登录再发表评论哦')
+      return
+    }
     await runAsync({ content, articleId, parentCommentId })
     onReplied?.()
     form.resetFields()
   }
 
   return <div className={[styles.reply, className].join(' ')}>
-    <Avatar src="" className={styles.avatar} />
+    <Avatar src={avatar} className={styles.avatar} />
     <Form className={styles.form} onFinish={handleSubmit} form={form}>
       <Form.Item name="content" noStyle>
         <TextArea className={styles.content} required placeholder={placeholder} maxLength={1000} allowClear/>
