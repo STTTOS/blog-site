@@ -35,8 +35,19 @@ const modelComponents = (
       initialValue: true,
       element: (
         <Radio.Group>
-          <Radio value={true}>原创</Radio>
+          <Radio value={true}>是</Radio>
           <Radio value={false}>转载</Radio>
+        </Radio.Group>
+      )
+    },
+    {
+      label: '仅自己可见',
+      name: 'private',
+      initialValue: false,
+      element: (
+        <Radio.Group>
+          <Radio value={true}>是</Radio>
+          <Radio value={false}>否</Radio>
         </Radio.Group>
       )
     },
