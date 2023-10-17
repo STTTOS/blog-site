@@ -11,6 +11,7 @@ import { logoImg } from '@/globalConfig'
 import switchRender from '@/utils/switchRender'
 import useUserInfo from '@/hooks/userUserInfo'
 import PopoverHandle from '@/layout/popoverHandle'
+import useNewFeatureInfo from '@/hooks/useNewFeatureInfo'
 
 const { Content, Header, Footer, Sider } = Layout
 
@@ -36,6 +37,7 @@ const ManageLayout = () => {
       </div>
     )
   }
+  useNewFeatureInfo()
 
   return (
     <>

@@ -1,3 +1,4 @@
+import { version } from '../package.json'
 export const minBoxSize = 100
 export const maxBoxSize = 140
 export const logoImg =
@@ -5,3 +6,5 @@ export const logoImg =
 
 // 浏览器支持的预览文件格式
 export const supportedPreviewFile = ['pdf']
+
+export const newFeartureStorageKey = `storage-key-${version}`
