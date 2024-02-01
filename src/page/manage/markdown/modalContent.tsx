@@ -48,7 +48,7 @@ const ModalContent: React.FC<IProps> = ({ register = () => void 0, data }) => {
       await addArticle(params)
     }
 
-    navigate(-1)
+    navigate('/manage/article')
   }, [data])
 
   // 向父组件的提交按钮, 注册`handleFinish`

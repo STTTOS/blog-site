@@ -62,6 +62,11 @@ const routers: MyRoute[] = [
         title: '系统管理'
       },
       {
+        path: '/markdown',
+        element: lazy(() => import('@/page/manage/markdown')),
+        title: '新增文章'
+      },
+      {
         path: '/markdown/:id',
         element: lazy(() => import('@/page/manage/markdown')),
         title: '编辑文章'

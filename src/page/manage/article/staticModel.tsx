@@ -15,6 +15,7 @@ const colums: (
   {
     title: '标题',
     dataIndex: 'title',
+    fixed: 'left',
     render: (_, { id, title, private: isPrivate }) => (
       <div>
         {isPrivate && <EyeInvisibleOutlined className={styles.private} />}

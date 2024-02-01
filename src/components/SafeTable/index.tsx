@@ -62,7 +62,7 @@ const SafeTable = <T extends object = any>({
         } as const)
     )
 
-  const newScroll = columns.length > 5 ? { x: 1300 } : undefined
+  const newScroll = columns.length > 5 ? { x: 'max-content' } : undefined
 
   return (
     <Table
