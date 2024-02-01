@@ -23,10 +23,9 @@ const ArticleBook: React.FC<IProps> = ({
     readingTime
   }
 }) => {
-
   const getColor = randomArticleCardColor(articleCardColors)
   return (
-    <a href={`/article?id=${id}`} target="_blank">
+    <a href={`/article/${id}`} target="_blank">
       <div className={styles.container}>
         <Badge count={viewCount} showZero>
           <div

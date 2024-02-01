@@ -8,8 +8,10 @@ import Article from '@/page/manage/article'
 import LayoutClient from '../layoutClient'
 import Home from '@/page/client/home'
 import withTitleAndRedirect from '@/Hoc/withTitleAndRedirect'
+import Forbidden from '@/page/403'
 
-export interface MyRoute extends Omit<RouteObject, 'children' | 'element' | 'index'> {
+export interface MyRoute
+  extends Omit<RouteObject, 'children' | 'element' | 'index'> {
   element?: LazyExoticComponent<() => JSX.Element> | FC
   title?: string
   children?: MyRoute[]
@@ -21,6 +23,10 @@ export interface MyRoute extends Omit<RouteObject, 'children' | 'element' | 'ind
  * @see http://react-guide.github.io/react-router-cn/docs/guides/basics/RouteConfiguration.html
  */
 const routers: MyRoute[] = [
+  {
+    path: '/403',
+    element: lazy(() => import('@/page/403'))
+  },
   {
     path: '/manage',
     element: Layout,
@@ -56,7 +62,7 @@ const routers: MyRoute[] = [
         title: '系统管理'
       },
       {
-        path: '/markdown',
+        path: '/markdown/:id',
         element: lazy(() => import('@/page/manage/markdown')),
         title: '编辑文章'
       },
@@ -79,7 +85,7 @@ const routers: MyRoute[] = [
         element: Home
       },
       {
-        path: '/article',
+        path: '/article/:id',
         element: lazy(() => import('@/page/client/article'))
       },
       {

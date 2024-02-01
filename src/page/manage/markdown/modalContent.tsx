@@ -15,14 +15,17 @@ type IProps = IFormWithDrawer & { data: Article }
 
 const ModalContent: React.FC<IProps> = ({ register = () => void 0, data }) => {
   const navigate = useNavigate()
-  const user = useUserInfo()
+  const { user } = useUserInfo()
   const { userOptions, tagOptions } = useGlobalData()
   const isEditing = !!data.id
 
-  const defaultData = useMemo(() => ({
-    ...data,
-    coAuthorIds: data?.coAuthorIds?.split(',').map(Number)
-  }), [data])
+  const defaultData = useMemo(
+    () => ({
+      ...data,
+      coAuthorIds: data?.coAuthorIds?.split(',').map(Number)
+    }),
+    [data]
+  )
   const config: ICreateFormConfig = {
     formConfig: {
       disabled: isEditing && user?.id !== data.authorId,

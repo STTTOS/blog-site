@@ -1,10 +1,11 @@
 import useAsync from './useAsync'
 import { getUser } from '@/service/user'
+import { useRequest } from 'ahooks'
 
 function useUserInfo() {
-  const { value } = useAsync(getUser)
+  const { data, loading } = useRequest(getUser)
 
-  return value
+  return { user: data, loading }
 }
 
 export default useUserInfo

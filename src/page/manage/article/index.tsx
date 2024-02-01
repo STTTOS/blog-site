@@ -14,7 +14,7 @@ import { colums, searchBarFields } from './staticModel'
 import { deleteArticle, getArticles } from '@/service/article'
 
 const Index = () => {
-  const user = useUserInfo()
+  const { user } = useUserInfo()
   const [form] = Form.useForm()
   const navigate = useNavigate()
   const {
@@ -30,12 +30,18 @@ const Index = () => {
   }
 
   const onAddOrUpdateClick = (id?: number) => {
-    const url = id ? `/manage/markdown?id=${id}` : '/manage/markdown'
+    const url = id ? `/manage/markdown/${id}` : '/manage/markdown'
 
-    navigate(url)
+    window.open(url)
   }
 
-  const canEdit = ({ coAuthorIds, authorId }: Pick<Article, 'coAuthorIds' | 'authorId'>) => user && (authorId === user.id || coAuthorIds?.split(',').map(Number).includes(user.id))
+  const canEdit = ({
+    coAuthorIds,
+    authorId
+  }: Pick<Article, 'coAuthorIds' | 'authorId'>) =>
+    user &&
+    (authorId === user.id ||
+      coAuthorIds?.split(',').map(Number).includes(user.id))
 
   const columns: TableColumnProps<Article>[] = [
     ...colums(userOptions),

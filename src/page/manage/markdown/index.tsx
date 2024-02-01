@@ -1,5 +1,5 @@
 import { Input, Button } from 'antd'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useParams } from 'react-router-dom'
 
 import useAsync from '@/hooks/useAsync'
 import styles from './index.module.less'
@@ -10,9 +10,9 @@ import { getArticleDetail } from '@/service/article'
 
 const Index = () => {
   const { Modal, openModal } = useFormModal()
-  const [seachParams] = useSearchParams()
+  const query = useParams()
 
-  const id = Number(seachParams.get('id'))
+  const id = Number(query.id)
   const { value, setValue } = useAsync(getArticleDetail, {
     params: { id: Number(id) },
     immediate: Boolean(id)

@@ -2,7 +2,7 @@ import type { Tag as TagType } from '@/service/tag/types'
 
 import { useEffect } from 'react'
 import { Tag, Avatar, Card, Skeleton, Tooltip } from 'antd'
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useSearchParams, useNavigate, useParams } from 'react-router-dom'
 import { GithubOutlined, MailOutlined, EyeOutlined } from '@ant-design/icons'
 
 import useAsync from '@/hooks/useAsync'
@@ -23,10 +23,10 @@ import useUserInfo from '@/hooks/userUserInfo'
 
 const Index: React.FC = () => {
   const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
+  const query = useParams()
 
-  const id = Number(searchParams.get('id'))
-  const user = useUserInfo()
+  const id = Number(query.id)
+  const { user } = useUserInfo()
   const { value: detail, loading } = useAsync(getArticleDetail, {
     params: { id }
   })

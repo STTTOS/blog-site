@@ -18,7 +18,7 @@ const colums: (
     render: (_, { id, title, private: isPrivate }) => (
       <div>
         {isPrivate && <EyeInvisibleOutlined className={styles.private} />}
-        <a href={`/article?id=${id}`} target="_blank">
+        <a href={`/article/${id}`} target="_blank">
           {title}
         </a>
       </div>
