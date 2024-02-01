@@ -18,6 +18,7 @@ module.exports = {
       }
     ],
     'max-line-length': 150,
+    'selector-class-pattern': null,
     'block-no-empty': true,
     indentation: 2,
     'max-empty-lines': 1,

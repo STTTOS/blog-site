@@ -1,31 +1,31 @@
 .container {
-  height: 100vh;
-  width: 100vw;
   display: flex;
+  width: 100vw;
+  height: 100vh;
 
   .contentLayout {
-    flex: 1;
-    height: 100%;
     display: flex;
-    flex-direction: column;
     position: relative;
+    height: 100%;
+    flex: 1;
+    flex-direction: column;
 
     .header {
       position: sticky;
       top: 0;
       right: 0;
       left: 0;
-      height: 60px;
       z-index: 999;
+      height: 60px;
+      text-align: right;
       background-color: #fff;
       box-shadow: 0 4px 8px 8px rgb(153 153 153 / 4%);
-      text-align: right;
     }
 
     .content {
-      flex: 1;
-      padding: 24px 24px 0;
       overflow-y: scroll;
+      padding: 24px 24px 0;
+      flex: 1;
     }
   }
 

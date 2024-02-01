@@ -2,7 +2,6 @@ import type { User, Login } from './types'
 import type { Params } from 'ahooks/lib/usePagination/types'
 
 import { message } from 'antd'
-import Cookies from 'js-cookie'
 import { SHA256 } from 'crypto-js'
 
 import request from '../../utils/http'
@@ -10,16 +9,12 @@ import request from '../../utils/http'
 // 登录
 async function login(params: Login) {
   const { username, password } = params
-  const {
-    data: { token },
-    msg
-  } = await request<{ token: string }>('api/user/signin', {
+  const { msg } = await request<{ token: string }>('api/user/signin', {
     username,
     // 密码：密文传递
     password: SHA256(password).toString()
   })
   // 存 cookie
-  Cookies.set('token', token, { expires: 90 })
   message.success(msg)
 }
 
@@ -84,8 +79,12 @@ async function getUsersByRecommend() {
   return list
 }
 
+function logout() {
+  return request('api/user/logout')
+}
 export {
   login,
+  logout,
   getUser,
   getUsers,
   addUser,

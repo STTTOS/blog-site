@@ -29,7 +29,7 @@ const AuthorDrawerContent: React.FC<IProps> = ({
     const { password, ...rest }: Omit<User, 'id' | 'createdAt'> =
       await form.validateFields()
     const params = {
-      password: SHA256(password).toString(),
+      password: password && SHA256(password).toString(),
       ...rest
     }
 

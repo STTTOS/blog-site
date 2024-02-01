@@ -1,12 +1,12 @@
+import { logout } from '@/service/user'
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons'
 import { Tooltip, Popconfirm } from 'antd'
-import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 
 const PopoverHandle = () => {
   const navigate = useNavigate()
-  const logOut = () => {
-    Cookies.remove('token')
+  const logOut = async () => {
+    await logout()
     navigate('/login')
   }
 
