@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { GithubOutlined } from '@ant-design/icons'
 
 import Box3D from '@/components/Box3D'
+import Footer from '@/components/Footer'
 import styles from './index.module.less'
 import randomInt from '@/utils/randomInt'
 import useAsync from '../../../hooks/useAsync'
@@ -93,6 +94,7 @@ const Index: FC = () => {
           )
         )}
       </div>
+      <Footer />
     </div>
   )
 }

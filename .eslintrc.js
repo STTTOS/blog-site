@@ -24,6 +24,8 @@ module.exports = {
    * 配置规则 @see https://www.bbsmax.com/A/gVdngQqlzW/
    */
   rules: {
+    'no-unused-vars': 'error',
+    '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-non-null-assertion': 0,
     'no-console': 1,
     'no-const-assign': 2,
