@@ -14,7 +14,6 @@ async function login(params: Login) {
     // 密码：密文传递
     password: SHA256(password).toString()
   })
-  // 存 cookie
   message.success(msg)
 }
 

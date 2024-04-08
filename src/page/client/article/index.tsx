@@ -2,7 +2,7 @@ import type { Tag as TagType } from '@/service/tag/types'
 
 import { useEffect } from 'react'
 import { Tag, Avatar, Card, Skeleton, Tooltip } from 'antd'
-import { useSearchParams, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { GithubOutlined, MailOutlined, EyeOutlined } from '@ant-design/icons'
 
 import useAsync from '@/hooks/useAsync'
@@ -19,7 +19,7 @@ import {
   getSimilarArticles
 } from '@/service/article'
 import Comments from '@/components/Comments'
-import useUserInfo from '@/hooks/userUserInfo'
+import { useUserInfo } from '@/model'
 
 const Index: React.FC = () => {
   const navigate = useNavigate()

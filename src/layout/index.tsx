@@ -9,11 +9,11 @@ import menuItems from './menuItems'
 import styles from './index.module.less'
 import { logoImg } from '@/globalConfig'
 import switchRender from '@/utils/switchRender'
-import useUserInfo from '@/hooks/userUserInfo'
 import PopoverHandle from '@/layout/popoverHandle'
 import useNewFeatureInfo from '@/hooks/useNewFeatureInfo'
 import Loading from '@/components/Loading'
 import Redirect from '@/components/Redirect'
+import { useUserInfo } from '@/model'
 
 const { Content, Header, Footer, Sider } = Layout
 

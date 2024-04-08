@@ -3,20 +3,18 @@ import type { Article } from '@/service/article/types'
 
 import { useAntdTable } from 'ahooks'
 import SearchBar from '@/components/SearchBar'
-import { useNavigate } from 'react-router-dom'
 import { Form, Button, Space, Popconfirm } from 'antd'
 
 import styles from './index.module.less'
-import useUserInfo from '@/hooks/userUserInfo'
 import SafeTable from '@/components/SafeTable'
 import useGlobalData from '@/hooks/useGlobalData'
 import { colums, searchBarFields } from './staticModel'
 import { deleteArticle, getArticles } from '@/service/article'
+import { useUserInfo } from '@/model'
 
 const Index = () => {
   const { user } = useUserInfo()
   const [form] = Form.useForm()
-  const navigate = useNavigate()
   const {
     tableProps,
     search: { submit, reset },

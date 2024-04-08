@@ -4,5 +4,7 @@ module.exports = {
   // 单引号
   singleQuote: true,
   // 不要尾逗号
-  trailingComma: 'none'
+  trailingComma: 'none',
+  plugins: ['prettier-plugin-classify-imports'],
+  importOrder: ['^[./]|(@/)']
 }

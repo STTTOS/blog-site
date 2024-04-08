@@ -2,14 +2,14 @@ import type { Article } from '@/service/article/types'
 import type { IFormWithDrawer } from '@/hooks/useFormDrawer'
 import type { ICreateFormConfig } from '@/utils/createForm/types'
 
-import { useEffect, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useMemo, useEffect, useCallback } from 'react'
 
+import { useUserInfo } from '@/model'
 import createForm from '@/utils/createForm'
 import { modelComponents } from './staticModel'
 import useGlobalData from '@/hooks/useGlobalData'
 import { addArticle, updateArticle } from '@/service/article'
-import useUserInfo from '@/hooks/userUserInfo'
 
 type IProps = IFormWithDrawer & { data: Article }
 
