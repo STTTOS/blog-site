@@ -1,13 +1,12 @@
+import { useEffect } from 'react'
 import { render } from 'react-dom'
 import { useRoutes, BrowserRouter } from 'react-router-dom'
 
 import './main.less'
 import routers from './router'
+import { useUserInfo } from './model'
 import useTimeout from './hooks/useTimeout'
 import { countWeb } from './service/common'
-
-import { useUserInfo } from './model'
-import { useEffect } from 'react'
 
 const Index = () => useRoutes(routers)
 

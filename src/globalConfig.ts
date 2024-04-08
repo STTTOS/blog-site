@@ -1,4 +1,5 @@
 import { version } from '../package.json'
+
 export const minBoxSize = 100
 export const maxBoxSize = 140
 export const logoImg =
