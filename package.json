@@ -87,8 +87,10 @@
     "vite": "^4.2.0"
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": "npm run eslint:ci",
-    "**/*.{js,jsx,ts,tsx,less,md,json}": [
+    "*.{js,jsx,ts,tsx}": [
+      "npx run eslint:ci"
+    ],
+    "*.{js,jsx,ts,tsx,less,md,json}": [
       "prettier --write"
     ]
   }

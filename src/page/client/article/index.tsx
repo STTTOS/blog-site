@@ -71,7 +71,11 @@ const Index: React.FC = () => {
     getUserCardData({ id: authorId })
   }, [authorId])
 
-  useTimeout(() => countArticle({ id }), 20 * 1000)
+  useTimeout(
+    () => countArticle({ id }),
+    8 * 1000,
+    process.env.NODE_ENV === 'development'
+  )
   return (
     <div className={styles.wrapper}>
       <div
