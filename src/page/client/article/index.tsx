@@ -1,25 +1,25 @@
 import type { Tag as TagType } from '@/service/tag/types'
 
 import { useEffect } from 'react'
-import { Tag, Avatar, Card, Skeleton, Tooltip } from 'antd'
-import { useNavigate, useParams } from 'react-router-dom'
-import { GithubOutlined, MailOutlined, EyeOutlined } from '@ant-design/icons'
+import { useParams, useNavigate } from 'react-router-dom'
+import { Tag, Card, Avatar, Tooltip, Skeleton } from 'antd'
+import { EyeOutlined, MailOutlined, GithubOutlined } from '@ant-design/icons'
 
+import { useUserInfo } from '@/model'
 import useAsync from '@/hooks/useAsync'
 import styles from './index.module.less'
 import useTimeout from '@/hooks/useTimeout'
 import { getUserCard } from '@/service/user'
+import Comments from '@/components/Comments'
+import ThreeColLayout from './ThreeColLayout'
 import mergeClassName from '@/utils/mergeClassName'
 import randomTagColor from '@/utils/randomTagColor'
-import ThreeColLayout from './ThreeColLayout'
-import { Catalogue, Viewer } from '@/components/Markdown'
+import { Viewer, Catalogue } from '@/components/Markdown'
 import {
   countArticle,
   getArticleDetail,
   getSimilarArticles
 } from '@/service/article'
-import Comments from '@/components/Comments'
-import { useUserInfo } from '@/model'
 
 const Index: React.FC = () => {
   const navigate = useNavigate()
@@ -172,7 +172,7 @@ const Index: React.FC = () => {
                 <div className={styles.similar_item} key={id}>
                   <a
                     target="_blank"
-                    href={'?id=' + id}
+                    href={`/article/${id}`}
                     className={styles.title}
                   >
                     {title}
