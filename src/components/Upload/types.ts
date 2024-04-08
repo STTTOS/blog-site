@@ -29,11 +29,13 @@ export interface IUploadProps {
    * 允许的最大数量
    */
   maxCount?: number
+  // eslint-disable-next-line no-unused-vars
   onChange?: (val: string) => void
   listType?: 'picture' | 'picture-card' | 'text'
   /**
    * 图片上传api
    */
+  // eslint-disable-next-line no-unused-vars
   request?: (file: File) => Promise<string>
   /**
    * 回显值, 默认不回显

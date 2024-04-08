@@ -1,8 +1,8 @@
 import type { ModalProps } from 'antd'
 import type { ReactElement } from 'react'
 
-import { Modal, Button, Space } from 'antd'
-import { cloneElement, Fragment, useState, useRef } from 'react'
+import { Modal, Space, Button } from 'antd'
+import { useRef, Fragment, useState, cloneElement } from 'react'
 
 interface IOpenModal
   extends Omit<ModalProps, 'visible' | 'onCancel' | 'onOk' | 'confirmLoading'> {
@@ -13,6 +13,7 @@ interface IOpenModal
 
 type CallBack = () => Promise<unknown>
 export interface IFormWithModal {
+  // eslint-disable-next-line no-unused-vars
   register?: (fn: CallBack) => unknown
 }
 

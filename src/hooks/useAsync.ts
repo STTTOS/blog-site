@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 const useAsync = <A extends Record<string, any>, T>(
+  // eslint-disable-next-line no-unused-vars
   asyncFunction: (args: A) => Promise<T>,
   {
     params,

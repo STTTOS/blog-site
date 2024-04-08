@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { SelectProps } from 'antd'
 
-import { Select, Spin, Empty } from 'antd'
 import debounce from 'lodash/debounce'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { Spin, Empty, Select } from 'antd'
+import React, { useRef, useMemo, useState, useEffect } from 'react'
 
 export interface DebounceSelectProps<ValueType = any>
   extends Omit<SelectProps<ValueType | ValueType[]>, 'options' | 'children'> {
+  // eslint-disable-next-line no-unused-vars
   fetchOptions: (value: string) => Promise<ValueType[]>
   debounceTimeout?: number
   isRenderRequest?: boolean

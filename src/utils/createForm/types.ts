@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { FormProps, FormInstance } from 'antd'
-import type { ReactElement, ReactNode } from 'react'
+import type { ReactNode, ReactElement } from 'react'
 import type { IEnhancedFormItemProps } from '@/components/FormItem/types'
 
 export interface IFormConfig extends FormProps {
@@ -48,6 +48,7 @@ export interface IFormItemProps<T = Record<string, any>>
   /**
    * 和showValue联动, 展示表单字段的值
    */
+  // eslint-disable-next-line no-unused-vars
   render?: (val?: any) => ReactNode
   /**
    * 此属性会传递到子元素(ReactElement上), 如果不指定, 则默认为: `请输入${label}`的格式
@@ -67,6 +68,7 @@ export type IComponent<T = Record<string, any>> =
   | IFormItemProps<T>
 
 export type IFuncComponents<T = Record<string, any>> = (
+  // eslint-disable-next-line no-unused-vars
   form: FormInstance
 ) => Array<IComponent<T>>
 export type IComponentsConfig<T = any> =

@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-console */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable no-console */
 import type {
   IDomEditor,
   IEditorConfig,
@@ -17,6 +18,7 @@ interface IProps {
   /**
    * 富文本内容变更时的回调
    */
+  // eslint-disable-next-line no-unused-vars
   onChange?: (val: string) => void
   value?: string
   /**
@@ -24,6 +26,7 @@ interface IProps {
    * params: { file: File }
    * return Promise<string>
    */
+  // eslint-disable-next-line no-unused-vars
   upload?: (params: { file: File }) => Promise<string>
 }
 
@@ -31,8 +34,8 @@ interface IProps {
 const FormEditor: React.FC<IProps> = ({
   height = 400,
   value,
-  onChange = () => { },
-  upload = () => { }
+  onChange = () => {},
+  upload = () => {}
 }) => {
   const [editor, setEditor] = useState<IDomEditor | null>(null)
 

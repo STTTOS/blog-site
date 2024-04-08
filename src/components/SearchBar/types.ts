@@ -12,5 +12,6 @@ export interface SearchBarProps<T = any> {
   countEveryLine?: 2 | 3 | 4 | 6
   initialValues?: Record<string, unknown>
   buttonPosition?: 'left' | 'center' | 'right'
+  // eslint-disable-next-line no-unused-vars
   onSearch?: (val: Record<string, any>) => unknown
 }

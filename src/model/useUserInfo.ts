@@ -1,6 +1,7 @@
+import { create } from 'zustand'
+
 import { getUser } from '@/service/user'
 import { User } from '@/service/user/types'
-import { create } from 'zustand'
 
 interface UserState {
   user?: User

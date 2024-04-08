@@ -3,13 +3,14 @@ import type { Article } from '@/service/article/types'
 import type { IFormItemProps } from '@/utils/createForm/types'
 
 import { Tag, Select } from 'antd'
+import { SelectProps } from 'rc-select/lib/Select'
 import { EyeInvisibleOutlined } from '@ant-design/icons'
 
 import styles from './index.module.less'
-import { SelectProps } from 'rc-select/lib/Select'
 import randomTagColor from '@/utils/randomTagColor'
 
 const colums: (
+  // eslint-disable-next-line no-unused-vars
   userOptions: SelectProps['options']
 ) => TableColumnProps<Article>[] = (userOptions) => [
   {

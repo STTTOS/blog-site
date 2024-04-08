@@ -1,14 +1,13 @@
-import type { FC, LazyExoticComponent } from 'react'
 import type { RouteObject } from 'react-router-dom'
+import type { FC, LazyExoticComponent } from 'react'
 
 import { lazy } from 'react'
 
 import Layout from '../layout'
-import Article from '@/page/manage/article'
-import LayoutClient from '../layoutClient'
 import Home from '@/page/client/home'
+import LayoutClient from '../layoutClient'
+import Article from '@/page/manage/article'
 import withTitleAndRedirect from '@/Hoc/withTitleAndRedirect'
-import Forbidden from '@/page/403'
 
 export interface MyRoute
   extends Omit<RouteObject, 'children' | 'element' | 'index'> {

@@ -5,6 +5,7 @@ import { useEffect } from 'react'
  * @param callback 回调函数
  * @param ms 倒计时时间
  */
+// eslint-disable-next-line no-unused-vars
 function useTimeout(callback: (...args: unknown[]) => unknown, ms: number) {
   useEffect(() => {
     const timer = setTimeout(callback, ms)

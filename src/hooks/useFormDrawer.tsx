@@ -1,8 +1,8 @@
 import type { DrawerProps } from 'antd'
 import type { ReactElement } from 'react'
 
-import { Drawer, Space, Button } from 'antd'
-import { cloneElement, Fragment, useState, useRef } from 'react'
+import { Space, Drawer, Button } from 'antd'
+import { useRef, Fragment, useState, cloneElement } from 'react'
 
 interface IOpenDrawer
   extends Omit<
@@ -15,6 +15,7 @@ interface IOpenDrawer
 
 type CallBack = () => Promise<unknown>
 export interface IFormWithDrawer {
+  // eslint-disable-next-line no-unused-vars
   register?: (fn: CallBack) => unknown
 }
 

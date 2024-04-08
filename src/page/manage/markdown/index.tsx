@@ -1,5 +1,5 @@
 import { Input, Button } from 'antd'
-import { useSearchParams, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import useAsync from '@/hooks/useAsync'
 import styles from './index.module.less'

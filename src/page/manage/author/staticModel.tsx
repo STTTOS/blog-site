@@ -2,12 +2,12 @@ import type { TableColumnProps } from 'antd'
 import type { User } from '@/service/user/types'
 import type { IComponent } from '../../../utils/createForm/types'
 
-import { Avatar, DatePicker, Select, Input, Switch } from 'antd'
+import Password from 'antd/lib/input/Password'
 import { UserOutlined } from '@ant-design/icons'
+import { Input, Avatar, Select, Switch, DatePicker } from 'antd'
 
 import Upload from '@/components/Upload'
 import { upload } from '@/service/common'
-import Password from 'antd/lib/input/Password'
 
 const colums: TableColumnProps<User>[] = [
   {
@@ -73,6 +73,7 @@ const searchBarFields = [
   }
 ]
 
+// eslint-disable-next-line no-unused-vars
 const drawerFormComponents: (type: 'add' | 'edit') => IComponent[] = (type) => {
   return [
     {

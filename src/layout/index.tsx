@@ -1,19 +1,17 @@
-import type { ReactNode } from 'react'
 import type { MenuInfo } from 'rc-menu/lib/interface'
 
-import { Layout, Menu, Empty } from 'antd'
-import { useState, useMemo } from 'react'
+import { Menu, Layout } from 'antd'
+import { useMemo, useState } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 
 import menuItems from './menuItems'
+import { useUserInfo } from '@/model'
 import styles from './index.module.less'
 import { logoImg } from '@/globalConfig'
-import switchRender from '@/utils/switchRender'
-import PopoverHandle from '@/layout/popoverHandle'
-import useNewFeatureInfo from '@/hooks/useNewFeatureInfo'
 import Loading from '@/components/Loading'
 import Redirect from '@/components/Redirect'
-import { useUserInfo } from '@/model'
+import PopoverHandle from '@/layout/popoverHandle'
+import useNewFeatureInfo from '@/hooks/useNewFeatureInfo'
 
 const { Content, Header, Footer, Sider } = Layout
 
