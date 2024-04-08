@@ -1,11 +1,12 @@
 import type { FC } from 'react'
 import type { Comment } from '@/service/comments/types'
 
+import { useRequest } from 'ahooks'
+
+import Reply from '../Reply'
+import ReplyItem from '../ReplyItem'
 import styles from './index.module.less'
 import { getComments } from '@/service/comments'
-import { useRequest } from 'ahooks'
-import ReplyItem from '../ReplyItem'
-import Reply from '../Reply'
 
 interface CommentsProps {
   articleId: number
@@ -24,7 +25,7 @@ const Comments: FC<CommentsProps> = ({ articleId, avatar }) => {
         {...data}
         key={data.id}
         articleId={articleId}
-        onRelied={refreshAsync}
+        onRefresh={refreshAsync}
         selfAvatar={avatar}
       />
     ))
@@ -38,7 +39,7 @@ const Comments: FC<CommentsProps> = ({ articleId, avatar }) => {
       </div>
       <Reply
         articleId={articleId}
-        onReplied={refreshAsync}
+        onRefresh={refreshAsync}
         className={styles.reply}
         avatar={avatar}
       />

@@ -1,19 +1,20 @@
-import type { FC } from 'react'
+import type { FC, Key } from 'react'
 import type { Comment } from '@/service/comments/types'
 
-import styles from './index.module.less'
-import { Avatar, Button, Form, message } from 'antd'
-import TextArea from 'antd/lib/input/TextArea'
-import { addComment } from '@/service/comments'
 import { useRequest } from 'ahooks'
+import TextArea from 'antd/lib/input/TextArea'
+import { Form, Avatar, Button, message } from 'antd'
+
 import { useUserInfo } from '@/model'
+import styles from './index.module.less'
+import { addComment } from '@/service/comments'
 
 interface ReplyProps {
   articleId: number
-  parentCommentId?: number
+  parentCommentId?: Key
   className?: string
   placeholder?: string
-  onReplied?: () => void
+  onRefresh?: () => void
   avatar?: string
 }
 const Reply: FC<ReplyProps> = ({
@@ -22,7 +23,7 @@ const Reply: FC<ReplyProps> = ({
   parentCommentId,
   className = '',
   placeholder = '下面我简单喵两句',
-  onReplied
+  onRefresh
 }) => {
   const [form] = Form.useForm()
   const { loading, runAsync } = useRequest(addComment, { manual: true })
@@ -34,7 +35,7 @@ const Reply: FC<ReplyProps> = ({
       return
     }
     await runAsync({ content, articleId, parentCommentId })
-    onReplied?.()
+    onRefresh?.()
     form.resetFields()
   }
 
