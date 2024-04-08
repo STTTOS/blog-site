@@ -1,7 +1,8 @@
 import type { SelectProps } from 'rc-select/lib/Select'
 import type { IFormItemProps } from '@/utils/createForm/types'
 
-import { Select, Radio, Input } from 'antd'
+import { Radio, Input, Select } from 'antd'
+
 import Upload from '@/components/Upload'
 import { upload } from '@/service/common'
 
@@ -35,7 +36,7 @@ const modelComponents = (
       initialValue: true,
       element: (
         <Radio.Group>
-          <Radio value={true}>是</Radio>
+          <Radio value={true}>原创</Radio>
           <Radio value={false}>转载</Radio>
         </Radio.Group>
       )
