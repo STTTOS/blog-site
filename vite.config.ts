@@ -8,13 +8,13 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:7500/',
+        target: 'http://www.wishufree.com/',
         cookieDomainRewrite: {
           'wishufree.com': 'localhost'
         }
       },
       '/static': {
-        target: 'http://localhost:7500/'
+        target: 'http://www.wishufree.com/'
       }
     }
   },

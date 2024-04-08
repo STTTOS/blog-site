@@ -2,15 +2,15 @@ import type { TableColumnProps } from 'antd'
 import type { Article } from '@/service/article/types'
 
 import { useAntdTable } from 'ahooks'
-import SearchBar from '@/components/SearchBar'
-import { Form, Button, Space, Popconfirm } from 'antd'
+import { Form, Space, Button, Popconfirm } from 'antd'
 
+import { useUserInfo } from '@/model'
 import styles from './index.module.less'
+import SearchBar from '@/components/SearchBar'
 import SafeTable from '@/components/SafeTable'
 import useGlobalData from '@/hooks/useGlobalData'
-import { colums, searchBarFields } from './staticModel'
-import { deleteArticle, getArticles } from '@/service/article'
-import { useUserInfo } from '@/model'
+import { getColumns, searchBarFields } from './staticModel'
+import { getArticles, deleteArticle } from '@/service/article'
 
 const Index = () => {
   const { user } = useUserInfo()
@@ -42,7 +42,7 @@ const Index = () => {
       coAuthorIds?.split(',').map(Number).includes(user.id))
 
   const columns: TableColumnProps<Article>[] = [
-    ...colums(userOptions),
+    ...getColumns(userOptions),
     {
       title: '操作',
       render: (_, { id, ...article }) => (

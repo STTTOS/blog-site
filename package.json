@@ -25,6 +25,7 @@
     "@wangeditor/editor-for-react": "^1.0.6",
     "ahooks": "^3.5.0",
     "antd": "^4.21.3",
+    "copy-to-clipboard": "^3.3.3",
     "crypto-js": "^4.1.1",
     "eslint": "^8.17.0",
     "highlight.js": "^11.6.0",

@@ -3,73 +3,96 @@ import type { Article } from '@/service/article/types'
 import type { IFormItemProps } from '@/utils/createForm/types'
 
 import { Tag, Select } from 'antd'
+import { FC, useState } from 'react'
 import { SelectProps } from 'rc-select/lib/Select'
-import { EyeInvisibleOutlined } from '@ant-design/icons'
+import { CopyOutlined, EyeInvisibleOutlined } from '@ant-design/icons'
 
+import copy from '@/utils/copy'
 import styles from './index.module.less'
 import randomTagColor from '@/utils/randomTagColor'
 
-const colums: (
-  // eslint-disable-next-line no-unused-vars
+interface TitleProps {
+  isPrivate: boolean
+  title: string
+  id: number
+}
+const Title: FC<TitleProps> = ({ isPrivate, title, id }) => {
+  const [focused, setFocused] = useState(false)
+  return (
+    <div
+      onMouseEnter={() => setFocused(true)}
+      onMouseLeave={() => setFocused(false)}
+    >
+      {isPrivate && <EyeInvisibleOutlined className={styles.private} />}
+      <a href={`/article/${id}`} target="_blank">
+        {title}
+      </a>
+      <CopyOutlined
+        style={{ marginLeft: 6, visibility: focused ? 'visible' : 'hidden' }}
+        onClick={() => {
+          copy(`[${title}](/article/${id})`)
+        }}
+      />
+    </div>
+  )
+}
+const getColumns = (
   userOptions: SelectProps['options']
-) => TableColumnProps<Article>[] = (userOptions) => [
-  {
-    title: '标题',
-    dataIndex: 'title',
-    fixed: 'left',
-    render: (_, { id, title, private: isPrivate }) => (
-      <div>
-        {isPrivate && <EyeInvisibleOutlined className={styles.private} />}
-        <a href={`/article/${id}`} target="_blank">
-          {title}
-        </a>
-      </div>
-    )
-  },
-  {
-    title: '摘要',
-    dataIndex: 'desc'
-  },
-  {
-    title: '标签',
-    dataIndex: 'tags',
-    width: 300,
-    render: (_, { tags }) =>
-      tags?.map(({ id, name }) => {
-        return (
-          <Tag key={id} className={styles.tag} color={randomTagColor()}>
-            {name}
-          </Tag>
-        )
-      })
-  },
-  {
-    title: '阅读量',
-    dataIndex: 'viewCount',
-    width: 110,
-    render: (_, { viewCount }) => viewCount.toLocaleString()
-  },
-  {
-    title: '作者昵称',
-    dataIndex: 'authorName'
-  },
-  {
-    title: '协同编辑作者',
-    dataIndex: 'coAuthorIds',
-    render: (_, { coAuthorIds }) =>
-      coAuthorIds
-        ?.split(',')
-        .map(
-          (id) => userOptions?.find(({ value }) => value == Number(id))?.label
-        )
-        .join(',')
-  },
-  {
-    title: '发布时间',
-    dataIndex: 'createdAt',
-    width: 200
-  }
-]
+): TableColumnProps<Article>[] => {
+  return [
+    {
+      title: '标题',
+      dataIndex: 'title',
+      fixed: 'left',
+      render: (_, { id, title, private: isPrivate }) => (
+        <Title {...{ id, title, isPrivate }} />
+      )
+    },
+    {
+      title: '摘要',
+      dataIndex: 'desc'
+    },
+    {
+      title: '标签',
+      dataIndex: 'tags',
+      width: 300,
+      render: (_, { tags }) =>
+        tags?.map(({ id, name }) => {
+          return (
+            <Tag key={id} className={styles.tag} color={randomTagColor()}>
+              {name}
+            </Tag>
+          )
+        })
+    },
+    {
+      title: '阅读量',
+      dataIndex: 'viewCount',
+      width: 110,
+      render: (_, { viewCount }) => viewCount.toLocaleString()
+    },
+    {
+      title: '作者昵称',
+      dataIndex: 'authorName'
+    },
+    {
+      title: '协同编辑作者',
+      dataIndex: 'coAuthorIds',
+      render: (_, { coAuthorIds }) =>
+        coAuthorIds
+          ?.split(',')
+          .map(
+            (id) => userOptions?.find(({ value }) => value == Number(id))?.label
+          )
+          .join(',')
+    },
+    {
+      title: '发布时间',
+      dataIndex: 'createdAt',
+      width: 200
+    }
+  ]
+}
 
 const searchBarFields = (
   userOptions: SelectProps['options'],
@@ -128,4 +151,4 @@ const searchBarFields = (
   ]
 }
 
-export { colums, searchBarFields }
+export { searchBarFields, getColumns }
