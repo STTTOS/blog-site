@@ -142,7 +142,7 @@ const Index: React.FC = () => {
                 <div className="flex">
                   <Avatar src={avatar} className={styles.avatar} />
 
-                  <div>
+                  <div className={styles.user_right}>
                     <div className={styles.name}>{name}</div>
                     <div className={styles.light_color}>{desc}</div>
                   </div>
