@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { message } from 'antd'
 import { extend } from 'umi-request'
 
-import { message } from 'antd'
-
-import { baseUrl } from '../config'
 import { ResBasic } from './types'
+import { baseUrl } from '../config'
 
 // 响应code异常处理程序
 const request = extend({
@@ -40,7 +39,6 @@ async function betterRequest<R>(
     })
 
     if (code !== 200) {
-      message.error(msg)
       throw new Error(msg)
     }
 
@@ -48,6 +46,7 @@ async function betterRequest<R>(
   } catch (error) {
     const errMsg = (error as Error).message
 
+    message.error((error as any).message || '网络错误')
     // 错误提示
     // 继续抛出错误, 为了终止之后的Promise处理进程
     throw new Error(errMsg)

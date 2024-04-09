@@ -1,12 +1,16 @@
-import { logout } from '@/service/user'
-import { LogoutOutlined, UserOutlined } from '@ant-design/icons'
 import { Tooltip, Popconfirm } from 'antd'
 import { useNavigate } from 'react-router-dom'
+import { UserOutlined, LogoutOutlined } from '@ant-design/icons'
+
+import { useUserInfo } from '@/model'
+import { logout } from '@/service/user'
 
 const PopoverHandle = () => {
   const navigate = useNavigate()
+  const { reset } = useUserInfo()
   const logOut = async () => {
     await logout()
+    reset()
     navigate('/login')
   }
 
