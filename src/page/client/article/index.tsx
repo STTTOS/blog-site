@@ -14,6 +14,7 @@ import Comments from '@/components/Comments'
 import ThreeColLayout from './ThreeColLayout'
 import mergeClassName from '@/utils/mergeClassName'
 import randomTagColor from '@/utils/randomTagColor'
+import ScrollBarNav from '@/components/ScrollBarNav'
 import { Viewer, Catalogue } from '@/components/Markdown'
 import {
   countArticle,
@@ -198,6 +199,7 @@ const Index: React.FC = () => {
           </Skeleton>
         }
       />
+      <ScrollBarNav />
     </div>
   )
 }
