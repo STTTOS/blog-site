@@ -1,3 +1,4 @@
+import 'lazysizes'
 import { render } from 'react-dom'
 import { useRoutes, BrowserRouter } from 'react-router-dom'
 

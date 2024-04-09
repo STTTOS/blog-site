@@ -1,16 +1,16 @@
 import hljs from 'highlight.js'
-import MarkdownIt from 'markdown-it'
-
 import mark from 'markdown-it-mark'
+import MarkdownIt from 'markdown-it'
 import insert from 'markdown-it-ins'
 import subscript from 'markdown-it-sub'
 import superscript from 'markdown-it-sup'
 import abbreviation from 'markdown-it-abbr'
 import footnote from 'markdown-it-footnote'
 import tasklists from 'markdown-it-task-lists'
-
 import 'highlight.js/styles/atom-one-light.css'
 import 'react-markdown-editor-lite/lib/index.css'
+
+import lazyLoadingPlugin from './plugins/image-lazy-loading'
 
 // Initialize a markdown parser
 /* Markdown-it options */
@@ -38,6 +38,7 @@ const mdParser = new MarkdownIt({
   .use(subscript)
   .use(superscript)
   .use(abbreviation)
+  .use(lazyLoadingPlugin)
   .use(tasklists, { label: true })
 
 export default mdParser
