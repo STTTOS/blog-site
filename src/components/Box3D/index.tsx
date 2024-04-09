@@ -1,7 +1,8 @@
-import type { DOMAttributes, FC, ReactNode, CSSProperties } from 'react'
+import type { FC, ReactNode, DOMAttributes, CSSProperties } from 'react'
+
+import classnames from 'classnames'
 
 import styles from './index.module.less'
-import mergeClassName from '@/utils/mergeClassName'
 
 interface Face {
   children?: ReactNode
@@ -36,7 +37,7 @@ const Box3D: FC<Box3DProps & DOMAttributes<HTMLDivElement>> = ({
 
   return (
     <div
-      className={mergeClassName(
+      className={classnames(
         className,
         styles.box,
         animation ? styles.animation : ''

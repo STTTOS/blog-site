@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 
 import { Avatar } from 'antd'
+import classnames from 'classnames'
 import ParticlesBg from 'particles-bg'
 import { useNavigate } from 'react-router-dom'
 import { GithubOutlined } from '@ant-design/icons'
@@ -10,7 +11,6 @@ import Footer from '@/components/Footer'
 import styles from './index.module.less'
 import randomInt from '@/utils/randomInt'
 import useAsync from '../../../hooks/useAsync'
-import mergeClassName from '@/utils/mergeClassName'
 import { getUsersByRecommend } from '@/service/user'
 
 const Index: FC = () => {
@@ -21,7 +21,7 @@ const Index: FC = () => {
     <div className={styles.wrapper}>
       <ParticlesBg bg type="lines" />
 
-      <div className={mergeClassName(styles.header, 'text-center')}>
+      <div className={classnames(styles.header, 'text-center')}>
         <span className={styles.to_all} onClick={() => navigate('/tag')}>
           浏览总站
         </span>

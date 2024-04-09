@@ -1,7 +1,8 @@
 import type { ReactElement } from 'react'
 
+import classnames from 'classnames'
+
 import styles from './index.module.less'
-import mergeClassName from '@/utils/mergeClassName'
 
 interface IProps {
   left: ReactElement
@@ -16,7 +17,7 @@ const ThreeColLayout: React.FC<IProps> = ({
   className = ''
 }) => {
   return (
-    <div className={mergeClassName(styles.wrapper, className)}>
+    <div className={classnames(styles.wrapper, className)}>
       <div className={styles.left}>{left}</div>
       <div className={styles.main}>{main}</div>
       <div className={styles.right}>{right}</div>

@@ -1,6 +1,7 @@
 import type { Tag as TagType } from '@/service/tag/types'
 
 import { useEffect } from 'react'
+import classnames from 'classnames'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Tag, Card, Avatar, Tooltip, Skeleton } from 'antd'
 import { EyeOutlined, MailOutlined, GithubOutlined } from '@ant-design/icons'
@@ -12,7 +13,6 @@ import useTimeout from '@/hooks/useTimeout'
 import { getUserCard } from '@/service/user'
 import Comments from '@/components/Comments'
 import ThreeColLayout from './ThreeColLayout'
-import mergeClassName from '@/utils/mergeClassName'
 import randomTagColor from '@/utils/randomTagColor'
 import ScrollBarNav from '@/components/ScrollBarNav'
 import { Viewer, Catalogue } from '@/components/Markdown'
@@ -89,7 +89,7 @@ const Index: React.FC = () => {
           <Skeleton title active loading={loading} paragraph={{ rows: 16 }}>
             <div className={styles.article}>
               <div className={styles.header}>
-                <div className={mergeClassName(styles.title, 'text-ellipsis')}>
+                <div className={classnames(styles.title, 'text-ellipsis')}>
                   {title}
                   <span className={styles.articleType}>
                     {isOrigin ? '原创' : '转载'}
@@ -104,7 +104,7 @@ const Index: React.FC = () => {
                 </div>
 
                 <div
-                  className={mergeClassName(
+                  className={classnames(
                     styles.info,
                     styles.light_color,
                     styles.set_margin_to_children
@@ -151,7 +151,7 @@ const Index: React.FC = () => {
                 {/* 邮箱以及git */}
                 {(github || email) && (
                   <div
-                    className={mergeClassName(
+                    className={classnames(
                       styles.icons,
                       styles.set_margin_to_children
                     )}
@@ -165,7 +165,7 @@ const Index: React.FC = () => {
                   </div>
                 )}
 
-                <div className={mergeClassName(styles.count_line, 'flex')}>
+                <div className={classnames(styles.count_line, 'flex')}>
                   <EyeOutlined className={styles.count_icon} />
                   <span>文章被阅读: {totalViewCount?.toLocaleString()}</span>
                 </div>
@@ -184,7 +184,7 @@ const Index: React.FC = () => {
                   </a>
 
                   <div
-                    className={mergeClassName(
+                    className={classnames(
                       styles.bottom,
                       styles.light_color,
                       styles.set_margin_to_children
