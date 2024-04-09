@@ -1,7 +1,7 @@
 import type { MenuInfo } from 'rc-menu/lib/interface'
 
 import { Menu, Layout } from 'antd'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 
 import menuItems from './menuItems'
@@ -16,7 +16,7 @@ import useNewFeatureInfo from '@/hooks/useNewFeatureInfo'
 const { Content, Header, Footer, Sider } = Layout
 
 const ManageLayout = () => {
-  const { user, loading } = useUserInfo()
+  const { user, loading, fetch } = useUserInfo()
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const [collapsed, setCollapsed] = useState(false)
@@ -71,6 +71,10 @@ const ManageLayout = () => {
   }, [user, loading, pathname])
 
   useNewFeatureInfo()
+
+  useEffect(() => {
+    fetch()
+  }, [])
   return children
 }
 
