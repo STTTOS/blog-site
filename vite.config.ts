@@ -8,23 +8,30 @@ export default defineConfig({
   define: {
     'process.env.NODE_ENV': `"${process.env.NODE_ENV}"`
   },
+  
   server: {
     proxy: {
       '/api': {
-        target: 'http://www.wishufree.com/',
+        target: 'http://www.wishufree.com',
         cookieDomainRewrite: {
           'wishufree.com': 'localhost'
         }
       },
       '/static': {
-        target: 'http://www.wishufree.com/'
+        target: 'http://www.wishufree.com'
       }
     }
   },
   build: {
     rollupOptions: {
+      onwarn(warning, warn) {
+        if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+          return
+        }
+        warn(warning)
+      },
       output: {
-        experimentalMinChunkSize: 1024 * 30
+        experimentalMinChunkSize: 1024 * 30,
       }
     }
   },
