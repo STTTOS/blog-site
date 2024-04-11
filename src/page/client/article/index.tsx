@@ -39,6 +39,7 @@ const Index: React.FC = () => {
     execute: getUserCardData,
     loading: userLoading
   } = useAsync(getUserCard, { immediate: false })
+  const { fetch } = useUserInfo()
 
   const {
     title,
@@ -77,6 +78,9 @@ const Index: React.FC = () => {
     8 * 1000,
     process.env.NODE_ENV === 'development'
   )
+  useEffect(() => {
+    fetch()
+  }, [])
   return (
     <div className={styles.wrapper}>
       <div
