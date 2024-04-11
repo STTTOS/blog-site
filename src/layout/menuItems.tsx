@@ -2,11 +2,12 @@ import type { MenuProps } from 'antd'
 
 import {
   TagsOutlined,
-  FileOutlined,
   UserOutlined,
   ToolOutlined,
   BookOutlined,
-  SettingOutlined
+  SettingOutlined,
+  FileWordOutlined,
+  FileTextOutlined
 } from '@ant-design/icons'
 
 type MenuItem = Required<MenuProps>['items'][number]
@@ -25,7 +26,7 @@ const menuItems: MenuItem[] = [
   {
     key: 'article',
     label: '文章管理',
-    icon: <FileOutlined />
+    icon: <FileWordOutlined />
   },
   {
     key: 'tool',
@@ -45,7 +46,7 @@ const menuItems: MenuItem[] = [
   {
     key: 'storage',
     label: '文件存储',
-    icon: <FileOutlined />
+    icon: <FileTextOutlined />
   }
 ]
 
