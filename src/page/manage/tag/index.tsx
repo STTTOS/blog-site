@@ -1,11 +1,13 @@
 import type { TableColumnProps } from 'antd'
 import type { Tag } from '@/service/tag/types'
 
+import { useEffect } from 'react'
 import { useAntdTable } from 'ahooks'
-import SearchBar from '@/components/SearchBar'
-import { Form, Button, Space, Popconfirm } from 'antd'
+import { useSearchParams } from 'react-router-dom'
+import { Form, Space, Button, Popconfirm } from 'antd'
 
 import styles from './index.module.less'
+import SearchBar from '@/components/SearchBar'
 import TagDrawerContent from './DrawerContent'
 import SafeTable from '@/components/SafeTable'
 import useFormDrawer from '@/hooks/useFormDrawer'
@@ -14,6 +16,7 @@ import { colums, searchBarFields } from './staticModel'
 
 const Index = () => {
   const [form] = Form.useForm()
+  const [query] = useSearchParams()
   const { Drawer, openDrawer } = useFormDrawer()
   const {
     tableProps,
@@ -56,6 +59,11 @@ const Index = () => {
     }
   ]
 
+  useEffect(() => {
+    if (query.get('open') === 'true') {
+      onAddOrUpdateClick()
+    }
+  }, [])
   return (
     <div className={styles.container}>
       <h2>标签管理</h2>

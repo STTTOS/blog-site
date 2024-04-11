@@ -1,22 +1,44 @@
 import type { SelectProps } from 'rc-select/lib/Select'
 import type { IFormItemProps } from '@/utils/createForm/types'
 
-import { Radio, Input, Select } from 'antd'
+import { Radio, Input, Space, Select, Button } from 'antd'
+import { PlusOutlined, ReloadOutlined } from '@ant-design/icons'
 
 import Upload from '@/components/Upload'
 import { upload } from '@/service/common'
+import AsyncButton from '@/components/AsyncButton'
 
 const { TextArea } = Input
 
 const modelComponents = (
   userOptions: SelectProps['options'],
-  tagOptions: SelectProps['options']
+  tagOptions: SelectProps['options'],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  refreshTags: () => Promise<any>
 ): IFormItemProps[] => {
   return [
     {
       label: '添加标签',
       name: 'tagIds',
       require: true,
+      extra: (
+        <Space style={{ marginTop: 6 }}>
+          <Button
+            size="small"
+            type="ghost"
+            icon={<PlusOutlined />}
+            onClick={() => window.open('/manage/tag?open=true')}
+          >
+            去新增标签
+          </Button>
+          <AsyncButton
+            size="small"
+            request={refreshTags}
+            icon={<ReloadOutlined />}
+            type="ghost"
+          />
+        </Space>
+      ),
       element: (
         <Select
           mode="multiple"
