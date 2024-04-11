@@ -12,7 +12,6 @@ const Index = () => useRoutes(routers)
 const App = () => {
   useTimeout(() => countWeb(), 5 * 1000, process.env.NODE_ENV === 'development')
 
-  alert('在服务器进行部署')
   return (
     // <React.StrictMode>
     <BrowserRouter>
