@@ -2,6 +2,7 @@ import type { TableColumnProps } from 'antd'
 import type { StroageItemProps } from './staticModel'
 
 import { Form, Space } from 'antd'
+import { useCallback } from 'react'
 import { useAntdTable } from 'ahooks'
 import { basename } from 'path-browserify'
 
@@ -12,7 +13,6 @@ import Upload from '@/components/Upload'
 import styles from './index.module.less'
 import { uploadFile } from '@/service/common'
 import SafeTable from '@/components/SafeTable'
-import useGlobalData from '@/hooks/useGlobalData'
 import AsyncButton from '@/components/AsyncButton'
 import { deleteFile, getPersistentFileList } from '@/service/storage'
 
@@ -22,8 +22,11 @@ const Index = () => {
     tableProps,
     search: { reset }
   } = useAntdTable(getPersistentFileList, { form })
-  useGlobalData()
 
+  const handleDelete = useCallback(async (url: string) => {
+    await deleteFile({ id: basename(url) })
+    reset()
+  }, [])
   const tableColumns: TableColumnProps<StroageItemProps>[] = [
     ...columns,
     {
@@ -37,11 +40,7 @@ const Index = () => {
           <a href={url} download={name}>
             download
           </a>
-          <AsyncButton
-            danger
-            type="text"
-            request={() => deleteFile({ id: basename(url) })}
-          >
+          <AsyncButton danger type="text" request={() => handleDelete(url)}>
             delete
           </AsyncButton>
         </Space>
