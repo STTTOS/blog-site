@@ -25,17 +25,17 @@ const modelComponents = (
         <Space style={{ marginTop: 6 }}>
           <Button
             size="small"
-            type="ghost"
+            ghost
             icon={<PlusOutlined />}
             onClick={() => window.open('/manage/tag?open=true')}
           >
             去新增标签
           </Button>
           <AsyncButton
+            ghost
             size="small"
             request={refreshTags}
             icon={<ReloadOutlined />}
-            type="ghost"
           />
         </Space>
       ),

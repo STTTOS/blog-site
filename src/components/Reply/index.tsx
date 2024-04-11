@@ -31,7 +31,7 @@ const Reply: FC<ReplyProps> = ({
 
   const handleSubmit = async ({ content }: Comment) => {
     if (!user) {
-      message.warn('先登录再发表评论哦')
+      message.warning('先登录再发表评论哦')
       return
     }
     await runAsync({ content, articleId, parentCommentId })
