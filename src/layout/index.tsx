@@ -68,7 +68,7 @@ const ManageLayout = () => {
         </Layout>
       </Layout>
     )
-  }, [user, loading, pathname])
+  }, [user, loading, pathname, collapsed])
 
   useNewFeatureInfo()
 
