@@ -41,6 +41,11 @@ const menuItems: MenuItem[] = [
     key: 'system',
     label: '系统管理',
     icon: <SettingOutlined />
+  },
+  {
+    key: 'storage',
+    label: '文件存储',
+    icon: <FileOutlined />
   }
 ]
 

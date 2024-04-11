@@ -46,7 +46,7 @@ async function betterRequest<R>(
   } catch (error) {
     const errMsg = (error as Error).message
 
-    message.error((error as any).message || '网络错误')
+    message.error(errMsg)
     // 错误提示
     // 继续抛出错误, 为了终止之后的Promise处理进程
     throw new Error(errMsg)

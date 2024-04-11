@@ -71,6 +71,11 @@ const routers: MyRoute[] = [
         title: '编辑文章'
       },
       {
+        path: '/storage',
+        element: lazy(() => import('@/page/manage/storage')),
+        title: '文件存储'
+      },
+      {
         path: '/',
         redirect: '/article'
       },

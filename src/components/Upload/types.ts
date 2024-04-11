@@ -49,8 +49,13 @@ export interface IUploadProps {
    * 文件列表类型上传按钮文字
    */
   uploadButtonText?: string
+  /**是否展示默认的文件列表 */
+  showFileList?: boolean
+  /**一次上传多个文件 */
+  multiple?: boolean
 }
 
 export interface FileListItem extends Omit<UploadFile, 'url'> {
   url: string
+  name: string
 }

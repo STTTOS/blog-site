@@ -24,6 +24,30 @@ async function upload(params: { file: File }) {
   return url
 }
 
+async function uploadTempFile(params: { file: File }) {
+  const formData = new FormData()
+  formData.append('file', params.file)
+
+  const {
+    data: { url }
+  } = await request<{ url: string }>(
+    'api/common/upload_temp_file',
+    {},
+    formData
+  )
+  return url
+}
+
+async function uploadFile(params: { file: File }) {
+  const formData = new FormData()
+  formData.append('file', params.file)
+
+  const {
+    data: { url }
+  } = await request<{ url: string }>('api/common/upload_file', {}, formData)
+  return url
+}
+
 async function countWeb() {
   await request('api/common/webViewCount')
 }
@@ -36,4 +60,11 @@ async function getCountWeb() {
   return viewCount
 }
 
-export { confirmAuth, upload, countWeb, getCountWeb }
+export {
+  confirmAuth,
+  upload,
+  countWeb,
+  getCountWeb,
+  uploadTempFile,
+  uploadFile
+}

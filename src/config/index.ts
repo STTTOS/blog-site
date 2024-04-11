@@ -7,3 +7,5 @@ export const baseUrl =
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   env === 'mock' ? 'http://localhost:4000' : ''
+
+export const domain = 'wishufree.com'

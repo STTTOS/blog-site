@@ -6,17 +6,18 @@ import type { FileListItem, IUploadProps } from './types'
 import type { UploadFile } from 'antd/lib/upload/interface'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
 
+import path from 'path-browserify'
 import { propEq, complement } from 'ramda'
 import React, { useState, useEffect } from 'react'
-import { Upload, message, Button, Modal } from 'antd'
+import { Modal, Upload, Button, message } from 'antd'
 import {
-  LoadingOutlined,
   PlusOutlined,
-  UploadOutlined
+  UploadOutlined,
+  LoadingOutlined
 } from '@ant-design/icons'
 
-import switchRender from '@/utils/switchRender'
 import useAsync from '@/hooks/useAsync'
+import switchRender from '@/utils/switchRender'
 import {
   getFileType,
   convertFileListToUrl,
@@ -40,11 +41,13 @@ const Index: React.FC<IUploadProps> = ({
   maxCount = 1,
   uploadText = '上传',
   showValue = false,
+  showFileList = true,
   onChange = () => void 0,
   accept = 'jpg,png,jpeg',
   request = async () => '',
   listType = 'picture-card',
-  uploadButtonText = '点击上传'
+  uploadButtonText = '点击上传',
+  ...rest
 }) => {
   const [previewVisible, setPreviewVisible] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
@@ -57,10 +60,11 @@ const Index: React.FC<IUploadProps> = ({
   const handleCancel = () => setPreviewVisible(false)
 
   const handlePreview = async (file: UploadFile) => {
-    if (listType === 'text' && value) {
+    // 仅预览图片
+    if (!['.png', '.jpg', '.jpeg'].includes(path.extname(file.url!))) {
       const anchor = document.createElement('a')
       anchor.target = '_blank'
-      anchor.href = value
+      anchor.href = file.url!
       anchor.click()
       return
     }
@@ -95,7 +99,8 @@ const Index: React.FC<IUploadProps> = ({
               limitHeight &&
               img.width !== limitWidth &&
               img.height !== limitHeight
-            ) return [`请上传宽高等于${limitWidth}*${limitHeight}的图片`, false]
+            )
+              return [`请上传宽高等于${limitWidth}*${limitHeight}的图片`, false]
 
             if (limitWidth && img.width !== limitWidth)
               return [`请上传宽度等于${limitWidth}的图片`, false]
@@ -121,7 +126,8 @@ const Index: React.FC<IUploadProps> = ({
     const { name, size, type } = file
     const fileType = getFileType(name)
 
-    if (!accept.includes(fileType!)) {
+    if (accept === '*') return true
+    else if (!accept.includes(fileType!)) {
       message.error(`只能上传${accept}类型的文件`)
       return false
     }
@@ -157,7 +163,13 @@ const Index: React.FC<IUploadProps> = ({
     const { name } = file as File
     const url = await submit(file as File)
 
-    const newList = fileList.concat({ name, uid: url, url }).slice(-maxCount)
+    const newList = fileList
+      .concat({
+        name,
+        url,
+        uid: url
+      })
+      .slice(-maxCount)
     const newUrl = convertFileListToUrl(newList.slice(-maxCount))
     setFileList(newList)
     onChange(newUrl)
@@ -191,14 +203,15 @@ const Index: React.FC<IUploadProps> = ({
   return (
     <>
       <Upload
+        {...rest}
         showUploadList
-        fileList={fileList}
         listType={listType}
         disabled={showDisabled}
         onRemove={handleRemove}
         onPreview={handlePreview}
         beforeUpload={beforeUpload}
         customRequest={handleCustomRequest}
+        fileList={showFileList ? fileList : []}
       >
         {!showValue &&
           switchRender(pictureButton, textButton, listType === 'picture-card')}
