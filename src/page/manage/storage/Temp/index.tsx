@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { List, Divider } from 'antd'
 import { basename } from 'path-browserify'
+import { List, Divider, Typography } from 'antd'
 
 import copy from '@/utils/copy'
 import { domain } from '@/config'
@@ -31,7 +31,7 @@ const Temp = () => {
             bordered
             className={styles.list}
             dataSource={fileList}
-            renderItem={(item) => (
+            renderItem={(item, index) => (
               <List.Item
                 actions={[
                   <a
@@ -42,6 +42,9 @@ const Temp = () => {
                   </a>
                 ]}
               >
+                <Typography.Text mark style={{ marginRight: 6 }}>
+                  {index + 1}
+                </Typography.Text>
                 {basename(item)}
               </List.Item>
             )}
