@@ -24,6 +24,7 @@ const modelComponents = (
       extra: (
         <Space style={{ marginTop: 6 }}>
           <Button
+            type="primary"
             size="small"
             ghost
             icon={<PlusOutlined />}
@@ -32,6 +33,7 @@ const modelComponents = (
             去新增标签
           </Button>
           <AsyncButton
+            type="primary"
             ghost
             size="small"
             request={refreshTags}
