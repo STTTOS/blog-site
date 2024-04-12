@@ -23,7 +23,9 @@ export default defineConfig({
     }
   },
   build: {
+    sourcemap: false,
     rollupOptions: {
+      cache: true,
       onwarn(warning, warn) {
         if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
           return
@@ -31,7 +33,7 @@ export default defineConfig({
         warn(warning)
       },
       output: {
-        experimentalMinChunkSize: 1024 * 30,
+        experimentalMinChunkSize: 1024 * 100,
       }
     }
   },

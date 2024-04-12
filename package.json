@@ -16,7 +16,7 @@
     "stylelint:fix": "stylelint --fix ./src/**/*.less --custom-syntax postcss-scss",
     "lint:fix": "npm run stylelint:fix && npm run eslint:fix",
     "pre-commit": "lint-staged",
-    "publish": "yarn lint:ci && yarn build && scp -r ./dist/* root@www.wishufree.com:/root/server/public",
+    "publish": "yarn lint:ci && yarn build && scp -r ./dist/* root@www.wishufree.com:/root/wish_server/apps/blog/public",
     "prepare": "husky"
   },
   "dependencies": {
