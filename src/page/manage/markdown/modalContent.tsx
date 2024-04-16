@@ -16,7 +16,8 @@ type IProps = IFormWithDrawer & { data: Article }
 const ModalContent: React.FC<IProps> = ({ register = () => void 0, data }) => {
   const navigate = useNavigate()
   const { user } = useUserInfo()
-  const { userOptions, tagOptions, refreshTags } = useGlobalData()
+  const { userOptions, tagOptions, refreshTags, fecthingTag, fetchingUser } =
+    useGlobalData()
   const isEditing = !!data.id
 
   const defaultData = useMemo(
@@ -34,7 +35,13 @@ const ModalContent: React.FC<IProps> = ({ register = () => void 0, data }) => {
       },
       data: defaultData
     },
-    components: modelComponents(userOptions, tagOptions, refreshTags)
+    components: modelComponents(
+      userOptions,
+      tagOptions,
+      refreshTags,
+      fecthingTag,
+      fetchingUser
+    )
   }
   const { formStructure, form } = createForm(config)
 

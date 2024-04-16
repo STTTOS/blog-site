@@ -14,7 +14,9 @@ const modelComponents = (
   userOptions: SelectProps['options'],
   tagOptions: SelectProps['options'],
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  refreshTags: () => Promise<any>
+  refreshTags: () => Promise<any>,
+  fetchingTag: boolean,
+  fetchingUser: boolean
 ): IFormItemProps[] => {
   return [
     {
@@ -45,6 +47,7 @@ const modelComponents = (
         <Select
           mode="multiple"
           allowClear
+          loading={fetchingTag}
           style={{ width: '100%' }}
           placeholder="Please select tags"
           options={tagOptions}
@@ -89,6 +92,7 @@ const modelComponents = (
         <Select
           mode="multiple"
           allowClear
+          loading={fetchingUser}
           style={{ width: '100%' }}
           placeholder="Please select authors"
           options={userOptions}
