@@ -108,7 +108,7 @@ const routers: MyRoute[] = [
     ]
   },
   {
-    path: '/tools',
+    path: '/tools/:id',
     element: lazy(() => import('@/page/tools'))
   },
   {

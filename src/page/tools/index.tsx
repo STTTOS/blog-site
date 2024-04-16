@@ -1,6 +1,6 @@
 import { Menu, Spin } from 'antd'
-import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 
 import styles from './index.module.less'
 import useAsync from '../../hooks/useAsync'
@@ -10,14 +10,13 @@ const Index: React.FC = () => {
   const [current, setCurrent] = useState<number>(0)
   const { value: toolList = [], loading: fetchingTools } = useAsync(getAllTools)
   const [loading, setLoading] = useState(false)
-
-  const [query, setQuery] = useSearchParams()
-  const tooId = query.get('id')
+  const query = useParams()
+  const toolId = query.id
 
   useEffect(() => {
     if (toolList.length === 0) return
 
-    const key = Number(tooId) || toolList[0].id
+    const key = Number(toolId) || toolList[0].id
     setCurrent(key)
 
     const { cssHref, scriptUrl } = toolList.find(({ id }) => id === key)!
@@ -49,8 +48,7 @@ const Index: React.FC = () => {
 
   const onChange = ({ key }: { key: string }) => {
     setLoading(true)
-    setQuery({ id: key }, { replace: true })
-    window.location.reload()
+    location.href = `/tools/${key}`
   }
 
   return (

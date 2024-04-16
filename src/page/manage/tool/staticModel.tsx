@@ -11,7 +11,7 @@ const colums: TableColumnProps<Tool>[] = [
     dataIndex: 'title',
     render: (_, { id, title }) => {
       return (
-        <a target="_blank" href={`/tools/?id=${id}#/`}>
+        <a target="_blank" href={`/tools/${id}`}>
           {title}
         </a>
       )
