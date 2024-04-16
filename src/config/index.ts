@@ -8,4 +8,4 @@ export const baseUrl =
   // @ts-ignore
   env === 'mock' ? 'http://localhost:4000' : ''
 
-export const domain = 'wishufree.com'
+export const domain = 'www.wishufree.com'

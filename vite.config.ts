@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: 'https://xuan-1313104191.cos.ap-chengdu.myqcloud.com/base/blog',
   plugins: [react()],
   define: {
     'process.env.NODE_ENV': `"${process.env.NODE_ENV}"`
@@ -33,6 +34,15 @@ export default defineConfig({
         warn(warning)
       },
       output: {
+        assetFileNames: (assetInfo) => {
+          return  '[name]-[hash][extname]'
+        },
+        chunkFileNames() {
+          return  '[name]-[hash].js'
+        },
+        entryFileNames() {
+          return  '[name]-[hash].js'
+        },
         experimentalMinChunkSize: 1024 * 100,
       }
     }
