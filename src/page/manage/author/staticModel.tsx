@@ -8,6 +8,7 @@ import { Input, Avatar, Select, Switch, DatePicker } from 'antd'
 import Upload from '@/components/Upload'
 import { upload } from '@/service/common'
 
+const { Password } = Input
 const colums: TableColumnProps<User>[] = [
   {
     title: '头像',
@@ -73,7 +74,7 @@ const searchBarFields = [
 ]
 
 // eslint-disable-next-line no-unused-vars
-const drawerFormComponents: (type: 'add' | 'edit') => IComponent[] = () => {
+const drawerFormComponents: (type: 'add' | 'edit') => IComponent[] = (type) => {
   return [
     {
       label: '账户',
@@ -83,6 +84,14 @@ const drawerFormComponents: (type: 'add' | 'edit') => IComponent[] = () => {
       range: [6, 16],
       rules: ['username']
     },
+    {
+      label: '密码',
+      name: 'password',
+      range: [6, 18],
+      require: type === 'add',
+      element: <Password />
+    },
+
     { label: '昵称', name: 'name', require: true },
     {
       label: '贡献者',

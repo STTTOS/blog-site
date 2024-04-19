@@ -1,8 +1,9 @@
 import type { TableColumnProps } from 'antd'
 import type { User } from '@/service/user/types'
 
+import { useMemo } from 'react'
 import { useAntdTable } from 'ahooks'
-import { Form, Space, Button, Popconfirm, notification } from 'antd'
+import { Form, Space, Button, Popconfirm } from 'antd'
 
 import { useUserInfo } from '@/model'
 import styles from './index.module.less'
@@ -10,9 +11,8 @@ import SearchBar from '@/components/SearchBar'
 import SafeTable from '@/components/SafeTable'
 import useFormDrawer from '@/hooks/useFormDrawer'
 import AuthorDrawerContent from './DrawerContent'
-import AsyncButton from '@/components/AsyncButton'
+import { getUsers, deleteUser } from '@/service/user'
 import { colums, searchBarFields } from './staticModel'
-import { getUsers, resetPwd, deleteUser } from '@/service/user'
 
 const Index = () => {
   const [form] = Form.useForm()
@@ -38,14 +38,9 @@ const Index = () => {
       refresh: reset
     })
   }
-
-  const handleResetPwd = async (id: number) => {
-    await resetPwd({ id })
-    notification.success({
-      message: '密码重置为: 12345678',
-      duration: 5
-    })
-  }
+  const hasAuth = useMemo(() => {
+    return user?.role === 'admin'
+  }, [user])
   const columns: TableColumnProps<User>[] = [
     ...colums,
     {
@@ -53,14 +48,11 @@ const Index = () => {
       width: 140,
       render: (_, record) => (
         <Space size="middle">
-          <a onClick={() => onAddOrUpdateClick(record)}>Update</a>
-
-          {user?.role === 'admin' && (
-            <AsyncButton type="link" request={() => handleResetPwd(record.id)}>
-              reset_password
-            </AsyncButton>
+          {user?.id === record.id && (
+            <a onClick={() => onAddOrUpdateClick(record)}>Update</a>
           )}
-          {user?.role === 'admin' && (
+
+          {hasAuth && (
             <Popconfirm
               title="确定删除这个作者吗?"
               onConfirm={() => deleteAuthor(record.id)}
