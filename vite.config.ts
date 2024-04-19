@@ -2,9 +2,10 @@ import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+const base = process.env.NODE_ENV === 'development' ? '/' : 'https://xuan-1313104191.cos.ap-chengdu.myqcloud.com/base/blog';
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: 'https://xuan-1313104191.cos.ap-chengdu.myqcloud.com/base/blog',
+  base,
   plugins: [react()],
   define: {
     'process.env.NODE_ENV': `"${process.env.NODE_ENV}"`
@@ -13,13 +14,13 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://www.wishufree.com',
+        target: 'http://localhost:7500',
         cookieDomainRewrite: {
           'wishufree.com': 'localhost'
         }
       },
       '/static': {
-        target: 'http://www.wishufree.com'
+        target: 'http://localhost:7500'
       }
     }
   },
