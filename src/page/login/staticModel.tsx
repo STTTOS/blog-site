@@ -7,8 +7,8 @@ const loginForm: IComponent[] = [
     label: '账户：',
     name: 'username',
     require: true,
-    rules: ['account'],
-    range: [6, 12],
+    rules: ['username'],
+    range: [6, 16],
     placeholder: '请输入账户名'
   },
   {
