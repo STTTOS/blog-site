@@ -16,7 +16,7 @@
     "stylelint:fix": "stylelint --fix ./src/**/*.less --custom-syntax postcss-scss",
     "lint:fix": "npm run stylelint:fix && npm run eslint:fix",
     "pre-commit": "lint-staged",
-    "publish": "yarn lint:ci && yarn build && scp -r ./dist/* root@www.wishufree.com:/root/wish_server/apps/blog/public",
+    "publish": "yarn lint:ci && yarn build && scp -r ./dist/* root@wishufree.com:/root/wish_server/apps/blog/public",
     "prepare": "husky"
   },
   "dependencies": {
@@ -60,6 +60,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@rollup/plugin-html": "^1.0.3",
     "@types/crypto-js": "^4.1.1",
     "@types/markdown-it": "^12.2.3",
     "@types/markdown-navbar": "^1.4.0",
