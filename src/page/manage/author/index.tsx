@@ -4,6 +4,7 @@ import type { User } from '@/service/user/types'
 import { useAntdTable } from 'ahooks'
 import { Form, Space, Button, Popconfirm, notification } from 'antd'
 
+import { useUserInfo } from '@/model'
 import styles from './index.module.less'
 import SearchBar from '@/components/SearchBar'
 import SafeTable from '@/components/SafeTable'
@@ -15,6 +16,7 @@ import { getUsers, resetPwd, deleteUser } from '@/service/user'
 
 const Index = () => {
   const [form] = Form.useForm()
+  const { user } = useUserInfo()
   const { Drawer, openDrawer } = useFormDrawer()
   const {
     tableProps,
@@ -53,12 +55,12 @@ const Index = () => {
         <Space size="middle">
           <a onClick={() => onAddOrUpdateClick(record)}>Update</a>
 
-          {record.role === 'admin' && (
+          {user?.role === 'admin' && (
             <AsyncButton type="link" request={() => handleResetPwd(record.id)}>
               reset_password
             </AsyncButton>
           )}
-          {record.role === 'admin' && (
+          {user?.role === 'admin' && (
             <Popconfirm
               title="确定删除这个作者吗?"
               onConfirm={() => deleteAuthor(record.id)}
