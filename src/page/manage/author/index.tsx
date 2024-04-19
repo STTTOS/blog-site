@@ -2,15 +2,16 @@ import type { TableColumnProps } from 'antd'
 import type { User } from '@/service/user/types'
 
 import { useAntdTable } from 'ahooks'
-import SearchBar from '@/components/SearchBar'
-import { Form, Button, Space, Popconfirm } from 'antd'
+import { Form, Space, Button, Popconfirm, notification } from 'antd'
 
 import styles from './index.module.less'
+import SearchBar from '@/components/SearchBar'
 import SafeTable from '@/components/SafeTable'
 import useFormDrawer from '@/hooks/useFormDrawer'
 import AuthorDrawerContent from './DrawerContent'
-import { deleteUser, getUsers } from '@/service/user'
+import AsyncButton from '@/components/AsyncButton'
 import { colums, searchBarFields } from './staticModel'
+import { getUsers, resetPwd, deleteUser } from '@/service/user'
 
 const Index = () => {
   const [form] = Form.useForm()
@@ -36,6 +37,13 @@ const Index = () => {
     })
   }
 
+  const handleResetPwd = async (id: number) => {
+    await resetPwd({ id })
+    notification.success({
+      message: '密码重置为: 12345678',
+      duration: 5
+    })
+  }
   const columns: TableColumnProps<User>[] = [
     ...colums,
     {
@@ -44,14 +52,22 @@ const Index = () => {
       render: (_, record) => (
         <Space size="middle">
           <a onClick={() => onAddOrUpdateClick(record)}>Update</a>
-          <Popconfirm
-            title="确定删除这个作者吗?"
-            onConfirm={() => deleteAuthor(record.id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <a>Delete</a>
-          </Popconfirm>
+
+          {record.role === 'admin' && (
+            <AsyncButton type="link" request={() => handleResetPwd(record.id)}>
+              reset_password
+            </AsyncButton>
+          )}
+          {record.role === 'admin' && (
+            <Popconfirm
+              title="确定删除这个作者吗?"
+              onConfirm={() => deleteAuthor(record.id)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <a>Delete</a>
+            </Popconfirm>
+          )}
         </Space>
       )
     }

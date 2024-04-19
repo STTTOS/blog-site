@@ -47,6 +47,10 @@ async function deleteUser(params: Pick<User, 'id'>) {
   message.success(msg)
 }
 
+async function resetPwd(params: Pick<User, 'id'>) {
+  return request<null>('api/user/resetPwd', params)
+}
+
 async function updateUser(params: Omit<User, 'createdAt'>) {
   const { msg } = await request<null>('api/user/update', params)
 
@@ -85,6 +89,7 @@ export {
   login,
   logout,
   getUser,
+  resetPwd,
   getUsers,
   addUser,
   deleteUser,

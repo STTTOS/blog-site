@@ -2,7 +2,6 @@ import type { TableColumnProps } from 'antd'
 import type { User } from '@/service/user/types'
 import type { IComponent } from '../../../utils/createForm/types'
 
-import Password from 'antd/lib/input/Password'
 import { UserOutlined } from '@ant-design/icons'
 import { Input, Avatar, Select, Switch, DatePicker } from 'antd'
 
@@ -74,7 +73,7 @@ const searchBarFields = [
 ]
 
 // eslint-disable-next-line no-unused-vars
-const drawerFormComponents: (type: 'add' | 'edit') => IComponent[] = (type) => {
+const drawerFormComponents: (type: 'add' | 'edit') => IComponent[] = () => {
   return [
     {
       label: '账户',
@@ -83,13 +82,6 @@ const drawerFormComponents: (type: 'add' | 'edit') => IComponent[] = (type) => {
       element: <Input />,
       range: [6, 12],
       rules: ['int']
-    },
-    {
-      label: '密码',
-      name: 'password',
-      range: [6, 18],
-      require: type === 'add',
-      element: <Password />
     },
     { label: '昵称', name: 'name', require: true },
     {

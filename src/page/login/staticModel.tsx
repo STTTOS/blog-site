@@ -1,13 +1,13 @@
-import { IComponent } from '@/utils/createForm/types'
-
 import { Input } from 'antd'
+
+import { IComponent } from '@/utils/createForm/types'
 
 const loginForm: IComponent[] = [
   {
     label: '账户：',
     name: 'username',
     require: true,
-    rules: ['int'],
+    rules: ['account'],
     range: [6, 12],
     placeholder: '请输入账户名'
   },
