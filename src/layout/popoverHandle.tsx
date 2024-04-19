@@ -1,10 +1,13 @@
-import { Tooltip, Popconfirm } from 'antd'
+import { CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Space, Tooltip, Popconfirm } from 'antd'
 import { UserOutlined, LogoutOutlined } from '@ant-design/icons'
 
 import { useUserInfo } from '@/model'
 import { logout } from '@/service/user'
+import MessageBox from '@/components/MessageBox'
 
+const style: CSSProperties = { fontSize: 20, fontWeight: 'bold' }
 const PopoverHandle = () => {
   const navigate = useNavigate()
   const { reset } = useUserInfo()
@@ -15,11 +18,12 @@ const PopoverHandle = () => {
   }
 
   return (
-    <div>
+    <Space size="large" align="center">
+      <MessageBox />
       <Tooltip title="个人中心" color="blue">
-        <UserOutlined style={{ fontSize: 20, fontWeight: 900 }} />
-        {/* <img src="https://gw.alipayobjects.com/mdn/rms_e695cc/afts/img/A*8wxuSZfaDWsAAAAAAAAAAAAAARQnAQ" alt="" /> */}
+        <UserOutlined style={style} />
       </Tooltip>
+
       <Popconfirm
         placement="bottom"
         title="确认退出登录吗"
@@ -28,12 +32,10 @@ const PopoverHandle = () => {
         okText="Yes"
       >
         <Tooltip title="退出登录" color="orange">
-          <LogoutOutlined
-            style={{ fontSize: 20, fontWeight: 900, marginLeft: 24 }}
-          />
+          <LogoutOutlined style={style} />
         </Tooltip>
       </Popconfirm>
-    </div>
+    </Space>
   )
 }
 
