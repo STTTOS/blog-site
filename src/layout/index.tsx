@@ -11,7 +11,6 @@ import { logoImg } from '@/globalConfig'
 import Loading from '@/components/Loading'
 import Redirect from '@/components/Redirect'
 import PopoverHandle from '@/layout/popoverHandle'
-import useNewFeatureInfo from '@/hooks/useNewFeatureInfo'
 
 const { Content, Header, Footer, Sider } = Layout
 
@@ -70,7 +69,7 @@ const ManageLayout = () => {
     )
   }, [user, loading, pathname, collapsed])
 
-  useNewFeatureInfo()
+  // useNewFeatureInfo()
 
   useEffect(() => {
     fetch()
