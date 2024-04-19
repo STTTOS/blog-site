@@ -80,8 +80,8 @@ const drawerFormComponents: (type: 'add' | 'edit') => IComponent[] = () => {
       name: 'username',
       require: true,
       element: <Input />,
-      range: [6, 12],
-      rules: ['int']
+      range: [6, 16],
+      rules: ['username']
     },
     { label: '昵称', name: 'name', require: true },
     {
