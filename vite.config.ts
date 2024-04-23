@@ -1,16 +1,16 @@
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import viteCompression from 'vite-plugin-compression'
 
-const base = process.env.NODE_ENV === 'development' ? '/' : 'https://xuan-1313104191.cos.ap-chengdu.myqcloud.com/base/blog';
+// const base = process.env.NODE_ENV === 'development' ? '/' : 'https://xuan-1313104191.cos.ap-chengdu.myqcloud.com/base/blog';
 // https://vitejs.dev/config/
 export default defineConfig({
-  base,
+  // base,
   plugins: [react()],
   define: {
     'process.env.NODE_ENV': `"${process.env.NODE_ENV}"`
   },
-  
   server: {
     proxy: {
       '/api': {
@@ -27,6 +27,15 @@ export default defineConfig({
   build: {
     sourcemap: false,
     rollupOptions: {
+      plugins: [
+        viteCompression({
+          verbose: true,
+          disable: false,
+          threshold: 1024 * 30,
+          algorithm: 'gzip',
+          ext: '.gz'
+        })
+      ],
       cache: true,
       onwarn(warning, warn) {
         if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
@@ -35,23 +44,38 @@ export default defineConfig({
         warn(warning)
       },
       output: {
-        assetFileNames: (assetInfo) => {
-          return  '[name]-[hash][extname]'
+        manualChunks(id) {
+          if (id.includes('antd') || id.includes('highlight')) {
+            return id
+              .toString()
+              .split('node_modules/')[1]
+              .split('/')[0]
+              .toString()
+          }
         },
-        chunkFileNames() {
-          return  '[name]-[hash].js'
+        assetFileNames: () => {
+          return '[name]-[hash][extname]'
+        },
+        chunkFileNames(chunk) {
+          if (chunk.facadeModuleId) {
+            const name = chunk.facadeModuleId
+              .split('src/page/')[1]
+              .split('.')[0]
+              .split('/')
+              .join('_')
+            return `p_${name}-[hash].async.js`
+          }
+          return '[name]-[hash].js'
         },
         entryFileNames() {
-          return  '[name]-[hash].js'
+          return 'entry-[hash].js'
         },
-        experimentalMinChunkSize: 1024 * 100,
+        experimentalMinChunkSize: 1024 * 20
       }
     }
   },
   resolve: {
-    alias: [
-      { find: '@', replacement: resolve(__dirname, './src') }
-    ],
+    alias: [{ find: '@', replacement: resolve(__dirname, './src') }]
   },
   css: {
     preprocessorOptions: {
