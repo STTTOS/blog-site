@@ -7,16 +7,25 @@
     display: flex;
     align-items: center;
     padding: 24px;
+    height: 100px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    box-shadow: 2px 0px 8px 0px #eee;
+    z-index: 10;
+    background-color: #fff;
 
     :global {
       .ant-input {
         font-size: 26px;
         font-weight: bold;
+        text-align: center;
       }
     }
   }
 
   .markdown {
     flex: 1;
+    margin-top: 100px;
   }
 }
