@@ -85,7 +85,7 @@ const modelComponents = (
       element: <TextArea showCount maxLength={100} />
     },
     {
-      label: '谁可见',
+      label: '可见用户',
       name: 'coAuthorIds',
       placeholder: '选择可见的用户',
       element: (
