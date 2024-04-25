@@ -130,7 +130,7 @@ const Index: React.FC = () => {
               <Viewer value={content} />
             </div>
 
-            <Avatars artcileId={id} />
+            {isPrivate && <Avatars artcileId={id} />}
             <Comments articleId={id} avatar={user?.avatar} />
           </Skeleton>
         }
