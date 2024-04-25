@@ -7,7 +7,6 @@ export default function lazyLoadingPlugin(config?: { isPrivate: boolean }) {
     const defaultImageRenderer = md.renderer.rules.image
     if (config?.isPrivate) {
       md.renderer.rules.image = function imageRender(tokens, idx, ...rest) {
-        console.log('触发了解析')
         const token = tokens[idx]
         token.attrSet('class', 'block')
         token.attrSet(

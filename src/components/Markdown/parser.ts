@@ -46,11 +46,12 @@ export const useMdParse = (config?: EditOptionProps) => {
     .use(subscript)
     .use(superscript)
     .use(abbreviation)
-    .use(videoParser(config))
-    .use(lazyLoadingPlugin(config))
-    .use(tasklists, { label: true })
+    // do not sort these plugin, the are sort related
     .use(html5Media, {
       videoAttrs: 'class="markdown-it-video" controls'
     })
+    .use(videoParser(config))
+    .use(lazyLoadingPlugin(config))
+    .use(tasklists, { label: true })
   return mdParser
 }
