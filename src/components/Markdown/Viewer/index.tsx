@@ -1,11 +1,12 @@
 import MdEditor from 'react-markdown-editor-lite'
 
-import mdParser from '../parser'
+import { useMdParse } from '../parser'
 
 interface IProps {
   value?: string
 }
 const Index: React.FC<IProps> = ({ value }) => {
+  const mdParser = useMdParse()
   return (
     <MdEditor
       value={value}

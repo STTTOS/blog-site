@@ -1,16 +1,19 @@
-import { Input, Button } from 'antd'
 import { useParams } from 'react-router-dom'
+import { QuestionCircleOutlined } from '@ant-design/icons'
+import { Input, Space, Button, Switch, Tooltip } from 'antd'
 
 import useAsync from '@/hooks/useAsync'
 import styles from './index.module.less'
 import ModalContent from './modalContent'
 import { Editor } from '@/components/Markdown'
 import useFormModal from '@/hooks/useFormModal'
+import useEditOptions from '@/model/editOptions'
 import { getArticleDetail } from '@/service/article'
 
 const Index = () => {
   const { Modal, openModal } = useFormModal()
   const query = useParams()
+  const { isPrivate, setPrivateMode } = useEditOptions()
 
   const id = Number(query.id)
   const { value, setValue } = useAsync(getArticleDetail, {
@@ -42,6 +45,7 @@ const Index = () => {
           bordered={false}
           onChange={hancleChange}
         />
+
         <Button
           disabled={!title || !content}
           onClick={pushhArticle}
@@ -52,6 +56,27 @@ const Index = () => {
       </div>
 
       <div className={styles.markdown}>
+        <div className={styles.control}>
+          <Space align="center">
+            <Switch
+              className={styles.switch}
+              checkedChildren="隐私编辑模式"
+              unCheckedChildren="正常编辑模式"
+              value={isPrivate}
+              onChange={(checked) => {
+                setPrivateMode?.(checked)
+                if (checked) {
+                  localStorage.setItem('private', 'true')
+                } else {
+                  localStorage.removeItem('private')
+                }
+              }}
+            />
+            <Tooltip title={<span>隐私编辑模式下,所有图片会被隐藏</span>}>
+              <QuestionCircleOutlined />
+            </Tooltip>
+          </Space>
+        </div>
         <Editor
           value={content}
           onChange={(content) => setValue({ ...value!, content })}

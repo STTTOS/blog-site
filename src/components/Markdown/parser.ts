@@ -1,3 +1,5 @@
+import type { EditOptionProps } from '@/model/editOptions'
+
 import hljs from 'highlight.js'
 import mark from 'markdown-it-mark'
 import MarkdownIt from 'markdown-it'
@@ -12,33 +14,35 @@ import 'react-markdown-editor-lite/lib/index.css'
 
 import lazyLoadingPlugin from './plugins/image-lazy-loading'
 
-// Initialize a markdown parser
-/* Markdown-it options */
-const mdParser = new MarkdownIt({
-  // 使用br换行
-  breaks: true,
-  // 高亮链接
-  linkify: true,
-  highlight(str, lang) {
-    if (lang && hljs.getLanguage(lang)) {
-      try {
-        return hljs.highlight(str, { language: lang, ignoreIllegals: true })
-          .value
-      } catch (__) {
-        // nothing to do
+export const useMdParse = (config?: EditOptionProps) => {
+  // Initialize a markdown parser
+  /* Markdown-it options */
+
+  const mdParser = new MarkdownIt({
+    // 使用br换行
+    breaks: true,
+    // 高亮链接
+    linkify: true,
+    highlight(str, lang) {
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          return hljs.highlight(str, { language: lang, ignoreIllegals: true })
+            .value
+        } catch (__) {
+          // nothing to do
+        }
       }
+
+      return ''
     }
-
-    return ''
-  }
-})
-  .use(mark)
-  .use(insert)
-  .use(footnote)
-  .use(subscript)
-  .use(superscript)
-  .use(abbreviation)
-  .use(lazyLoadingPlugin)
-  .use(tasklists, { label: true })
-
-export default mdParser
+  })
+    .use(mark)
+    .use(insert)
+    .use(footnote)
+    .use(subscript)
+    .use(superscript)
+    .use(abbreviation)
+    .use(lazyLoadingPlugin(config))
+    .use(tasklists, { label: true })
+  return mdParser
+}
