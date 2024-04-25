@@ -9,6 +9,7 @@ import { EyeOutlined, MailOutlined, GithubOutlined } from '@ant-design/icons'
 import { useUserInfo } from '@/model'
 import useAsync from '@/hooks/useAsync'
 import styles from './index.module.less'
+import Avatars from '@/components/Avatars'
 import useTimeout from '@/hooks/useTimeout'
 import { getUserCard } from '@/service/user'
 import Comments from '@/components/Comments'
@@ -98,9 +99,9 @@ const Index: React.FC = () => {
                   <span className={styles.articleType}>
                     {isOrigin ? '原创' : '转载'}
                   </span>
-                  {isPrivate && (
-                    <span className={styles.private}>仅我可见</span>
-                  )}
+                  <span className={styles.private}>
+                    {isPrivate ? '私密' : '公开'}
+                  </span>
                 </div>
 
                 <div className={styles.subTitle}>
@@ -129,6 +130,7 @@ const Index: React.FC = () => {
               <Viewer value={content} />
             </div>
 
+            <Avatars artcileId={id} />
             <Comments articleId={id} avatar={user?.avatar} />
           </Skeleton>
         }

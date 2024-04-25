@@ -69,7 +69,7 @@ const modelComponents = (
       )
     },
     {
-      label: '仅自己可见',
+      label: '是否私密',
       name: 'private',
       initialValue: false,
       element: (
@@ -85,9 +85,9 @@ const modelComponents = (
       element: <TextArea showCount maxLength={100} />
     },
     {
-      label: '协同编辑',
+      label: '谁可见',
       name: 'coAuthorIds',
-      placeholder: '选择协同编辑用户',
+      placeholder: '选择可见的用户',
       element: (
         <Select
           mode="multiple"

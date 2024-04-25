@@ -3,6 +3,7 @@ import type { Params } from 'ahooks/lib/usePagination/types'
 
 import { message } from 'antd'
 
+import { User } from '../user/types'
 import request from '../../utils/http'
 
 // pc
@@ -68,6 +69,15 @@ async function countArticle(params: Pick<Article, 'id'>) {
   request<null>('api/article/count', params)
 }
 
+async function visibleUsers(params: Pick<Article, 'id'>) {
+  const {
+    data: { list }
+  } = await request<{
+    list: Array<Pick<User, 'id' | 'avatar' | 'username' | 'name'>>
+  }>('api/article/visibleUsers', params)
+  return list
+}
+
 export {
   getArticles,
   addArticle,
@@ -76,5 +86,6 @@ export {
   getArticleDetail,
   getSimilarArticles,
   countArticle,
-  getClientArticles
+  getClientArticles,
+  visibleUsers
 }

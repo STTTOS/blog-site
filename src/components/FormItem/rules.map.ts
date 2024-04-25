@@ -14,7 +14,7 @@ export const rulesMap = new Map([
   ['word', { pattern: /^[0-9a-zA-Z]*$/, message: '只能输入数字或字母' }],
   [
     'username',
-    { pattern: /^[0-9a-zA-Z]*$/, message: '只能输入数字, 字母, 下划线_' }
+    { pattern: /^[0-9a-zA-Z_]*$/, message: '只能输入数字, 字母, 下划线_' }
   ],
   [
     'normalWord',
