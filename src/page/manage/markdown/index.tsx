@@ -51,7 +51,7 @@ const Index = () => {
           onClick={pushhArticle}
           type="primary"
         >
-          {id ? '更新' : '发布'}
+          发布
         </Button>
       </div>
 

@@ -123,7 +123,7 @@ const Index: React.FC = () => {
                   <span>
                     {createdAt}(上次修改: {updateDateFromNow})
                   </span>
-                  <span>阅读量:{viewCount}</span>
+                  <span>浏览次数:{viewCount}</span>
                   <i className={styles.readingTime}>{readingTime}分钟</i>
                 </div>
 
@@ -203,7 +203,7 @@ const Index: React.FC = () => {
                       styles.set_margin_to_children
                     )}
                   >
-                    <span>阅读量:{viewCount.toLocaleString()}</span>
+                    <span>浏览次数:{viewCount.toLocaleString()}</span>
                     <i className={styles.readingTime}>{readingTime}分钟</i>
                   </div>
                 </div>

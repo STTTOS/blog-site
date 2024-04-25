@@ -34,7 +34,7 @@ const colums: TableColumnProps<User>[] = [
     dataIndex: 'desc'
   },
   {
-    title: '文章阅读量',
+    title: '总浏览次数',
     dataIndex: 'viewCount'
   },
   {

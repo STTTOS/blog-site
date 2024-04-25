@@ -66,7 +66,7 @@ const getColumns = (
         })
     },
     {
-      title: '阅读量',
+      title: '浏览次数',
       dataIndex: 'viewCount',
       width: 110,
       render: (_, { viewCount }) => viewCount.toLocaleString()

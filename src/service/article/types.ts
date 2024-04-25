@@ -42,7 +42,7 @@ interface Article {
    */
   tags?: Tag[]
   /**
-   * 文章阅读量
+   * 文章浏览次数
    */
   viewCount: number
   /**

@@ -19,7 +19,7 @@ const colums: TableColumnProps<TagType>[] = [
     render: (_, { name }) => <Tag color={randomTagColor()}>{name}</Tag>
   },
   {
-    title: '阅读量',
+    title: '总浏览次数',
     dataIndex: 'viewCount',
     render: (_, { viewCount = 0 }) => viewCount.toLocaleString()
   }

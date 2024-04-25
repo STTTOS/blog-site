@@ -57,7 +57,7 @@ const Index: FC = () => {
                       <div className={styles.name}>{name}</div>
 
                       <div className={styles.extra}>
-                        <span>文章阅读量:</span>
+                        <span>总浏览次数:</span>
                         <span className={styles.total}>
                           {totalViewCount.toLocaleString()}
                         </span>

@@ -12,7 +12,7 @@ interface Tag {
    */
   icon?: string
   /**
-   * tag阅读量
+   * tag浏览次数
    */
   viewCount?: number
 }
