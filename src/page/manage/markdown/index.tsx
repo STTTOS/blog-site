@@ -70,7 +70,7 @@ const Index = () => {
                 }
               }}
             />
-            <Tooltip title={<span>隐私编辑模式下,所有图片会被隐藏</span>}>
+            <Tooltip title={<span>隐私编辑模式下,所有图片/视频会被隐藏</span>}>
               <QuestionCircleOutlined />
             </Tooltip>
           </Space>

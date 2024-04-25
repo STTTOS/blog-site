@@ -15,6 +15,7 @@ import 'react-markdown-editor-lite/lib/index.css'
 // @ts-ignore
 import { html5Media } from 'markdown-it-html5-media'
 
+import videoParser from './plugins/video-parser'
 import lazyLoadingPlugin from './plugins/image-lazy-loading'
 
 export const useMdParse = (config?: EditOptionProps) => {
@@ -42,13 +43,14 @@ export const useMdParse = (config?: EditOptionProps) => {
     .use(mark)
     .use(insert)
     .use(footnote)
-    .use(html5Media, {
-      videoAttrs: 'class="markdown-it-video" controls'
-    })
     .use(subscript)
     .use(superscript)
     .use(abbreviation)
+    .use(videoParser(config))
     .use(lazyLoadingPlugin(config))
     .use(tasklists, { label: true })
+    .use(html5Media, {
+      videoAttrs: 'class="markdown-it-video" controls'
+    })
   return mdParser
 }
