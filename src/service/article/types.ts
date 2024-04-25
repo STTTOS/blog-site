@@ -22,6 +22,10 @@ interface Article {
    */
   createdAt: string
   /**
+   * 修改日期
+   */
+  updatedAt: string
+  /**
    * 作者id
    */
   authorId?: number

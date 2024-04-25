@@ -90,6 +90,11 @@ const getColumns = (
       title: '发布时间',
       dataIndex: 'createdAt',
       width: 200
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updatedAt',
+      width: 200
     }
   ]
 }

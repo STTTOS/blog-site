@@ -1,7 +1,8 @@
 import type { Tag as TagType } from '@/service/tag/types'
 
-import { useEffect } from 'react'
+import dayjs from 'dayjs'
 import classnames from 'classnames'
+import { useMemo, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Tag, Card, Avatar, Tooltip, Skeleton } from 'antd'
 import { EyeOutlined, MailOutlined, GithubOutlined } from '@ant-design/icons'
@@ -49,6 +50,7 @@ const Index: React.FC = () => {
     tags = [],
     isOrigin,
     viewCount,
+    updatedAt,
     createdAt,
     readingTime,
     backgroundUrl,
@@ -57,6 +59,9 @@ const Index: React.FC = () => {
   } = detail || {}
   const { avatar, desc, github, email, name, totalViewCount } = authorInfo || {}
 
+  const updateDateFromNow = useMemo(() => {
+    return dayjs(updatedAt).fromNow()
+  }, [updatedAt])
   const renderTags = (tags: TagType[]) =>
     tags.map(({ name, id }) => (
       <Tag
@@ -115,7 +120,9 @@ const Index: React.FC = () => {
                     styles.set_margin_to_children
                   )}
                 >
-                  <span>{createdAt}</span>
+                  <span>
+                    {createdAt}(上次修改: {updateDateFromNow})
+                  </span>
                   <span>阅读量:{viewCount}</span>
                   <i className={styles.readingTime}>{readingTime}分钟</i>
                 </div>
