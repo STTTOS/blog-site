@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { UploadFile } from 'antd/lib/upload/interface'
 
 export interface IUploadProps {
@@ -53,6 +54,7 @@ export interface IUploadProps {
   showFileList?: boolean
   /**一次上传多个文件 */
   multiple?: boolean
+  children?: ReactNode
 }
 
 export interface FileListItem extends Omit<UploadFile, 'url'> {

@@ -11,6 +11,9 @@ import footnote from 'markdown-it-footnote'
 import tasklists from 'markdown-it-task-lists'
 import 'highlight.js/styles/atom-one-light.css'
 import 'react-markdown-editor-lite/lib/index.css'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { html5Media } from 'markdown-it-html5-media'
 
 import lazyLoadingPlugin from './plugins/image-lazy-loading'
 
@@ -39,6 +42,9 @@ export const useMdParse = (config?: EditOptionProps) => {
     .use(mark)
     .use(insert)
     .use(footnote)
+    .use(html5Media, {
+      videoAttrs: 'class="markdown-it-video" controls'
+    })
     .use(subscript)
     .use(superscript)
     .use(abbreviation)

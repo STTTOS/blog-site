@@ -33,6 +33,7 @@ const getBase64 = (file: RcFile): Promise<string> =>
   })
 
 const Index: React.FC<IUploadProps> = ({
+  children,
   value = '',
   limitWidth,
   limitHeight,
@@ -206,6 +207,7 @@ const Index: React.FC<IUploadProps> = ({
       <Upload
         {...rest}
         showUploadList
+        accept={accept}
         listType={listType}
         disabled={showDisabled}
         onRemove={handleRemove}
@@ -215,7 +217,12 @@ const Index: React.FC<IUploadProps> = ({
         fileList={showFileList ? fileList : []}
       >
         {!showValue &&
-          switchRender(pictureButton, textButton, listType === 'picture-card')}
+          (children ||
+            switchRender(
+              pictureButton,
+              textButton,
+              listType === 'picture-card'
+            ))}
       </Upload>
 
       <Modal
