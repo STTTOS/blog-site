@@ -180,7 +180,7 @@ const Index: React.FC = () => {
 
                 <div className={classnames(styles.count_line, 'flex')}>
                   <EyeOutlined className={styles.count_icon} />
-                  <span>文章被阅读: {totalViewCount?.toLocaleString()}</span>
+                  <span>文章浏览次数: {totalViewCount?.toLocaleString()}</span>
                 </div>
               </Card>
             )}

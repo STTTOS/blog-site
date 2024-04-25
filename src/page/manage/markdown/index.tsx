@@ -39,23 +39,21 @@ const Index = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <Input
-          value={title}
-          placeholder="请输入文章标题"
-          bordered={false}
-          onChange={hancleChange}
-        />
-
-        <Button
-          disabled={!title || !content}
-          onClick={pushhArticle}
-          type="primary"
-        >
-          发布
-        </Button>
-      </div>
-
-      <div className={styles.markdown}>
+        <div className={styles.row}>
+          <Input
+            value={title}
+            placeholder="请输入文章标题"
+            bordered={false}
+            onChange={hancleChange}
+          />
+          <Button
+            disabled={!title || !content}
+            onClick={pushhArticle}
+            type="primary"
+          >
+            发布
+          </Button>
+        </div>
         <div className={styles.control}>
           <Space align="center">
             <Switch
@@ -77,6 +75,9 @@ const Index = () => {
             </Tooltip>
           </Space>
         </div>
+      </div>
+
+      <div className={styles.markdown}>
         <Editor
           value={content}
           onChange={(content) => setValue({ ...value!, content })}
