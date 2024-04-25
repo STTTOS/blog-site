@@ -20,7 +20,7 @@ const Avatars: FC<AvatarsProps> = ({ artcileId }) => {
         <div className={styles.title}>可见用户</div>
         <Avatar.Group className={styles.avatars}>
           {list.map(({ avatar, name }) => (
-            <Tooltip title={name}>
+            <Tooltip title={name} key={`${name}${avatar}`}>
               <Avatar src={avatar} />
             </Tooltip>
           ))}
