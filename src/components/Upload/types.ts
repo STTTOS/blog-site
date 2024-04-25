@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { UploadFile } from 'antd/lib/upload/interface'
+import type { uploadPersistentFile } from 'antd/lib/upload/interface'
 
 export interface IUploadProps {
   /**
@@ -57,7 +57,7 @@ export interface IUploadProps {
   children?: ReactNode
 }
 
-export interface FileListItem extends Omit<UploadFile, 'url'> {
+export interface FileListItem extends Omit<uploadPersistentFile, 'url'> {
   url: string
   name: string
 }

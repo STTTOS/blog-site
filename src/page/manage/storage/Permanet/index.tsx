@@ -11,9 +11,9 @@ import { domain } from '@/config'
 import { columns } from './staticModel'
 import Upload from '@/components/Upload'
 import styles from './index.module.less'
-import { uploadFile } from '@/service/common'
 import SafeTable from '@/components/SafeTable'
 import AsyncButton from '@/components/AsyncButton'
+import { uploadPersistentFile } from '@/service/common'
 import { deleteFile, getPersistentFileList } from '@/service/storage'
 
 const Index = () => {
@@ -60,7 +60,7 @@ const Index = () => {
           showFileList={false}
           uploadButtonText="上传文件"
           request={async (file) => {
-            const url = await uploadFile({ file })
+            const url = await uploadPersistentFile({ file })
             reset()
             return url
           }}

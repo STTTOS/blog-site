@@ -3,8 +3,8 @@
 // 1. 支持多图片模式, 默认以 , 分割
 import type { RcFile } from 'antd/es/upload'
 import type { FileListItem, IUploadProps } from './types'
-import type { UploadFile } from 'antd/lib/upload/interface'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
+import type { uploadPersistentFile } from 'antd/lib/upload/interface'
 
 import path from 'path-browserify'
 import { propEq, complement } from 'ramda'
@@ -61,7 +61,7 @@ const Index: React.FC<IUploadProps> = ({
 
   const handleCancel = () => setPreviewVisible(false)
 
-  const handlePreview = async (file: UploadFile) => {
+  const handlePreview = async (file: uploadPersistentFile) => {
     // 仅预览图片
     if (!['.png', '.jpg', '.jpeg'].includes(path.extname(file.url!))) {
       const anchor = document.createElement('a')
@@ -153,7 +153,7 @@ const Index: React.FC<IUploadProps> = ({
     return true
   }
 
-  const handleRemove = ({ url = '' }: UploadFile) => {
+  const handleRemove = ({ url = '' }: uploadPersistentFile) => {
     const newList = fileList.filter(complement(propEq('url', url)))
     const newUrl = convertFileListToUrl(newList)
 
