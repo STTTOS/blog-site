@@ -48,7 +48,8 @@ export const useMdParse = (config?: EditOptionProps) => {
     .use(abbreviation)
     // do not sort these plugin, the are sort related
     .use(html5Media, {
-      videoAttrs: 'class="markdown-it-video" controls'
+      videoAttrs:
+        'class="markdown-it-video" controls autoplay=false preload="none"'
     })
     .use(videoParser(config))
     .use(lazyLoadingPlugin(config))

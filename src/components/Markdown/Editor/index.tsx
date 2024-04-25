@@ -1,9 +1,9 @@
 import { useRef } from 'react'
 import MdEditor from 'react-markdown-editor-lite'
 
-import video from '../plugins/video'
 import { useMdParse } from '../parser'
 import { upload } from '@/service/common'
+import video from '../plugins/videoUpload'
 import useEditOptions from '@/model/editOptions'
 
 // Register plugins if required
