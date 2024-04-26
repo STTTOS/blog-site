@@ -53,6 +53,7 @@
     "react-router-dom": "^6.3.0",
     "react-syntax-highlighter": "^15.5.0",
     "rehype-video": "^2.0.2",
+    "remark-breaks": "^4.0.0",
     "remark-gfm": "^4.0.0",
     "remark-ins": "^1.1.0",
     "umi-request": "^1.4.0",

@@ -7,6 +7,7 @@ import remarkGfm from 'remark-gfm'
 import remarkIns from 'remark-ins'
 import Markdown from 'react-markdown'
 import rehypeVideo from 'rehype-video'
+import remarkBreaks from 'remark-breaks'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import dark from 'react-syntax-highlighter/dist/esm/styles/prism/one-dark'
 
@@ -16,7 +17,7 @@ const Parser: FC<{ children: string }> = ({ children }) => {
   return (
     <Markdown
       rehypePlugins={[[rehypeVideo, { details: false }]]}
-      remarkPlugins={[remarkGfm, remarkIns]}
+      remarkPlugins={[remarkGfm, remarkIns, remarkBreaks]}
       components={{
         img(props) {
           return <Image {...props} />
