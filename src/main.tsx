@@ -1,4 +1,3 @@
-import 'lazysizes'
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import { StrictMode } from 'react'

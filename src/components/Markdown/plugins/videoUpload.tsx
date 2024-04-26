@@ -24,9 +24,8 @@ export default class Counter extends PluginComponent {
   }
 
   async handleUpload(file: File) {
-    const url = await uploadFile({ file })
-    this.editor.insertText(`![${file.name}](${url})`)
-    return url
+    this.editor.insertPlaceholder('![uploading_video...]', uploadFile({ file }))
+    return ''
   }
 
   render() {

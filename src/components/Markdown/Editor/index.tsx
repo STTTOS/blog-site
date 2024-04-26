@@ -1,7 +1,8 @@
 import { useRef } from 'react'
 import MdEditor from 'react-markdown-editor-lite'
+import 'react-markdown-editor-lite/lib/index.css'
 
-import { useMdParse } from '../parser'
+import Parser from '../Parser'
 import { upload } from '@/service/common'
 import video from '../plugins/videoUpload'
 import useEditOptions from '@/model/editOptions'
@@ -22,7 +23,6 @@ const Index: React.FC<IProps> = ({ onChange = () => void 0, value }) => {
     return url
   }
   const { isPrivate } = useEditOptions()
-  const mdParser = useMdParse({ isPrivate })
 
   return (
     <MdEditor
@@ -33,7 +33,7 @@ const Index: React.FC<IProps> = ({ onChange = () => void 0, value }) => {
       onImageUpload={handleUpload}
       imageAccept=".png,.jpeg,.jpg"
       onChange={({ text }) => onChange(text)}
-      renderHTML={(text) => mdParser.render(text)}
+      renderHTML={(text) => <Parser>{text}</Parser>}
     />
   )
 }

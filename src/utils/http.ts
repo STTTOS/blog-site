@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { message } from 'antd'
-import { extend } from 'umi-request'
+import { join } from 'path-browserify'
+import { extend, RequestOptionsInit } from 'umi-request'
 
 import { ResBasic } from './types'
 import { baseUrl } from '../config'
@@ -22,21 +22,22 @@ request.interceptors.response.use(async (response) => {
 async function betterRequest<R>(
   url: string,
   params?: Record<string, any>,
-  file?: FormData
+  file?: FormData,
+  options?: RequestOptionsInit & { origin?: boolean }
 ) {
   try {
     const {
       data,
       code,
       msg = '系統繁忙'
-    } = await request<Promise<ResBasic<R>>>(`/${url}`, {
+    } = await request<Promise<ResBasic<R>>>(join('/', url), {
       method: 'POST',
-      headers: {
-        code: localStorage.getItem('code') || ''
-      },
       data: file || params,
-      requestType: file ? 'form' : 'json'
+      requestType: file ? 'form' : 'json',
+      ...options
     })
+
+    if (options?.origin) return { data, code, msg }
 
     if (code !== 200) {
       throw new Error(msg)
@@ -46,7 +47,6 @@ async function betterRequest<R>(
   } catch (error) {
     const errMsg = (error as Error).message
 
-    message.error(errMsg)
     // 错误提示
     // 继续抛出错误, 为了终止之后的Promise处理进程
     throw new Error(errMsg)
