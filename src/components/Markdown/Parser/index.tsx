@@ -11,18 +11,22 @@ import remarkBreaks from 'remark-breaks'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import dark from 'react-syntax-highlighter/dist/esm/styles/prism/one-dark'
 
-import Image from '@/components/Image'
+import Image, { ElementBeForbidden } from '@/components/Image'
 
-const Parser: FC<{ children: string }> = ({ children }) => {
+const Parser: FC<{ children: string; isPrivate?: boolean }> = ({
+  children,
+  isPrivate
+}) => {
   return (
     <Markdown
       rehypePlugins={[[rehypeVideo, { details: false }]]}
       remarkPlugins={[remarkGfm, remarkIns, remarkBreaks]}
       components={{
         img(props) {
-          return <Image {...props} />
+          return <Image {...props} isPrivate={isPrivate} />
         },
         video(props) {
+          if (isPrivate) return ElementBeForbidden
           return (
             <video
               controls
@@ -48,6 +52,9 @@ const Parser: FC<{ children: string }> = ({ children }) => {
               {children}
             </code>
           )
+        },
+        a({ href, children }) {
+          return <a href={href} target="_blank" children={children} />
         }
       }}
     >

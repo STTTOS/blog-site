@@ -13,6 +13,7 @@ import styles from './index.module.less'
 interface ImageProps {
   src?: string
   alt?: string
+  isPrivate?: boolean
 }
 async function accessOriginImage(src: string) {
   try {
@@ -25,6 +26,12 @@ async function accessOriginImage(src: string) {
     return false
   }
 }
+
+export const ElementBeForbidden = (
+  <div style={{ textAlign: 'center' }}>
+    <img src="http://www.wishufree.com/static/files/images__4e6a952a88e11972469c3ae0b.png" />
+  </div>
+)
 const Image: FC<ImageProps> = (props) => {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -53,6 +60,10 @@ const Image: FC<ImageProps> = (props) => {
         message.info('该图片并未压缩, 已展示原图')
       }
     }
+  }
+
+  if (props.isPrivate) {
+    return ElementBeForbidden
   }
 
   return (
@@ -86,8 +97,10 @@ const Image: FC<ImageProps> = (props) => {
         onClose={() => setOpen(false)}
         className={styles.modal}
       >
-        <div style={{ overflow: 'auto', maxHeight: '100%' }}>
-          <img src={originSrc} />
+        <div
+          style={{ overflow: 'auto', maxHeight: '100%', textAlign: 'center' }}
+        >
+          <img src={originSrc} style={{ maxWidth: 'calc(100% - 100px)' }} />
           <CloseCircleOutlined
             onClick={() => setOpen(false)}
             className={styles.icon}

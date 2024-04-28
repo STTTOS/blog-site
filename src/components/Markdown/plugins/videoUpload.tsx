@@ -31,7 +31,7 @@ export default class Counter extends PluginComponent {
   render() {
     return (
       <Upload
-        accept=".mp4"
+        accept=".mp4,.mov"
         listType="text"
         showFileList={false}
         maxSize={2 * 1024 * 1024}
