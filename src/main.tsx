@@ -27,10 +27,10 @@ const App = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: '#94b668',
-            colorFillContentHover: '#90bb57',
-            colorLink: '#94b668',
-            colorLinkHover: '#90bb57'
+            colorPrimary: '#5CB963',
+            colorFillContentHover: '#83D68C',
+            colorLink: '#5CB963',
+            colorLinkHover: '#83D68C'
           }
         }}
       >
