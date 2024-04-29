@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { message } from 'antd'
 import { join } from 'path-browserify'
-import { extend, RequestOptionsInit } from 'umi-request'
+import { extend, ResponseError, RequestOptionsInit } from 'umi-request'
 
+import { history } from '@/main'
 import { ResBasic } from './types'
-import { baseUrl } from '../config'
+import { baseUrl } from '@/config'
 
 // 响应code异常处理程序
 const request = extend({
@@ -26,30 +28,34 @@ async function betterRequest<R>(
   options?: RequestOptionsInit & { origin?: boolean }
 ) {
   try {
-    const {
-      data,
-      code,
-      msg = '系統繁忙'
-    } = await request<Promise<ResBasic<R>>>(join('/', url), {
+    const response = await request<Promise<ResBasic<R>>>(join('/', url), {
       method: 'POST',
       data: file || params,
       requestType: file ? 'form' : 'json',
       ...options
     })
+    if (options?.origin) return response
 
-    if (options?.origin) return { data, code, msg }
+    const { code, data, msg } = response
 
-    if (code !== 200) {
-      throw new Error(msg)
+    if (code === 401) {
+      history.push('/login')
+    } else if (code === 403) {
+      history.push('/403')
     }
-
+    if (code !== 200) {
+      throw { data: response }
+    }
     return { data, msg }
   } catch (error) {
-    const errMsg = (error as Error).message
+    const err = error as ResponseError
+    const { data, response } = err
 
-    // 错误提示
-    // 继续抛出错误, 为了终止之后的Promise处理进程
-    throw new Error(errMsg)
+    message.error(data.msg || '服务器内部错误')
+    if (response.status.toString().startsWith('50')) {
+      history.push('/500')
+    }
+    throw error
   }
 }
 

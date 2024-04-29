@@ -1,4 +1,4 @@
-import { Input } from 'antd'
+import { Input, Checkbox } from 'antd'
 
 import { IComponent } from '@/utils/createForm/types'
 
@@ -18,6 +18,11 @@ const loginForm: IComponent[] = [
     require: true,
     placeholder: '请输入登录密码',
     element: <Input.Password />
+  },
+  {
+    name: 'keepLogin',
+    valuePropName: 'checked',
+    element: <Checkbox>30天免登</Checkbox>
   }
 ]
 

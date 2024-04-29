@@ -9,7 +9,6 @@ import { useUserInfo } from '@/model'
 import styles from './index.module.less'
 import { logoImg } from '@/globalConfig'
 import Loading from '@/components/Loading'
-import Redirect from '@/components/Redirect'
 import PopoverHandle from '@/layout/popoverHandle'
 
 const { Content, Header, Footer, Sider } = Layout
@@ -28,8 +27,6 @@ const ManageLayout = () => {
 
   const children = useMemo(() => {
     if (loading) return <Loading />
-
-    if (user?.role !== 'admin') return <Redirect to="/403" />
 
     if (pathname.includes('markdown')) return <Outlet />
 

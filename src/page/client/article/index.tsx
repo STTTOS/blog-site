@@ -29,7 +29,6 @@ const Index: React.FC = () => {
   const query = useParams()
 
   const id = Number(query.id)
-  const { user } = useUserInfo()
   const { value: detail, loading } = useAsync(getArticleDetail, {
     params: { id }
   })
@@ -41,7 +40,7 @@ const Index: React.FC = () => {
     execute: getUserCardData,
     loading: userLoading
   } = useAsync(getUserCard, { immediate: false })
-  const { fetch } = useUserInfo()
+  const { fetch, user } = useUserInfo()
 
   const {
     title,
@@ -85,7 +84,7 @@ const Index: React.FC = () => {
     process.env.NODE_ENV === 'development'
   )
   useEffect(() => {
-    fetch()
+    fetch('client')
   }, [])
   return (
     <div className={styles.wrapper}>

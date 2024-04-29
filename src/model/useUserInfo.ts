@@ -1,11 +1,12 @@
 import { create } from 'zustand'
 
-import { getUser } from '@/service/user'
 import { User } from '@/service/user/types'
+import { getUser, userInfoType } from '@/service/user'
 
 interface UserState {
   user?: User
-  fetch: () => Promise<void>
+  // eslint-disable-next-line no-unused-vars
+  fetch: (type?: userInfoType) => Promise<void>
   loading: boolean
   /**清空用户信息 */
   reset: () => void
@@ -13,10 +14,10 @@ interface UserState {
 const useUserInfo = create<UserState>((set) => ({
   user: undefined,
   loading: true,
-  async fetch() {
+  async fetch(type = 'manage') {
     try {
       set({ loading: true })
-      const user = await getUser()
+      const user = await getUser(type)
       set({ user })
     } catch (error) {
       // nothing to do

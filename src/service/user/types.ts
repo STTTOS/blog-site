@@ -62,6 +62,8 @@ interface Login {
    * 密码
    */
   password: string
+  /**30天记住密码 */
+  keepLogin: boolean
 }
 
 export type { User, Login }

@@ -3,23 +3,27 @@ import type { Params } from 'ahooks/lib/usePagination/types'
 
 import { message } from 'antd'
 import { SHA256 } from 'crypto-js'
+import { join } from 'path-browserify'
 
 import request from '../../utils/http'
 
 // 登录
 async function login(params: Login) {
-  const { username, password } = params
+  const { password, ...rest } = params
   const { msg } = await request<{ token: string }>('api/user/signin', {
-    username,
+    ...rest,
     // 密码：密文传递
     password: SHA256(password).toString()
   })
   message.success(msg)
 }
 
-// 获取用户信息
-async function getUser() {
-  const { data } = await request<User>('api/user/info')
+export type userInfoType = 'client' | 'manage'
+// 获取用户信息 后台
+async function getUser(type: userInfoType) {
+  const { data } = await request<User>(
+    join('api/user', type === 'manage' ? 'loginCheck' : 'info')
+  )
   return data
 }
 
