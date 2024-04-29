@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 
 import { Button } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import loginForm from './staticModel'
 // import { useUserInfo } from '@/model'
@@ -12,6 +12,8 @@ import createForm from '@/utils/createForm'
 
 const Index: FC = () => {
   const navigate = useNavigate()
+  const [params] = useSearchParams()
+
   // const { fetch } = useUserInfo()
   // 创建登录表单
   const { formStructure } = createForm({
@@ -21,8 +23,12 @@ const Index: FC = () => {
       },
       onFinish: async (values) => {
         await login(values)
-        console.log(values)
-        navigate('/manage')
+        const from = params.getAll('from')[0]
+        if (from) {
+          navigate(from)
+        } else {
+          navigate('/')
+        }
       }
     },
     components: [
@@ -44,11 +50,12 @@ const Index: FC = () => {
   return (
     <div className={styles['login-container']}>
       <div className={styles['login-left']}>
-        <div className={styles['left-text']}>
+        <div className={styles['left-text']} onClick={() => navigate('/')}>
           <span>Welcome</span>
           <span>木木记</span>
         </div>
       </div>
+
       <div className={styles['login-right']}>
         <div className={styles['right-form']}>{formStructure}</div>
       </div>

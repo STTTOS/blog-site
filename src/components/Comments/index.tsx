@@ -1,10 +1,13 @@
 import type { FC } from 'react'
 import type { Comment } from '@/service/comments/types'
 
+import { Button } from 'antd'
 import { useRequest } from 'ahooks'
+import { useNavigate } from 'react-router'
 
 import Reply from '../Reply'
 import ReplyItem from '../ReplyItem'
+import { useUserInfo } from '@/model'
 import styles from './index.module.less'
 import { getComments } from '@/service/comments'
 
@@ -13,6 +16,8 @@ interface CommentsProps {
   avatar?: string
 }
 const Comments: FC<CommentsProps> = ({ articleId, avatar }) => {
+  const { user } = useUserInfo()
+  const nav = useNavigate()
   const { data, refreshAsync } = useRequest(getComments, {
     defaultParams: [{ articleId }]
   })
@@ -31,6 +36,24 @@ const Comments: FC<CommentsProps> = ({ articleId, avatar }) => {
     ))
   }
 
+  if (!user?.id) {
+    return (
+      <div className={styles.login_wrapper}>
+        <Button
+          type="primary"
+          color=""
+          onClick={() =>
+            nav(`/login?from=${encodeURIComponent(location.pathname)}`)
+          }
+          className={styles.button}
+        >
+          去登录
+        </Button>
+
+        <div className={styles.tips}>登录后可发表评论</div>
+      </div>
+    )
+  }
   return (
     <div className={styles.container}>
       <div className={styles.header}>

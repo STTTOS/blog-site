@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
+import { ConfigProvider } from 'antd'
 import { useRoutes } from 'react-router-dom'
 // import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -23,7 +24,18 @@ const App = () => {
   return (
     // <StrictMode>
     <BrowserRouter history={history}>
-      <Index />
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: '#94b668',
+            colorFillContentHover: '#90bb57',
+            colorLink: '#94b668',
+            colorLinkHover: '#90bb57'
+          }
+        }}
+      >
+        <Index />
+      </ConfigProvider>
     </BrowserRouter>
     // </StrictMode>
   )

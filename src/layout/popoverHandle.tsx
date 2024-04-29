@@ -20,7 +20,7 @@ const PopoverHandle = () => {
   return (
     <Space size="large" align="center">
       <MessageBox />
-      <Tooltip title="个人中心" color="blue">
+      <Tooltip title="个人中心">
         <UserOutlined style={style} />
       </Tooltip>
 
@@ -31,7 +31,7 @@ const PopoverHandle = () => {
         cancelText="No"
         okText="Yes"
       >
-        <Tooltip title="退出登录" color="orange">
+        <Tooltip title="退出登录">
           <LogoutOutlined style={style} />
         </Tooltip>
       </Popconfirm>
