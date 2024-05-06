@@ -137,6 +137,7 @@ const Index: React.FC = () => {
             </div>
 
             {isPrivate && <Avatars artcileId={id} />}
+
             <Comments articleId={id} avatar={user?.avatar} />
           </Skeleton>
         }
@@ -187,11 +188,7 @@ const Index: React.FC = () => {
             <Card title="相关推荐" className={styles.similar}>
               {recommendList.map(({ viewCount, readingTime, title, id }) => (
                 <div className={styles.similar_item} key={id}>
-                  <a
-                    target="_blank"
-                    href={`/article/${id}`}
-                    className={styles.title}
-                  >
+                  <a target="_blank" href={`/article/${id}`}>
                     {title}
                   </a>
 

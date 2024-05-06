@@ -98,7 +98,6 @@ const FormEditor: React.FC<IProps> = ({
     }
   }, [editor])
 
-  // console.log(editor?.getAllMenuKeys(), 'edotor');
   return (
     <>
       <div style={{ border: '1px solid #ccc', zIndex: 100 }}>

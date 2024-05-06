@@ -2,6 +2,7 @@ import type { TableColumnProps } from 'antd'
 import type { Article } from '@/service/article/types'
 
 import { useAntdTable } from 'ahooks'
+import { useNavigate } from 'react-router'
 import { Form, Space, Button, Popconfirm } from 'antd'
 
 import { useUserInfo } from '@/model'
@@ -13,6 +14,7 @@ import { getColumns, searchBarFields } from './staticModel'
 import { getArticles, deleteArticle } from '@/service/article'
 
 const Index = () => {
+  const nav = useNavigate()
   const { user } = useUserInfo()
   const [form] = Form.useForm()
   const {
@@ -30,7 +32,7 @@ const Index = () => {
   const onAddOrUpdateClick = (id?: number) => {
     const url = id ? `/manage/markdown/${id}` : '/manage/markdown'
 
-    window.open(url)
+    nav(url)
   }
 
   const canEdit = ({

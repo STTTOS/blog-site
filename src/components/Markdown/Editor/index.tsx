@@ -1,4 +1,3 @@
-import { useRef } from 'react'
 import MdEditor from 'react-markdown-editor-lite'
 import 'react-markdown-editor-lite/lib/index.css'
 
@@ -16,7 +15,6 @@ interface IProps {
   onChange?: (val: string) => void
 }
 const Index: React.FC<IProps> = ({ onChange = () => void 0, value }) => {
-  const ref = useRef(null)
   // eslint-disable-next-line no-unused-vars
   const handleUpload = async (file: File) => {
     const url = await upload({ file })
@@ -26,7 +24,6 @@ const Index: React.FC<IProps> = ({ onChange = () => void 0, value }) => {
 
   return (
     <MdEditor
-      ref={ref}
       value={value}
       key={String(isPrivate)}
       style={{ height: '100%' }}

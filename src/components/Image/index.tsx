@@ -98,9 +98,14 @@ const Image: FC<ImageProps> = (props) => {
         className={styles.modal}
       >
         <div
-          style={{ overflow: 'auto', maxHeight: '100%', textAlign: 'center' }}
+          style={{
+            overflow: 'auto',
+            maxHeight: '100%',
+            textAlign: 'center',
+            outlineColor: '#5CB963'
+          }}
         >
-          <img src={originSrc} style={{ maxWidth: 'calc(100% - 100px)' }} />
+          <img src={originSrc} style={{ maxWidth: 'calc(100vw - 100px)' }} />
           <CloseCircleOutlined
             onClick={() => setOpen(false)}
             className={styles.icon}

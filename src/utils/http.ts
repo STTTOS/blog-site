@@ -39,20 +39,24 @@ async function betterRequest<R>(
     const { code, data, msg } = response
 
     if (code === 401) {
-      history.push('/login')
+      // history.push(`/login?from=${encodeURIComponent(location.pathname)}`)
+      location.href = `/login?from=${encodeURIComponent(location.pathname)}`
     } else if (code === 403) {
-      history.push('/403')
+      // history.push('/403')
+      location.href = '/403'
     }
     if (code !== 200) {
-      throw { data: response }
+      throw { data: { msg }, response }
     }
     return { data, msg }
   } catch (error) {
+    if (options?.origin) throw error
+
     const err = error as ResponseError
     const { data, response } = err
 
     message.error(data.msg || '服务器内部错误')
-    if (response.status.toString().startsWith('50')) {
+    if (response.status?.toString().startsWith('50')) {
       history.push('/500')
     }
     throw error

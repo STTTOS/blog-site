@@ -6,7 +6,6 @@ import { message } from 'antd'
 import { User } from '../user/types'
 import request from '../../utils/http'
 
-// pc
 const getArticles = async (pageParams: Params[0], params: { id: string }) => {
   const { data } = await request<{ list: Article[]; total: number }>(
     'api/article/list',
@@ -15,7 +14,6 @@ const getArticles = async (pageParams: Params[0], params: { id: string }) => {
       ...pageParams
     }
   )
-  // {list: [], total: 0}
   return data
 }
 

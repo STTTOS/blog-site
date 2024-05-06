@@ -2,13 +2,13 @@ import type { FC, Key } from 'react'
 import type { Comment } from '@/service/comments/types'
 
 import { useRequest } from 'ahooks'
-import TextArea from 'antd/lib/input/TextArea'
-import { Form, Avatar, Button, message } from 'antd'
+import { Form, Input, Avatar, Button, message } from 'antd'
 
 import { useUserInfo } from '@/model'
 import styles from './index.module.less'
 import { addComment } from '@/service/comments'
 
+const { TextArea } = Input
 interface ReplyProps {
   articleId: number
   parentCommentId?: Key
