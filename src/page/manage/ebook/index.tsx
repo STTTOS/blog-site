@@ -2,10 +2,10 @@ import type { TableColumnProps } from 'antd'
 import type { Ebook } from '../../../service/ebook/types'
 
 import { useAntdTable } from 'ahooks'
-import SearchBar from '@/components/SearchBar'
-import { Form, Button, Space, Popconfirm } from 'antd'
+import { Form, Space, Button, Popconfirm } from 'antd'
 
 import styles from './index.module.less'
+import SearchBar from '@/components/SearchBar'
 import SafeTable from '@/components/SafeTable'
 import EbookDrawerContent from './DrawerContent'
 import useFormDrawer from '@/hooks/useFormDrawer'
@@ -20,7 +20,7 @@ const Index = () => {
     tableProps,
     search: { submit, reset },
     loading
-  } = useAntdTable(getEbooks, { form })
+  } = useAntdTable(getEbooks, { form, cacheKey: '/manage/ebook' })
 
   const deleteAuthor = async (id: number) => {
     await deleteEbook({ id })

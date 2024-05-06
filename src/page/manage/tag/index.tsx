@@ -22,7 +22,7 @@ const Index = () => {
     tableProps,
     search: { submit, reset },
     loading
-  } = useAntdTable(getTags, { form })
+  } = useAntdTable(getTags, { form, cacheKey: '/manage/tag' })
 
   const deleteAuthor = async (id: number) => {
     await deleteTag({ id })

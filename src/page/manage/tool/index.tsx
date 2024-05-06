@@ -2,15 +2,15 @@ import type { TableColumnProps } from 'antd'
 import type { Tool } from '@/service/tool/types'
 
 import { useAntdTable } from 'ahooks'
-import SearchBar from '@/components/SearchBar'
-import { Form, Button, Space, Popconfirm } from 'antd'
+import { Form, Space, Button, Popconfirm } from 'antd'
 
 import styles from './index.module.less'
+import SearchBar from '@/components/SearchBar'
 import TagDrawerContent from './DrawerContent'
 import SafeTable from '@/components/SafeTable'
 import useFormDrawer from '@/hooks/useFormDrawer'
-import { colums, searchBarFields } from './staticModel'
 import { getTools, deleteTool } from '@/service/tool'
+import { colums, searchBarFields } from './staticModel'
 
 const Index = () => {
   const [form] = Form.useForm()
@@ -19,7 +19,7 @@ const Index = () => {
     tableProps,
     search: { submit, reset },
     loading
-  } = useAntdTable(getTools, { form })
+  } = useAntdTable(getTools, { form, cacheKey: '/manage/tool' })
 
   const deleteAuthor = async (id: number) => {
     await deleteTool({ id })
@@ -41,7 +41,6 @@ const Index = () => {
     {
       title: '操作',
       render: (_, record) => {
-
         return (
           <Space size="middle">
             <a onClick={() => onAddOrUpdateClick(record)}>Update</a>
@@ -78,11 +77,7 @@ const Index = () => {
         </Button>
       </div>
 
-      <SafeTable
-        columns={columns}
-        rowKey="id"
-        {...tableProps}
-      />
+      <SafeTable columns={columns} rowKey="id" {...tableProps} />
       {Drawer}
     </div>
   )

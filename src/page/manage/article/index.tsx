@@ -21,7 +21,7 @@ const Index = () => {
     tableProps,
     search: { submit, reset },
     loading
-  } = useAntdTable(getArticles, { form })
+  } = useAntdTable(getArticles, { form, cacheKey: 'manage/article' })
   const { userOptions, tagOptions } = useGlobalData()
 
   const deleteArticleFn = async (id: number) => {
