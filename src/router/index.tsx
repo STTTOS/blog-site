@@ -27,6 +27,10 @@ const routers: MyRoute[] = [
     element: lazy(() => import('@/page/403'))
   },
   {
+    path: '/404',
+    element: lazy(() => import('@/page/404'))
+  },
+  {
     path: '/500',
     element: lazy(() => import('@/page/500'))
   },

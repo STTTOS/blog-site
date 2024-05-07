@@ -44,7 +44,10 @@ async function betterRequest<R>(
     } else if (code === 403) {
       // history.push('/403')
       location.href = '/403'
+    } else if (code === 404) {
+      location.href = '/404'
     }
+
     if (code !== 200) {
       throw { data: { msg }, response }
     }
