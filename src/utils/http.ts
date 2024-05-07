@@ -42,10 +42,9 @@ async function betterRequest<R>(
       // history.push(`/login?from=${encodeURIComponent(location.pathname)}`)
       location.href = `/login?from=${encodeURIComponent(location.pathname)}`
     } else if (code === 403) {
-      // history.push('/403')
-      location.href = '/403'
+      history.push('/403')
     } else if (code === 404) {
-      location.href = '/404'
+      history.push('/404')
     }
 
     if (code !== 200) {
