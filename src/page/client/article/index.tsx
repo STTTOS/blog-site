@@ -2,13 +2,13 @@ import type { Tag as TagType } from '@/service/tag/types'
 
 import dayjs from 'dayjs'
 import classnames from 'classnames'
+import { useRequest } from 'ahooks'
 import { useMemo, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Tag, Card, Avatar, Tooltip, Skeleton } from 'antd'
 import { EyeOutlined, MailOutlined, GithubOutlined } from '@ant-design/icons'
 
 import { useUserInfo } from '@/model'
-import useAsync from '@/hooks/useAsync'
 import styles from './index.module.less'
 import Avatars from '@/components/Avatars'
 import useTimeout from '@/hooks/useTimeout'
@@ -29,17 +29,17 @@ const Index: React.FC = () => {
   const query = useParams()
 
   const id = Number(query.id)
-  const { value: detail, loading } = useAsync(getArticleDetail, {
-    params: { id }
+  const { data: detail, loading } = useRequest(getArticleDetail, {
+    defaultParams: [{ id }]
   })
-  const { value: recommendList = [] } = useAsync(getSimilarArticles, {
-    params: { id }
+  const { data: recommendList = [] } = useRequest(getSimilarArticles, {
+    defaultParams: [{ id }]
   })
   const {
-    value: authorInfo,
-    execute: getUserCardData,
+    data: authorInfo,
+    runAsync: getUserCardData,
     loading: userLoading
-  } = useAsync(getUserCard, { immediate: false })
+  } = useRequest(getUserCard, { manual: true })
   const { fetch, user } = useUserInfo()
 
   const {
