@@ -5,7 +5,7 @@ import { Modal, Space, Button } from 'antd'
 import { useRef, Fragment, useState, cloneElement } from 'react'
 
 interface IOpenModal
-  extends Omit<ModalProps, 'visible' | 'onCancel' | 'onOk' | 'confirmLoading'> {
+  extends Omit<ModalProps, 'visible' | 'onCancel' | 'confirmLoading'> {
   content: ReactElement
   showCancel?: boolean
   refresh?: () => void
@@ -39,8 +39,11 @@ const useFormModal = () => {
     setVisible(true)
   }
 
-  const handleOk = async () => {
+  const handleOk = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     try {
+      rest.onOk?.(e)
       setConfirmLoading(true)
       await callbackRef.current?.call(null)
       closeModal()

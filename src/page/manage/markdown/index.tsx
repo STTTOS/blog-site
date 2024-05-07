@@ -1,24 +1,34 @@
+import { useRequest } from 'ahooks'
+import { useRef, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { Input, Space, Button, Switch, Tooltip } from 'antd'
 
-import useAsync from '@/hooks/useAsync'
+import { history } from '@/main'
 import styles from './index.module.less'
 import ModalContent from './modalContent'
 import { Editor } from '@/components/Markdown'
 import useFormModal from '@/hooks/useFormModal'
 import useEditOptions from '@/model/editOptions'
+import { Article } from '@/service/article/types'
 import { getArticleDetail } from '@/service/article'
 
 const Index = () => {
   const { Modal, openModal } = useFormModal()
   const query = useParams()
+  const ref = useRef<Partial<Article>>(null)
+
   const { isPrivate, setPrivateMode } = useEditOptions()
 
   const id = Number(query.id)
-  const { value, setValue } = useAsync(getArticleDetail, {
-    params: { id: Number(id) },
-    immediate: Boolean(id)
+  const { data: value, mutate: setValue } = useRequest(getArticleDetail, {
+    defaultParams: [{ id: Number(id) }],
+    manual: !id,
+    onSuccess(data) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      ref.current = data
+    }
   })
   const { title, content } = value || {}
 
@@ -35,6 +45,27 @@ const Index = () => {
 
     setValue({ ...value!, title })
   }
+
+  useEffect(() => {
+    // 新增时, 字段都为空, 则不拦截
+    if (!id && !title && !content) return
+    // 编辑时, 若字段都未改变, 则不拦截
+    if (id && content === ref.current?.content && title == ref.current?.title)
+      return
+
+    const unblock = history.block((tx) => {
+      openModal({
+        title: '确认离开吗',
+        content: <span>你编辑的信息未被保存, 离开页面后将会丢失</span>,
+        onOk() {
+          unblock()
+          tx.retry()
+        }
+      })
+    })
+
+    return unblock
+  }, [title, content, id])
 
   return (
     <div className={styles.container}>
