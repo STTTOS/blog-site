@@ -5,6 +5,7 @@ import type { ICreateFormConfig } from '@/utils/createForm/types'
 import { useNavigate } from 'react-router-dom'
 import { useMemo, useEffect, useCallback } from 'react'
 
+import { unblock } from '.'
 import { useUserInfo } from '@/model'
 import createForm from '@/utils/createForm'
 import { modelComponents } from './staticModel'
@@ -55,6 +56,7 @@ const ModalContent: React.FC<IProps> = ({ register = () => void 0, data }) => {
       await addArticle(params)
     }
 
+    unblock()
     navigate('/manage/article')
   }, [data])
 

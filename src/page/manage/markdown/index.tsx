@@ -4,15 +4,16 @@ import { useParams } from 'react-router-dom'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { Input, Space, Button, Switch, Tooltip } from 'antd'
 
-import { history } from '@/main'
 import styles from './index.module.less'
 import ModalContent from './modalContent'
 import { Editor } from '@/components/Markdown'
 import useFormModal from '@/hooks/useFormModal'
 import useEditOptions from '@/model/editOptions'
 import { Article } from '@/service/article/types'
+import { history } from '@/components/BrowserRouter'
 import { getArticleDetail } from '@/service/article'
 
+export let unblock: () => void = () => void 0
 const Index = () => {
   const { Modal, openModal } = useFormModal()
   const query = useParams()
@@ -49,11 +50,11 @@ const Index = () => {
   useEffect(() => {
     // 新增时, 字段都为空, 则不拦截
     if (!id && !title && !content) return
-    // 编辑时, 若字段都未改变, 则不拦截
+    // // 编辑时, 若字段都未改变, 则不拦截
     if (id && content === ref.current?.content && title == ref.current?.title)
       return
 
-    const unblock = history.block((tx) => {
+    unblock = history.block((tx) => {
       openModal({
         title: '确认离开吗',
         content: <span>你编辑的信息未被保存, 离开页面后将会丢失</span>,
@@ -63,9 +64,8 @@ const Index = () => {
         }
       })
     })
-
     return unblock
-  }, [title, content, id])
+  }, [id, title, content])
 
   return (
     <div className={styles.container}>

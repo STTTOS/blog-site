@@ -3,9 +3,10 @@ import { message } from 'antd'
 import { join } from 'path-browserify'
 import { extend, ResponseError, RequestOptionsInit } from 'umi-request'
 
-import { history } from '@/main'
 import { ResBasic } from './types'
 import { baseUrl } from '@/config'
+import { unblock } from '@/page/manage/markdown'
+import { history } from '@/components/BrowserRouter'
 
 // 响应code异常处理程序
 const request = extend({
@@ -21,6 +22,17 @@ request.interceptors.response.use(async (response) => {
   return response
 })
 
+/**
+ * @description 无视history.block, 强行跳转
+ */
+function forceJumpTo(path: string, mode: 'href' | 'route' = 'route') {
+  unblock()
+  if (mode === 'href') {
+    location.href = path
+  } else {
+    history.push(path)
+  }
+}
 async function betterRequest<R>(
   url: string,
   params?: Record<string, any>,
@@ -39,12 +51,15 @@ async function betterRequest<R>(
     const { code, data, msg } = response
 
     if (code === 401) {
-      // history.push(`/login?from=${encodeURIComponent(location.pathname)}`)
-      location.href = `/login?from=${encodeURIComponent(location.pathname)}`
+      forceJumpTo(
+        `/login?from=${encodeURIComponent(location.pathname)}`,
+        'href'
+      )
     } else if (code === 403) {
+      forceJumpTo('/403')
       history.push('/403')
     } else if (code === 404) {
-      history.push('/404')
+      forceJumpTo('/404')
     }
 
     if (code !== 200) {
@@ -59,7 +74,7 @@ async function betterRequest<R>(
 
     message.error(data.msg || '服务器内部错误')
     if (response.status?.toString().startsWith('50')) {
-      history.push('/500')
+      forceJumpTo('/500')
     }
     throw error
   }
