@@ -1,20 +1,42 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { FC } from 'react'
-
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import remarkGfm from 'remark-gfm'
 import remarkIns from 'remark-ins'
+import { memo, type FC } from 'react'
 import Markdown from 'react-markdown'
 import rehypeVideo from 'rehype-video'
 import remarkBreaks from 'remark-breaks'
 import { CopyOutlined } from '@ant-design/icons'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import dark from 'react-syntax-highlighter/dist/esm/styles/prism/one-dark'
+import { themes, Highlight, RenderProps } from 'prism-react-renderer'
 
 import copy from '@/utils/copy'
 import Image, { ElementBeForbidden } from '@/components/Image'
 
+const renderChildren = ({
+  style,
+  tokens,
+  getLineProps,
+  getTokenProps
+}: RenderProps) => (
+  <pre style={style}>
+    {tokens.map((line, i) => (
+      <div key={i} {...getLineProps({ line })}>
+        <span style={{ marginRight: 10 }}>{i + 1}</span>
+        {line.map((token, key) => (
+          <span key={key} {...getTokenProps({ token })} />
+        ))}
+      </div>
+    ))}
+  </pre>
+)
+const SyntaxHighlighter = memo(({ children, language }: any) => {
+  return (
+    <Highlight code={children} language={language} theme={themes.oneDark}>
+      {renderChildren}
+    </Highlight>
+  )
+})
 const Parser: FC<{ children: string; isPrivate?: boolean }> = ({
   children,
   isPrivate
@@ -39,7 +61,7 @@ const Parser: FC<{ children: string; isPrivate?: boolean }> = ({
           )
         },
         code(props) {
-          const { children, className, ...rest } = props
+          const { children, className } = props
           const match = /language-(\w+)/.exec(className || '')
           return match ? (
             <div style={{ position: 'relative' }}>
@@ -47,21 +69,12 @@ const Parser: FC<{ children: string; isPrivate?: boolean }> = ({
                 onClick={() => copy(props.children as string)}
                 style={{ position: 'absolute', right: -10, top: -20 }}
               />
-              <SyntaxHighlighter
-                {...(rest as any)}
-                PreTag="div"
-                children={String(children).replace(/\n$/, '')}
-                language={match[1] as any}
-                style={dark}
-                showLineNumbers
-                showInlineLineNumbers
-                startingLineNumber
-              />
+              <SyntaxHighlighter language={match?.[1]}>
+                {String(children)}
+              </SyntaxHighlighter>
             </div>
           ) : (
-            <code {...rest} className={className}>
-              {children}
-            </code>
+            <code className={className}>{children}</code>
           )
         },
         a({ href, children }) {
