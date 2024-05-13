@@ -5,7 +5,7 @@ import { extend, ResponseError, RequestOptionsInit } from 'umi-request'
 
 import { ResBasic } from './types'
 import { baseUrl } from '@/config'
-import { unblock } from '@/page/manage/markdown'
+// import { unblock } from '@/page/manage/markdown'
 import { history } from '@/components/BrowserRouter'
 
 // 响应code异常处理程序
@@ -26,7 +26,7 @@ request.interceptors.response.use(async (response) => {
  * @description 无视history.block, 强行跳转
  */
 function forceJumpTo(path: string, mode: 'href' | 'route' = 'route') {
-  unblock()
+  // unblock()
   if (mode === 'href') {
     location.href = path
   } else {
