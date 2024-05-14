@@ -153,9 +153,7 @@ function format(routers: MyRoute[], basePath = ''): RouteObject[] {
         ...rest,
         path: nextPath,
         children: children && format(children, nextPath),
-        element:
-          element &&
-          withTitleAndRedirect({ title, basePath, redirect, element })
+        element: withTitleAndRedirect({ title, basePath, redirect, element })
       }
     }
   )
