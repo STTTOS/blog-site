@@ -1,9 +1,10 @@
 import type { MyRoute } from '../router/index'
 
-import { useEffect, Suspense } from 'react'
+import { join } from 'path-browserify'
+import { useMemo, Suspense, useEffect } from 'react'
 
-import Redirect from '@/components/Redirect'
 import Loading from '@/components/Loading'
+import Redirect from '@/components/Redirect'
 
 type Props = Pick<MyRoute, 'element' | 'title' | 'redirect'> & {
   basePath: string
@@ -21,13 +22,22 @@ function withTitleAndRedirect({
       if (title) {
         document.title = title
       }
-    }, [])
+    }, [title])
 
-    return redirect ? <Redirect to={basePath + redirect} /> : (
-      <Suspense fallback={<Loading />}>
-        <Element />
-      </Suspense>
-    )
+    const children = useMemo(() => {
+      if (redirect) {
+        return <Redirect to={join(basePath, redirect)} />
+      }
+      if (Element)
+        return (
+          <Suspense fallback={<Loading />}>
+            <Element />
+          </Suspense>
+        )
+      return null
+    }, [redirect, Element, basePath])
+
+    return children
   }
   return <NewCmp />
 }

@@ -2,6 +2,7 @@ import type { RouteObject } from 'react-router-dom'
 import type { FC, LazyExoticComponent } from 'react'
 
 import { lazy } from 'react'
+import { join } from 'path-browserify'
 
 import Layout from '../layout'
 import Home from '@/page/client/home'
@@ -39,64 +40,64 @@ const routers: MyRoute[] = [
     element: Layout,
     children: [
       {
-        path: '/author',
+        path: 'author',
         element: lazy(() => import('@/page/manage/author')),
         title: '作者管理'
       },
       {
-        path: '/tag',
+        path: 'tag',
         element: lazy(() => import('@/page/manage/tag')),
         title: '标签管理'
       },
       {
-        path: '/article',
+        path: 'article',
         title: '文章管理',
         children: [
           {
-            path: '/list',
+            path: 'list',
             element: Article,
             title: '文章列表'
           },
           {
-            path: '/recycle',
+            path: 'recycle',
             element: lazy(() => import('@/page/manage/article/recycle')),
             title: '回收站'
+          },
+          {
+            path: '*',
+            redirect: 'list'
           }
         ]
       },
       {
-        path: '/tool',
+        path: 'tool',
         element: lazy(() => import('@/page/manage/tool')),
         title: '工具管理'
       },
       {
-        path: '/ebook',
+        path: 'ebook',
         element: lazy(() => import('@/page/manage/ebook')),
         title: '电子书管理'
       },
       {
-        path: '/system',
+        path: 'system',
         element: lazy(() => import('@/page/manage/system')),
         title: '系统管理'
       },
       {
-        path: '/markdown',
+        path: 'markdown',
         element: lazy(() => import('@/page/manage/markdown')),
         title: '新增文章'
       },
       {
-        path: '/markdown/:id',
+        path: 'markdown/:id',
         element: lazy(() => import('@/page/manage/markdown')),
         title: '编辑文章'
       },
       {
-        path: '/storage',
+        path: 'storage',
         element: lazy(() => import('@/page/manage/storage')),
         title: '文件存储'
-      },
-      {
-        path: '/',
-        redirect: '/article/list'
       },
       {
         path: '*',
@@ -113,15 +114,15 @@ const routers: MyRoute[] = [
         element: Home
       },
       {
-        path: '/article/:id',
+        path: 'article/:id',
         element: lazy(() => import('@/page/client/article'))
       },
       {
-        path: '/article/list',
+        path: 'article/list',
         element: lazy(() => import('@/page/client/articleList'))
       },
       {
-        path: '/tag',
+        path: 'tag',
         element: lazy(() => import('@/page/client/tag'))
       }
     ]
@@ -145,18 +146,34 @@ const routers: MyRoute[] = [
 ]
 
 function format(routers: MyRoute[], basePath = ''): RouteObject[] {
-  return routers.map(
+  const result = routers.map(
     ({ path, children, element, redirect, title = '木木记', ...rest }) => {
-      const nextPath = basePath + path
+      const nextPath = join(basePath, path || '')
+
+      // 如果element不存在, 则将子元素铺平
+      if (!element && children) {
+        return children.map((item) => ({
+          ...item,
+          // 组合父级route path & 子路由path
+          path: join(path || '', item.path || ''),
+          element: withTitleAndRedirect({ basePath: nextPath, ...item }),
+          children: item.children && format(item.children, nextPath)
+        }))
+      }
 
       return {
         ...rest,
-        path: nextPath,
+        path,
         children: children && format(children, nextPath),
-        element: withTitleAndRedirect({ title, basePath, redirect, element })
+        element: withTitleAndRedirect({
+          title,
+          basePath,
+          redirect,
+          element
+        })
       }
     }
   )
+  return result.flat(5)
 }
-
 export default format(routers)
