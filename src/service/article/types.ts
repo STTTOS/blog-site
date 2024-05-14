@@ -69,6 +69,10 @@ interface Article {
    * 是否为原创, 默认为true, 否则为转载
    */
   isOrigin: boolean
+  /**
+   * 删除时间
+   */
+  deletedAt: string
 }
 
 export type { Article }

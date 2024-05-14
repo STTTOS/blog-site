@@ -1,4 +1,5 @@
 // 文章回收站
+import dayjs from 'dayjs'
 import { useAntdTable } from 'ahooks'
 import { Space, Popconfirm, TableColumnProps } from 'antd'
 
@@ -20,6 +21,12 @@ const Recycle = () => {
     refresh()
   }
   const columns: TableColumnProps<Article>[] = [
+    {
+      title: '删除剩余时间(天)',
+      render(_, { deletedAt }) {
+        return dayjs().add(30, 'day').diff(deletedAt, 'day')
+      }
+    },
     ...getColumns([], false).filter(
       ({ dataIndex }) =>
         !['coAuthorIds', 'authorName'].includes(dataIndex as string)

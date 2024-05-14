@@ -96,7 +96,7 @@ const routers: MyRoute[] = [
       },
       {
         path: '/',
-        redirect: '/article'
+        redirect: '/article/list'
       },
       {
         path: '*',
