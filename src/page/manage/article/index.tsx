@@ -53,7 +53,7 @@ const Index = () => {
             <>
               <a onClick={() => onAddOrUpdateClick(id)}>Update</a>
               <Popconfirm
-                title="删除后将会被放到回收站"
+                title="删除后将会被放到回收站, 30天后自动删除"
                 onConfirm={() => deleteArticleFn(id)}
                 okText="Yes"
                 cancelText="No"
