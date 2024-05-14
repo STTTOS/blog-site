@@ -15,8 +15,9 @@ interface TitleProps {
   isPrivate: boolean
   title: string
   id: number
+  jumpAble?: boolean
 }
-const Title: FC<TitleProps> = ({ isPrivate, title, id }) => {
+const Title: FC<TitleProps> = ({ isPrivate, title, id, jumpAble }) => {
   const [focused, setFocused] = useState(false)
   return (
     <div
@@ -24,9 +25,13 @@ const Title: FC<TitleProps> = ({ isPrivate, title, id }) => {
       onMouseLeave={() => setFocused(false)}
     >
       {isPrivate && <EyeInvisibleOutlined className={styles.private} />}
-      <a href={`/article/${id}`} target="_blank">
-        {title}
-      </a>
+      {jumpAble ? (
+        <a href={`/article/${id}`} target="_blank">
+          {title}
+        </a>
+      ) : (
+        <span>{title}</span>
+      )}
       <CopyOutlined
         style={{ marginLeft: 6, visibility: focused ? 'visible' : 'hidden' }}
         onClick={() => {
@@ -37,7 +42,8 @@ const Title: FC<TitleProps> = ({ isPrivate, title, id }) => {
   )
 }
 const getColumns = (
-  userOptions: SelectProps['options']
+  userOptions?: SelectProps['options'],
+  jumpAble = true
 ): TableColumnProps<Article>[] => {
   return [
     {
@@ -45,7 +51,7 @@ const getColumns = (
       dataIndex: 'title',
       fixed: 'left',
       render: (_, { id, title, private: isPrivate }) => (
-        <Title {...{ id, title, isPrivate }} />
+        <Title {...{ id, title, isPrivate }} jumpAble={jumpAble} />
       )
     },
     {

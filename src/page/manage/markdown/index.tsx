@@ -2,7 +2,7 @@ import { useRequest } from 'ahooks'
 import { useRef, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { QuestionCircleOutlined } from '@ant-design/icons'
-import { Input, Space, Button, Switch, Tooltip } from 'antd'
+import { Spin, Input, Space, Button, Switch, Tooltip } from 'antd'
 
 import styles from './index.module.less'
 import ModalContent from './modalContent'
@@ -22,7 +22,11 @@ const Index = () => {
   const { isPrivate, setPrivateMode } = useEditOptions()
 
   const id = Number(query.id)
-  const { data: value, mutate: setValue } = useRequest(getArticleDetail, {
+  const {
+    data: value,
+    mutate: setValue,
+    loading
+  } = useRequest(getArticleDetail, {
     defaultParams: [{ id: Number(id) }],
     manual: !id,
     onSuccess(data) {
@@ -68,55 +72,59 @@ const Index = () => {
   }, [id, title, content])
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <div className={styles.row}>
-          <Input
-            value={title}
-            placeholder="请输入文章标题"
-            bordered={false}
-            onChange={hancleChange}
-          />
-          <Button
-            disabled={!title || !content}
-            onClick={pushhArticle}
-            type="primary"
-          >
-            发布
-          </Button>
-        </div>
-        <div className={styles.control}>
-          <Space align="center">
-            <Switch
-              className={styles.switch}
-              checkedChildren="隐私编辑模式"
-              unCheckedChildren="正常编辑模式"
-              value={isPrivate}
-              onChange={(checked) => {
-                setPrivateMode?.(checked)
-                if (checked) {
-                  localStorage.setItem('private', 'true')
-                } else {
-                  localStorage.removeItem('private')
-                }
-              }}
+    <Spin spinning={loading}>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <div className={styles.row}>
+            <Input
+              value={title}
+              placeholder="请输入文章标题"
+              bordered={false}
+              onChange={hancleChange}
             />
-            <Tooltip title={<span>隐私编辑模式下,所有图片/视频会被隐藏</span>}>
-              <QuestionCircleOutlined />
-            </Tooltip>
-          </Space>
+            <Button
+              disabled={!title || !content}
+              onClick={pushhArticle}
+              type="primary"
+            >
+              发布
+            </Button>
+          </div>
+          <div className={styles.control}>
+            <Space align="center">
+              <Switch
+                className={styles.switch}
+                checkedChildren="隐私编辑模式"
+                unCheckedChildren="正常编辑模式"
+                value={isPrivate}
+                onChange={(checked) => {
+                  setPrivateMode?.(checked)
+                  if (checked) {
+                    localStorage.setItem('private', 'true')
+                  } else {
+                    localStorage.removeItem('private')
+                  }
+                }}
+              />
+              <Tooltip
+                title={<span>隐私编辑模式下,所有图片/视频会被隐藏</span>}
+              >
+                <QuestionCircleOutlined />
+              </Tooltip>
+            </Space>
+          </div>
         </div>
-      </div>
 
-      <div className={styles.markdown}>
-        <Editor
-          value={content}
-          onChange={(content) => setValue({ ...value!, content })}
-        />
-      </div>
+        <div className={styles.markdown}>
+          <Editor
+            value={content}
+            onChange={(content) => setValue({ ...value!, content })}
+          />
+        </div>
 
-      {Modal}
-    </div>
+        {Modal}
+      </div>
+    </Spin>
   )
 }
 

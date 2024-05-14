@@ -50,8 +50,19 @@ const routers: MyRoute[] = [
       },
       {
         path: '/article',
-        element: Article,
-        title: '文章管理'
+        title: '文章管理',
+        children: [
+          {
+            path: '/list',
+            element: Article,
+            title: '文章列表'
+          },
+          {
+            path: '/recycle',
+            element: lazy(() => import('@/page/manage/article/recycle')),
+            title: '回收站'
+          }
+        ]
       },
       {
         path: '/tool',
@@ -89,7 +100,7 @@ const routers: MyRoute[] = [
       },
       {
         path: '*',
-        redirect: '/article'
+        redirect: '/article/list'
       }
     ]
   },
@@ -142,7 +153,9 @@ function format(routers: MyRoute[], basePath = ''): RouteObject[] {
         ...rest,
         path: nextPath,
         children: children && format(children, nextPath),
-        element: withTitleAndRedirect({ title, basePath, redirect, element })
+        element:
+          element &&
+          withTitleAndRedirect({ title, basePath, redirect, element })
       }
     }
   )

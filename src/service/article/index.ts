@@ -31,6 +31,21 @@ const getClientArticles = async (params: {
   return list
 }
 
+const getArticleRecycleList = async (
+  pageParams: Params[0],
+  params: { id: string }
+) => {
+  const { data } = await request<{ list: Article[]; total: number }>(
+    'api/article/recycle/list',
+    {
+      ...params,
+      ...pageParams
+    }
+  )
+
+  return data
+}
+
 async function addArticle(params: Omit<Article, 'id' | 'createdAt'>) {
   const { msg } = await request<null>('api/article/add', params)
 
@@ -75,6 +90,15 @@ async function visibleUsers(params: Pick<Article, 'id'>) {
   }>('api/article/visibleUsers', params)
   return list
 }
+async function recoverAritcle(params: Pick<Article, 'id'>) {
+  await request('api/article/recover', params)
+  message.success('恢复成功')
+}
+
+async function deleteAriclePhysically(params: Pick<Article, 'id'>) {
+  await request('api/article/physicalDelete', params)
+  message.success('删除成功')
+}
 
 export {
   getArticles,
@@ -85,5 +109,8 @@ export {
   getSimilarArticles,
   countArticle,
   getClientArticles,
-  visibleUsers
+  visibleUsers,
+  getArticleRecycleList,
+  recoverAritcle,
+  deleteAriclePhysically
 }

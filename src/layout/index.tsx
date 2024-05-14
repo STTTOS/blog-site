@@ -19,8 +19,8 @@ const ManageLayout = () => {
   const { pathname } = useLocation()
   const [collapsed, setCollapsed] = useState(false)
 
-  const activeKey = pathname.split('/').slice(-1)
-
+  const activeKey = [pathname.split('/').slice(2).join('/')]
+  const openKey = activeKey.map((item) => item.split('/')[0])
   const onMenuItemClick = ({ key }: MenuInfo) => {
     navigate(`/manage/${key}`)
   }
@@ -48,9 +48,11 @@ const ManageLayout = () => {
           </div>
           <Menu
             selectedKeys={activeKey}
+            defaultOpenKeys={openKey}
             onClick={onMenuItemClick}
             theme="light"
             items={menuItems}
+            mode="inline"
           />
         </Sider>
         <Layout className={styles.contentLayout}>
@@ -64,7 +66,7 @@ const ManageLayout = () => {
         </Layout>
       </Layout>
     )
-  }, [user, loading, pathname, collapsed])
+  }, [user, loading, pathname, collapsed, activeKey])
 
   // useNewFeatureInfo()
 
