@@ -99,6 +99,11 @@ async function deleteAriclePhysically(params: Pick<Article, 'id'>) {
   await request('api/article/physicalDelete', params)
   message.success('删除成功')
 }
+async function changeAricleVisibility(
+  params: Pick<Article, 'id'> & { isPrivate: boolean }
+) {
+  await request('api/article/changeVisibility', params)
+}
 
 export {
   getArticles,
@@ -112,5 +117,6 @@ export {
   visibleUsers,
   getArticleRecycleList,
   recoverAritcle,
-  deleteAriclePhysically
+  deleteAriclePhysically,
+  changeAricleVisibility
 }

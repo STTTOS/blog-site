@@ -1,9 +1,9 @@
 import type { TableColumnProps } from 'antd'
 import type { Article } from '@/service/article/types'
 
-import { useAntdTable } from 'ahooks'
 import { useNavigate } from 'react-router'
-import { Form, Space, Button, Popconfirm } from 'antd'
+import { useRequest, useAntdTable } from 'ahooks'
+import { Form, Space, Button, Switch, Popconfirm } from 'antd'
 
 import { useUserInfo } from '@/model'
 import styles from './index.module.less'
@@ -11,7 +11,11 @@ import SearchBar from '@/components/SearchBar'
 import SafeTable from '@/components/SafeTable'
 import useGlobalData from '@/hooks/useGlobalData'
 import { getColumns, searchBarFields } from './staticModel'
-import { getArticles, deleteArticle } from '@/service/article'
+import {
+  getArticles,
+  deleteArticle,
+  changeAricleVisibility
+} from '@/service/article'
 
 const Index = () => {
   const nav = useNavigate()
@@ -20,10 +24,13 @@ const Index = () => {
   const {
     tableProps,
     search: { submit, reset },
-    loading
+    loading,
+    refresh
   } = useAntdTable(getArticles, { form, cacheKey: 'manage/article' })
   const { userOptions, tagOptions } = useGlobalData()
-
+  const { loading: operating, runAsync } = useRequest(changeAricleVisibility, {
+    manual: true
+  })
   const deleteArticleFn = async (id: number) => {
     await deleteArticle({ id })
     reset()
@@ -45,6 +52,26 @@ const Index = () => {
 
   const columns: TableColumnProps<Article>[] = [
     ...getColumns(userOptions),
+    {
+      fixed: 'right',
+      title: '是否可见',
+      render(_, { id, private: isPrivate, authorId }) {
+        return (
+          authorId === user?.id && (
+            <Switch
+              loading={operating}
+              checkedChildren="是"
+              unCheckedChildren="否"
+              checked={!isPrivate}
+              onChange={async (checked) => {
+                await runAsync({ id, isPrivate: !checked })
+                refresh()
+              }}
+            />
+          )
+        )
+      }
+    },
     {
       title: '操作',
       render: (_, { id, ...article }) => (
