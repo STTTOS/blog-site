@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react'
-import type { uploadPersistentFile } from 'antd/lib/upload/interface'
 
-export interface IUploadProps {
+import { UploadFile, UploadProps } from 'antd'
+
+export interface IUploadProps extends Omit<UploadProps, 'onChange'> {
   /**
    * 来自表单的值
    */
@@ -57,7 +58,7 @@ export interface IUploadProps {
   children?: ReactNode
 }
 
-export interface FileListItem extends Omit<uploadPersistentFile, 'url'> {
+export interface FileListItem extends Omit<UploadFile, 'url'> {
   url: string
   name: string
 }
