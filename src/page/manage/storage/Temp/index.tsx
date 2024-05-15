@@ -14,6 +14,7 @@ const Temp = () => {
     <div className={styles.wrapper}>
       <Upload
         multiple
+        directory
         accept="*"
         listType="text"
         showFileList={false}
