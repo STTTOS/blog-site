@@ -127,14 +127,17 @@ const Index: React.FC<IUploadProps> = ({
     const { name, size, type } = file
     const fileType = getFileType(name)
 
-    if (accept === '*') return true
-    else if (!accept.includes(fileType!)) {
+    if (!accept.includes(fileType!) && accept !== '*') {
       message.error(`只能上传${accept}类型的文件`)
       return false
     }
 
     // 将文件大小转化为Kb
     const fileSize = size / 1024
+    if (fileSize === 0) {
+      message.error('不允许上传空文件')
+      return false
+    }
     if (fileSize < minSize) {
       message.error(`文件大小至少为${minSize}Kb`)
       return false

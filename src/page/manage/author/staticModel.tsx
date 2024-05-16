@@ -91,7 +91,12 @@ const drawerFormComponents: (type: 'add' | 'edit') => IComponent[] = (type) => {
       require: type === 'add',
       element: <Password />
     },
-
+    {
+      label: '安全密码',
+      name: 'secureKey',
+      range: [6, 18],
+      element: <Password />
+    },
     { label: '昵称', name: 'name', require: true },
     {
       label: '贡献者',

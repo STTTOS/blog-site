@@ -1,6 +1,7 @@
 import type { User, Login } from './types'
 import type { Params } from 'ahooks/lib/usePagination/types'
 
+import { Key } from 'react'
 import { message } from 'antd'
 import { SHA256 } from 'crypto-js'
 import { join } from 'path-browserify'
@@ -86,6 +87,13 @@ async function getUsersByRecommend() {
   return list
 }
 
+async function veirfySecureKey(params: Pick<User, 'secureKey'> & { id?: Key }) {
+  const {
+    data: { access }
+  } = await request<{ access: boolean }>('api/user/veirfySecureKey', params)
+  return access
+}
+
 function logout() {
   return request('api/user/logout')
 }
@@ -100,5 +108,6 @@ export {
   updateUser,
   getAllUser,
   getUserCard,
+  veirfySecureKey,
   getUsersByRecommend
 }

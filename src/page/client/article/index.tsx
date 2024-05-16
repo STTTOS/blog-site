@@ -10,6 +10,7 @@ import { EyeOutlined, MailOutlined, GithubOutlined } from '@ant-design/icons'
 
 import { useUserInfo } from '@/model'
 import styles from './index.module.less'
+import { useNeedAuth } from '@/page/Auth'
 import Avatars from '@/components/Avatars'
 import useTimeout from '@/hooks/useTimeout'
 import { getUserCard } from '@/service/user'
@@ -21,6 +22,7 @@ import { Viewer, Catalogue } from '@/components/Markdown'
 import {
   countArticle,
   getArticleDetail,
+  isArticleNeedPwd,
   getSimilarArticles
 } from '@/service/article'
 
@@ -29,9 +31,25 @@ const Index: React.FC = () => {
   const query = useParams()
 
   const id = Number(query.id)
-  const { data: detail, loading } = useRequest(getArticleDetail, {
-    defaultParams: [{ id }]
+
+  const {
+    goAuth,
+    key: secureKey,
+    validating
+  } = useNeedAuth({
+    isNeed: () => isArticleNeedPwd({ id })
   })
+  const { data: detail, loading: fetching } = useRequest(getArticleDetail, {
+    defaultParams: [{ id, secureKey }],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError(res: any) {
+      if (res?.response?.code === 10000) goAuth()
+    }
+  })
+  const loading = useMemo(() => {
+    return validating || fetching
+  }, [validating, fetching])
+
   const { data: recommendList = [] } = useRequest(getSimilarArticles, {
     defaultParams: [{ id }]
   })
@@ -73,6 +91,45 @@ const Index: React.FC = () => {
       </Tag>
     ))
 
+  // const openModal = () => {
+  //   open({
+  //     title: (
+  //       <span>
+  //         安全密码
+  //         <Tooltip
+  //           title={
+  //             <span>
+  //               可在
+  //               <Link to="/manage/author" target="_blank">
+  //                 账号管理
+  //               </Link>
+  //               <span>处设置</span>
+  //               <span style={{ fontWeight: 'bold' }}>安全密码</span>
+  //             </span>
+  //           }
+  //         >
+  //           <QuestionCircleOutlined style={{ marginLeft: 6 }} />
+  //         </Tooltip>
+  //       </span>
+  //     ),
+  //     footer: false,
+  //     content: (
+  //       <Form onFinish={({ secureKey }) => handleVerifyPwd(secureKey)}>
+  //         <Form.Item
+  //           name="secureKey"
+  //           rules={[{ required: true, message: '不可为空' }]}
+  //         >
+  //           <Input.Password placeholder="你的安全密码" />
+  //         </Form.Item>
+  //         <div>
+  //           <Button type="primary" htmlType="submit">
+  //             确认
+  //           </Button>
+  //         </div>
+  //       </Form>
+  //     )
+  //   })
+  // }
   useEffect(() => {
     if (!authorId) return
     getUserCardData({ id: authorId })

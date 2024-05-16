@@ -1,3 +1,4 @@
+import { isNil } from 'lodash'
 import { useRequest } from 'ahooks'
 import { useRef, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
@@ -6,28 +7,33 @@ import { Spin, Input, Space, Button, Switch, Tooltip } from 'antd'
 
 import styles from './index.module.less'
 import ModalContent from './modalContent'
+import { useNeedAuth } from '@/page/Auth'
 import { Editor } from '@/components/Markdown'
 import useFormModal from '@/hooks/useFormModal'
 import useEditOptions from '@/model/editOptions'
 import { Article } from '@/service/article/types'
 import { history } from '@/components/BrowserRouter'
-import { getArticleDetail } from '@/service/article'
+import { getArticleDetail, isArticleNeedPwd } from '@/service/article'
 
 export let unblock: () => void = () => void 0
 const Index = () => {
   const { Modal, openModal } = useFormModal()
   const query = useParams()
   const ref = useRef<Partial<Article>>(null)
+  const { id } = query
 
   const { isPrivate, setPrivateMode } = useEditOptions()
+  const { key } = useNeedAuth({
+    isNeed: () =>
+      isNil(id) ? Promise.resolve(false) : isArticleNeedPwd({ id: Number(id) })
+  })
 
-  const id = Number(query.id)
   const {
     data: value,
     mutate: setValue,
     loading
   } = useRequest(getArticleDetail, {
-    defaultParams: [{ id: Number(id) }],
+    defaultParams: [{ id: Number(id), secureKey: key }],
     manual: !id,
     onSuccess(data) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -39,6 +45,7 @@ const Index = () => {
 
   const pushhArticle = () => {
     openModal({
+      width: 600,
       title: id ? '更新文章' : '发布文章',
       centered: true,
       content: <ModalContent data={value!} />

@@ -80,6 +80,17 @@ const modelComponents = (
       )
     },
     {
+      label: <span>开启密码访问</span>,
+      name: 'secure',
+      initialValue: false,
+      element: (
+        <Radio.Group>
+          <Radio value={true}>是</Radio>
+          <Radio value={false}>否</Radio>
+        </Radio.Group>
+      )
+    },
+    {
       label: '编辑摘要',
       name: 'desc',
       element: <TextArea showCount maxLength={100} />

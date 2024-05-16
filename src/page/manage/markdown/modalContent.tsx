@@ -2,6 +2,7 @@ import type { Article } from '@/service/article/types'
 import type { IFormWithDrawer } from '@/hooks/useFormDrawer'
 import type { ICreateFormConfig } from '@/utils/createForm/types'
 
+import { MD5 } from 'crypto-js'
 import { useNavigate } from 'react-router-dom'
 import { useMemo, useEffect, useCallback } from 'react'
 
@@ -47,8 +48,8 @@ const ModalContent: React.FC<IProps> = ({ register = () => void 0, data }) => {
   const { formStructure, form } = createForm(config)
 
   const handleFinish = useCallback(async () => {
-    const res = await form.validateFields()
-    const params = { ...data, ...res }
+    const { secureKey, ...res } = await form.validateFields()
+    const params = { ...data, ...res, secureKey: secureKey && MD5(secureKey) }
 
     if (isEditing) {
       await updateArticle(params)

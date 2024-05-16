@@ -64,10 +64,20 @@ async function updateArticle(params: Omit<Article, 'createdAt'>) {
   message.success(msg)
 }
 
-async function getArticleDetail(params: Pick<Article, 'id'>) {
+async function getArticleDetail(
+  params: Pick<Article, 'id'> & { secureKey?: string | null }
+) {
   const { data } = await request<Article>('api/article/detail', params)
 
   return data
+}
+async function isArticleNeedPwd(params: Pick<Article, 'id'>) {
+  const { data } = await request<{ needPwd: boolean }>(
+    'api/article/needPwd',
+    params
+  )
+
+  return data.needPwd
 }
 
 async function getSimilarArticles(params: Pick<Article, 'id'>) {
@@ -118,5 +128,6 @@ export {
   getArticleRecycleList,
   recoverAritcle,
   deleteAriclePhysically,
-  changeAricleVisibility
+  changeAricleVisibility,
+  isArticleNeedPwd
 }

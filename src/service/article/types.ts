@@ -73,6 +73,10 @@ interface Article {
    * 删除时间
    */
   deletedAt: string
+  /**
+   * 是否使用密码访问
+   */
+  secure: boolean
 }
 
 export type { Article }

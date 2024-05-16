@@ -17,7 +17,7 @@ export interface IFormWithModal {
   register?: (fn: CallBack) => unknown
 }
 
-const useFormModal = () => {
+const useFormModal = (defaultConfig?: Partial<IOpenModal>) => {
   const [visible, setVisible] = useState(false)
   const [confirmLoading, setConfirmLoading] = useState(false)
   const [modalProps, setModalProps] = useState<IOpenModal>({
@@ -35,7 +35,7 @@ const useFormModal = () => {
   const closeModal = () => setVisible(false)
 
   const openModal = (config: IOpenModal) => {
-    setModalProps(config)
+    setModalProps({ ...defaultConfig, ...config })
     setVisible(true)
   }
 

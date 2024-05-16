@@ -51,6 +51,10 @@ interface User {
    * total view
    */
   totalViewCount: number
+  /**
+   * 安全密码
+   */
+  secureKey?: string
 }
 
 interface Login {

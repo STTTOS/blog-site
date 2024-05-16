@@ -36,6 +36,10 @@ const routers: MyRoute[] = [
     element: lazy(() => import('@/page/500'))
   },
   {
+    path: '/auth/:id',
+    element: lazy(() => import('@/page/Auth'))
+  },
+  {
     path: '/manage',
     element: Layout,
     children: [
