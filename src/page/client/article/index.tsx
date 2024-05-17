@@ -18,6 +18,7 @@ import Comments from '@/components/Comments'
 import ThreeColLayout from './ThreeColLayout'
 import randomTagColor from '@/utils/randomTagColor'
 import ScrollBarNav from '@/components/ScrollBarNav'
+import { useHideContent } from '@/hooks/useHideContent'
 import { Viewer, Catalogue } from '@/components/Markdown'
 import {
   countArticle,
@@ -39,6 +40,7 @@ const Index: React.FC = () => {
   } = useNeedAuth({
     isNeed: () => isArticleNeedPwd({ id })
   })
+  useHideContent()
   const { data: detail, loading: fetching } = useRequest(getArticleDetail, {
     defaultParams: [{ id, secureKey }],
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -91,45 +93,6 @@ const Index: React.FC = () => {
       </Tag>
     ))
 
-  // const openModal = () => {
-  //   open({
-  //     title: (
-  //       <span>
-  //         安全密码
-  //         <Tooltip
-  //           title={
-  //             <span>
-  //               可在
-  //               <Link to="/manage/author" target="_blank">
-  //                 账号管理
-  //               </Link>
-  //               <span>处设置</span>
-  //               <span style={{ fontWeight: 'bold' }}>安全密码</span>
-  //             </span>
-  //           }
-  //         >
-  //           <QuestionCircleOutlined style={{ marginLeft: 6 }} />
-  //         </Tooltip>
-  //       </span>
-  //     ),
-  //     footer: false,
-  //     content: (
-  //       <Form onFinish={({ secureKey }) => handleVerifyPwd(secureKey)}>
-  //         <Form.Item
-  //           name="secureKey"
-  //           rules={[{ required: true, message: '不可为空' }]}
-  //         >
-  //           <Input.Password placeholder="你的安全密码" />
-  //         </Form.Item>
-  //         <div>
-  //           <Button type="primary" htmlType="submit">
-  //             确认
-  //           </Button>
-  //         </div>
-  //       </Form>
-  //     )
-  //   })
-  // }
   useEffect(() => {
     if (!authorId) return
     getUserCardData({ id: authorId })
@@ -161,7 +124,7 @@ const Index: React.FC = () => {
                     {isOrigin ? '原创' : '转载'}
                   </span>
                   <span className={styles.private}>
-                    {isPrivate ? '私密' : '公开'}
+                    {isPrivate ? '仅我可见' : '公开'}
                   </span>
                 </div>
 

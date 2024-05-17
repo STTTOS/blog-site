@@ -2,10 +2,16 @@ import type { TableColumnProps } from 'antd'
 import type { Article } from '@/service/article/types'
 import type { IFormItemProps } from '@/utils/createForm/types'
 
-import { Tag, Select } from 'antd'
 import { FC, useState } from 'react'
+import { Tag, Space, Select } from 'antd'
 import { SelectProps } from 'rc-select/lib/Select'
-import { CopyOutlined, EyeInvisibleOutlined } from '@ant-design/icons'
+import {
+  LockFilled,
+  EyeOutlined,
+  CopyOutlined,
+  UnlockOutlined,
+  EyeInvisibleOutlined
+} from '@ant-design/icons'
 
 import copy from '@/utils/copy'
 import styles from './index.module.less'
@@ -16,15 +22,19 @@ interface TitleProps {
   title: string
   id: number
   jumpAble?: boolean
+  secure?: boolean
 }
-const Title: FC<TitleProps> = ({ isPrivate, title, id, jumpAble }) => {
+const Title: FC<TitleProps> = ({ isPrivate, title, id, jumpAble, secure }) => {
   const [focused, setFocused] = useState(false)
   return (
     <div
       onMouseEnter={() => setFocused(true)}
       onMouseLeave={() => setFocused(false)}
     >
-      {isPrivate && <EyeInvisibleOutlined className={styles.private} />}
+      <Space className={styles.icon}>
+        {isPrivate ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+        {secure ? <LockFilled /> : <UnlockOutlined />}
+      </Space>
       {jumpAble ? (
         <a href={`/article/${id}`} target="_blank">
           {title}
@@ -50,8 +60,8 @@ const getColumns = (
       title: '标题',
       dataIndex: 'title',
       fixed: 'left',
-      render: (_, { id, title, private: isPrivate }) => (
-        <Title {...{ id, title, isPrivate }} jumpAble={jumpAble} />
+      render: (_, { id, title, private: isPrivate, secure }) => (
+        <Title {...{ id, title, isPrivate, secure }} jumpAble={jumpAble} />
       )
     },
     {

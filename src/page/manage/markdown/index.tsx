@@ -14,6 +14,7 @@ import useFormModal from '@/hooks/useFormModal'
 import useEditOptions from '@/model/editOptions'
 import { Article } from '@/service/article/types'
 import { history } from '@/components/BrowserRouter'
+import { useHideContent } from '@/hooks/useHideContent'
 import { getArticleDetail, isArticleNeedPwd } from '@/service/article'
 
 export let unblock: () => void = () => void 0
@@ -61,6 +62,7 @@ const Index = () => {
     setValue({ ...value!, title })
   }
 
+  useHideContent(!!content && !!title && !!id && mode === 'secure')
   useEffect(() => {
     // 新增时, 字段都为空, 则不拦截
     if (!id && !title && !content) return

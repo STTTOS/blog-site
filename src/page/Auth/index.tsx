@@ -14,7 +14,7 @@ import {
 import styles from './index.module.less'
 import { veirfySecureKey } from '@/service/user'
 
-const secureKey = 'secureKey'
+export const sessionSecurekey = 'secureKey'
 const Auth = () => {
   const nav = useNavigate()
   const [query] = useSearchParams()
@@ -25,7 +25,7 @@ const Auth = () => {
 
     const access = await runAsync({ secureKey: encrypted, id: params.id })
     if (access) {
-      sessionStorage.setItem('secureKey', encrypted)
+      sessionStorage.setItem(sessionSecurekey, encrypted)
       nav(decodeURIComponent(query.get('from') || ''))
     } else {
       message.error('密码不正确')
@@ -75,34 +75,38 @@ const Auth = () => {
     </div>
   )
 }
-export const useNeedAuth = ({
-  isNeed
-}: {
-  isNeed: () => Promise<boolean>
-  // validate: () => Promise<any>
-}) => {
-  const location = useLocation()
+
+export const useGoAuth = () => {
   const nav = useNavigate()
+  const location = useLocation()
+
   const params = useParams()
+  const goAuth = () => {
+    nav(
+      `/auth/${params.id}?from=${encodeURIComponent(
+        location.pathname + location.search
+      )}`
+    )
+  }
+  return { goAuth }
+}
+export const useNeedAuth = ({ isNeed }: { isNeed: () => Promise<boolean> }) => {
+  const { goAuth } = useGoAuth()
   const { loading, runAsync } = useRequest(isNeed, { manual: true })
-  const key = sessionStorage.getItem(secureKey)
+  const key = sessionStorage.getItem(sessionSecurekey)
 
   useEffect(() => {
     if (!key) {
       runAsync().then((need) => {
         if (need) {
-          nav(
-            `/auth/${params.id}?from=${encodeURIComponent(
-              location.pathname + location.search
-            )}`
-          )
+          goAuth()
         }
       })
     }
   }, [runAsync, key])
   return {
     key,
-    goAuth: () => nav('/auth'),
+    goAuth,
     validating: loading
   }
 }

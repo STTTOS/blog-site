@@ -69,7 +69,7 @@ const modelComponents = (
       )
     },
     {
-      label: '是否私密',
+      label: '仅我可见',
       name: 'private',
       initialValue: false,
       element: (

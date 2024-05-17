@@ -9,3 +9,6 @@ export const baseUrl =
   env === 'mock' ? 'http://localhost:4000' : ''
 
 export const domain = 'www.wishufree.com'
+
+// 离开页面后, 重新校验安全密码的时间s
+export const revalidateTime = 5 * 60
