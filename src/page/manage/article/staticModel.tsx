@@ -5,26 +5,19 @@ import type { IFormItemProps } from '@/utils/createForm/types'
 import { FC, useState } from 'react'
 import { Tag, Space, Select } from 'antd'
 import { SelectProps } from 'rc-select/lib/Select'
-import {
-  LockFilled,
-  EyeOutlined,
-  CopyOutlined,
-  UnlockOutlined,
-  EyeInvisibleOutlined
-} from '@ant-design/icons'
+import { LockFilled, CopyOutlined, UnlockOutlined } from '@ant-design/icons'
 
 import copy from '@/utils/copy'
 import styles from './index.module.less'
 import randomTagColor from '@/utils/randomTagColor'
 
 interface TitleProps {
-  isPrivate: boolean
   title: string
   id: number
   jumpAble?: boolean
   secure?: boolean
 }
-const Title: FC<TitleProps> = ({ isPrivate, title, id, jumpAble, secure }) => {
+const Title: FC<TitleProps> = ({ title, id, jumpAble, secure }) => {
   const [focused, setFocused] = useState(false)
   return (
     <div
@@ -32,7 +25,7 @@ const Title: FC<TitleProps> = ({ isPrivate, title, id, jumpAble, secure }) => {
       onMouseLeave={() => setFocused(false)}
     >
       <Space className={styles.icon}>
-        {isPrivate ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+        {/* {isPrivate ? <EyeInvisibleOutlined /> : <EyeOutlined />} */}
         {secure ? <LockFilled /> : <UnlockOutlined />}
       </Space>
       {jumpAble ? (
@@ -60,8 +53,8 @@ const getColumns = (
       title: '标题',
       dataIndex: 'title',
       fixed: 'left',
-      render: (_, { id, title, private: isPrivate, secure }) => (
-        <Title {...{ id, title, isPrivate, secure }} jumpAble={jumpAble} />
+      render: (_, { id, title, secure }) => (
+        <Title {...{ id, title, secure }} jumpAble={jumpAble} />
       )
     },
     {

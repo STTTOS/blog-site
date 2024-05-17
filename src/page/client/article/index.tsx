@@ -45,7 +45,7 @@ const Index: React.FC = () => {
     defaultParams: [{ id, secureKey }],
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError(res: any) {
-      if (res?.response?.code === 10000) goAuth()
+      if (res?.response?.code === 10001) goAuth()
     }
   })
   const loading = useMemo(() => {

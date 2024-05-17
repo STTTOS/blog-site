@@ -3,20 +3,14 @@ import { SHA256 } from 'crypto-js'
 import { useRequest } from 'ahooks'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { Form, Input, Button, Tooltip, message } from 'antd'
-import {
-  Link,
-  useParams,
-  useLocation,
-  useNavigate,
-  useSearchParams
-} from 'react-router-dom'
+import { Link, useParams, useLocation, useSearchParams } from 'react-router-dom'
 
 import styles from './index.module.less'
 import { veirfySecureKey } from '@/service/user'
+import { history } from '@/components/BrowserRouter'
 
 export const sessionSecurekey = 'secureKey'
 const Auth = () => {
-  const nav = useNavigate()
   const [query] = useSearchParams()
   const params = useParams()
   const { runAsync, loading } = useRequest(veirfySecureKey)
@@ -26,7 +20,7 @@ const Auth = () => {
     const access = await runAsync({ secureKey: encrypted, id: params.id })
     if (access) {
       sessionStorage.setItem(sessionSecurekey, encrypted)
-      nav(decodeURIComponent(query.get('from') || ''))
+      history.replace(decodeURIComponent(query.get('from') || ''))
     } else {
       message.error('密码不正确')
     }
@@ -77,12 +71,11 @@ const Auth = () => {
 }
 
 export const useGoAuth = () => {
-  const nav = useNavigate()
   const location = useLocation()
 
   const params = useParams()
   const goAuth = () => {
-    nav(
+    history.replace(
       `/auth/${params.id}?from=${encodeURIComponent(
         location.pathname + location.search
       )}`
