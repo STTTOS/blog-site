@@ -13,7 +13,7 @@ export const sessionSecurekey = 'secureKey'
 const Auth = () => {
   const [query] = useSearchParams()
   const params = useParams()
-  const { runAsync, loading } = useRequest(veirfySecureKey)
+  const { runAsync, loading } = useRequest(veirfySecureKey, { manual: true })
   const handleVerifyPwd = async (secureKey: string) => {
     const encrypted = SHA256(secureKey).toString()
 

@@ -1,5 +1,3 @@
-import { isNil } from 'lodash'
-import { useRequest } from 'ahooks'
 import { useRef, useEffect } from 'react'
 import { Spin, Input, Space, Button, Switch, Tooltip } from 'antd'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
@@ -12,10 +10,9 @@ import { Editor } from '@/components/Markdown'
 import useFormModal from '@/hooks/useFormModal'
 import useEditOptions from '@/model/editOptions'
 import { Article } from '@/service/article/types'
-import { useGoAuth, useNeedAuth } from '@/page/Auth'
 import { history } from '@/components/BrowserRouter'
 import { useHideContent } from '@/hooks/useHideContent'
-import { getArticleDetail, isArticleNeedPwd } from '@/service/article'
+import useArticleDetailWithValidating from '@/hooks/useArticleDetailWithValidating'
 
 export let unblock: () => void = () => void 0
 const Index = () => {
@@ -27,28 +24,14 @@ const Index = () => {
   const { id } = query
 
   const { isPrivate, setPrivateMode } = useEditOptions()
-  const { goAuth } = useGoAuth()
-  const { key } = useNeedAuth({
-    isNeed: () =>
-      isNil(id) ? Promise.resolve(false) : isArticleNeedPwd({ id: Number(id) })
-  })
-
   const {
     data: value,
-    mutate: setValue,
-    loading
-  } = useRequest(getArticleDetail, {
-    defaultParams: [{ id: Number(id), secureKey: key }],
-    manual: !id,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onError(res: any) {
-      if (res?.response?.code === 10001) goAuth()
-    },
-    onSuccess(data) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      ref.current = data
-    }
+    loading,
+    setValue
+  } = useArticleDetailWithValidating(Number(id), (data) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    ref.current = data
   })
   const { title, content } = value || {}
 

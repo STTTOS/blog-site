@@ -10,7 +10,6 @@ import { EyeOutlined, MailOutlined, GithubOutlined } from '@ant-design/icons'
 
 import { useUserInfo } from '@/model'
 import styles from './index.module.less'
-import { useNeedAuth } from '@/page/Auth'
 import Avatars from '@/components/Avatars'
 import useTimeout from '@/hooks/useTimeout'
 import { getUserCard } from '@/service/user'
@@ -20,12 +19,8 @@ import randomTagColor from '@/utils/randomTagColor'
 import ScrollBarNav from '@/components/ScrollBarNav'
 import { useHideContent } from '@/hooks/useHideContent'
 import { Viewer, Catalogue } from '@/components/Markdown'
-import {
-  countArticle,
-  getArticleDetail,
-  isArticleNeedPwd,
-  getSimilarArticles
-} from '@/service/article'
+import { countArticle, getSimilarArticles } from '@/service/article'
+import useArticleDetailWithValidating from '@/hooks/useArticleDetailWithValidating'
 
 const Index: React.FC = () => {
   const navigate = useNavigate()
@@ -33,25 +28,7 @@ const Index: React.FC = () => {
 
   const id = Number(query.id)
 
-  const {
-    goAuth,
-    key: secureKey,
-    validating
-  } = useNeedAuth({
-    isNeed: () => isArticleNeedPwd({ id })
-  })
-  useHideContent()
-  const { data: detail, loading: fetching } = useRequest(getArticleDetail, {
-    defaultParams: [{ id, secureKey }],
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onError(res: any) {
-      if (res?.response?.code === 10001) goAuth()
-    }
-  })
-  const loading = useMemo(() => {
-    return validating || fetching
-  }, [validating, fetching])
-
+  const { data: detail, loading } = useArticleDetailWithValidating(id)
   const { data: recommendList = [] } = useRequest(getSimilarArticles, {
     defaultParams: [{ id }]
   })
@@ -93,6 +70,7 @@ const Index: React.FC = () => {
       </Tag>
     ))
 
+  useHideContent()
   useEffect(() => {
     if (!authorId) return
     getUserCardData({ id: authorId })
