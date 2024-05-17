@@ -1,7 +1,7 @@
-import type { IComponent, ICreateFormConfig } from './types'
+import type { IComponent, IFormItemProps, ICreateFormConfig } from './types'
 
-import { Form, Row, Col, Input } from 'antd'
-import { isValidElement, cloneElement, useEffect } from 'react'
+import { Row, Col, Form, Input } from 'antd'
+import { useEffect, cloneElement, isValidElement } from 'react'
 
 import FormItem from '@/components/FormItem'
 
@@ -50,7 +50,7 @@ const useForm = ({
       placeholder = `请输入${label}`,
       element = <Input allowClear />,
       ...formItemProps
-    } = config
+    } = config as IFormItemProps<Record<string, unknown>>
 
     const localSpan = span ?? itemSpan
     const localRequire = require ?? itemsRequire

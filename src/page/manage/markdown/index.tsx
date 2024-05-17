@@ -1,10 +1,11 @@
 import { isNil } from 'lodash'
 import { useRequest } from 'ahooks'
 import { useRef, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { QuestionCircleOutlined } from '@ant-design/icons'
 import { Spin, Input, Space, Button, Switch, Tooltip } from 'antd'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 
+import { EditMode } from '../article'
 import styles from './index.module.less'
 import ModalContent from './modalContent'
 import { useNeedAuth } from '@/page/Auth'
@@ -17,8 +18,10 @@ import { getArticleDetail, isArticleNeedPwd } from '@/service/article'
 
 export let unblock: () => void = () => void 0
 const Index = () => {
-  const { Modal, openModal } = useFormModal()
+  const { Modal, openModal } = useFormModal({ destroyOnClose: false })
   const query = useParams()
+  const [params] = useSearchParams()
+  const mode = params.get('mode') as EditMode
   const ref = useRef<Partial<Article>>(null)
   const { id } = query
 
@@ -97,12 +100,25 @@ const Index = () => {
               发布
             </Button>
           </div>
+          <div className={styles.secure_mode_text}>
+            {mode === 'secure' && (
+              <span>
+                <InfoCircleOutlined style={{ marginRight: 4 }} />
+                你当前处于加密编辑模式, 文本内容以及图片都会被加密处理,
+                并且会开启安全密码访问, 可在
+                <Link to="/manage/author" target="_blank">
+                  用户管理
+                </Link>
+                处设置/修改安全密码
+              </span>
+            )}
+          </div>
           <div className={styles.control}>
             <Space align="center">
               <Switch
                 className={styles.switch}
-                checkedChildren="隐私编辑模式"
-                unCheckedChildren="正常编辑模式"
+                checkedChildren="隐私模式"
+                unCheckedChildren="显示图片/视频"
                 value={isPrivate}
                 onChange={(checked) => {
                   setPrivateMode?.(checked)

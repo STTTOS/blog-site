@@ -29,7 +29,7 @@ async function accessOriginImage(src: string) {
 
 export const ElementBeForbidden = (
   <div style={{ textAlign: 'center' }}>
-    <img src="http://www.wishufree.com/static/files/images__4e6a952a88e11972469c3ae0b.png" />
+    <img src="//www.wishufree.com/static/files/images__4e6a952a88e11972469c3ae0b.png" />
   </div>
 )
 const Image: FC<ImageProps> = (props) => {
@@ -45,9 +45,11 @@ const Image: FC<ImageProps> = (props) => {
     const url = exsited ? originSrc : props.src!
     setLoading(false)
 
+    const [name] = url.split('?token=')
     const a = document.createElement('a')
     a.download = basename(props.src!)
     a.href = url
+    a.download = name
     a.click()
   }
 
@@ -70,7 +72,7 @@ const Image: FC<ImageProps> = (props) => {
     <div className={styles.wrapper}>
       <LazyLoadImage
         effect="blur"
-        placeholderSrc="/static/7855d7716bd637e33ae511c05.png"
+        placeholderSrc="//:www.wishufree.com/static/7855d7716bd637e33ae511c05.png"
         {...props}
       />
 

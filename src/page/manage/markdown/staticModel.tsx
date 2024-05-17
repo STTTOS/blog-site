@@ -79,17 +79,19 @@ const modelComponents = (
         </Radio.Group>
       )
     },
-    {
-      label: <span>开启密码访问</span>,
-      name: 'secure',
-      initialValue: false,
-      element: (
-        <Radio.Group>
-          <Radio value={true}>是</Radio>
-          <Radio value={false}>否</Radio>
-        </Radio.Group>
-      )
-    },
+    // fix: 不支持修复, 只有新增的时候可以选择类型
+    // 不然在编辑的时候, 增加了许多复杂度
+    // {
+    //   label: <span>开启密码访问</span>,
+    //   name: 'secure',
+    //   initialValue: false,
+    //   element: (
+    //     <Radio.Group>
+    //       <Radio value={true}>是</Radio>
+    //       <Radio value={false}>否</Radio>
+    //     </Radio.Group>
+    //   )
+    // },
     {
       label: '编辑摘要',
       name: 'desc',

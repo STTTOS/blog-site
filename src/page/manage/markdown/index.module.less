@@ -8,8 +8,8 @@
     align-items: center;
   }
   .header {
-    padding: 24px;
-    height: 110px;
+    padding: 24px 24px 4px;
+    flex-shrink: 0;
 
     :global {
       .ant-input {
@@ -30,9 +30,13 @@
   }
   .markdown {
     flex: 1;
-    height: calc(100% - 110px);
   }
   .switch {
     width: 110px;
+  }
+  .secure_mode_text {
+    font-size: 13px;
+    color: #7d7d7d;
+    text-align: center;
   }
 }

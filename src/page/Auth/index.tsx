@@ -92,7 +92,9 @@ export const useNeedAuth = ({
       runAsync().then((need) => {
         if (need) {
           nav(
-            `/auth/${params.id}?from=${encodeURIComponent(location.pathname)}`
+            `/auth/${params.id}?from=${encodeURIComponent(
+              location.pathname + location.search
+            )}`
           )
         }
       })

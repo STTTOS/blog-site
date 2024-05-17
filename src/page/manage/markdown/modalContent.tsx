@@ -3,8 +3,8 @@ import type { IFormWithDrawer } from '@/hooks/useFormDrawer'
 import type { ICreateFormConfig } from '@/utils/createForm/types'
 
 import { MD5 } from 'crypto-js'
-import { useNavigate } from 'react-router-dom'
 import { useMemo, useEffect, useCallback } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { unblock } from '.'
 import { useUserInfo } from '@/model'
@@ -17,6 +17,7 @@ type IProps = IFormWithDrawer & { data: Article }
 
 const ModalContent: React.FC<IProps> = ({ register = () => void 0, data }) => {
   const navigate = useNavigate()
+  const [query] = useSearchParams()
   const { user } = useUserInfo()
   const { userOptions, tagOptions, refreshTags, fecthingTag, fetchingUser } =
     useGlobalData()
@@ -49,7 +50,12 @@ const ModalContent: React.FC<IProps> = ({ register = () => void 0, data }) => {
 
   const handleFinish = useCallback(async () => {
     const { secureKey, ...res } = await form.validateFields()
-    const params = { ...data, ...res, secureKey: secureKey && MD5(secureKey) }
+    const params = {
+      ...data,
+      ...res,
+      secureKey: secureKey && MD5(secureKey),
+      secure: query.get('mode') === 'secure'
+    }
 
     if (isEditing) {
       await updateArticle(params)

@@ -24,6 +24,20 @@ async function upload(params: { file: File }) {
   return url
 }
 
+async function uploadImageProtected(params: { file: File }) {
+  const formData = new FormData()
+  formData.append('file', params.file)
+
+  const {
+    data: { url }
+  } = await request<{ url: string }>(
+    'api/common/upload_image_encrypted',
+    {},
+    formData
+  )
+  return url
+}
+
 async function uploadTempFile(params: { file: File }) {
   const formData = new FormData()
   formData.append('file', params.file)
@@ -81,5 +95,6 @@ export {
   getCountWeb,
   uploadTempFile,
   uploadPersistentFile,
-  uploadFile
+  uploadFile,
+  uploadImageProtected
 }
