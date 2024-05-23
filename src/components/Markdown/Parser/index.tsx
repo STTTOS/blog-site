@@ -2,7 +2,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import 'plyr-react/plyr.css'
-import Plyr from 'plyr-react'
 import remarkGfm from 'remark-gfm'
 import remarkIns from 'remark-ins'
 import { memo, type FC } from 'react'
@@ -54,16 +53,9 @@ const Parser: FC<{ children: string; isPrivate?: boolean }> = ({
         video(props) {
           if (isPrivate) return ElementBeForbidden
           return (
-            <Plyr
-              controls
-              source={{
-                type: 'video',
-                poster: '',
-                sources: [{ src: props.src! }]
-              }}
-              crossOrigin="anonymous"
-              style={{ width: '100%' }}
-            />
+            <video style={{ width: '100%' }}>
+              <source src={props.src} type="video/mp4" />
+            </video>
           )
         },
         code(props) {
