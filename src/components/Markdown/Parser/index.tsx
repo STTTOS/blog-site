@@ -47,13 +47,14 @@ const Parser: FC<{ children: string; isPrivate?: boolean }> = ({
       rehypePlugins={[[rehypeVideo, { details: false }]]}
       remarkPlugins={[remarkGfm, remarkIns, remarkBreaks]}
       components={{
-        img(props) {
+        // eslint-disable-next-line no-unused-vars
+        img({ node, ...props }) {
           return <Image {...props} isPrivate={isPrivate} />
         },
         video(props) {
           if (isPrivate) return ElementBeForbidden
           return (
-            <video style={{ width: '100%' }}>
+            <video controls style={{ width: '100%' }}>
               <source src={props.src} type="video/mp4" />
             </video>
           )

@@ -1,5 +1,4 @@
-import classnames from 'classnames'
-import { Spin, message } from 'antd'
+import { message } from 'antd'
 import Modal from '@mui/material/Modal'
 import { basename } from 'path-browserify'
 import { type FC, useMemo, useState } from 'react'
@@ -7,24 +6,30 @@ import { CloseCircleOutlined } from '@ant-design/icons'
 import 'react-lazy-load-image-component/src/effects/blur.css'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 
-import request from '@/utils/http'
 import styles from './index.module.less'
+import AsyncButton from '../AsyncButton'
 
 interface ImageProps {
   src?: string
   alt?: string
   isPrivate?: boolean
 }
-async function accessOriginImage(src: string) {
-  try {
-    await request(src, undefined, undefined, {
-      method: 'get',
-      origin: true
-    })
-    return true
-  } catch (error) {
-    return false
-  }
+
+function getOriginUrl(src: string) {
+  if (src.startsWith('https:')) return src.replace('/compressed', '/origin')
+  return `/static/origin/${basename(src)}`
+}
+function accessOriginImage(src: string) {
+  return new Promise<boolean>((resolve) => {
+    const img = new Image()
+    img.src = src
+    img.onload = () => {
+      resolve(true)
+    }
+    img.onerror = () => {
+      resolve(false)
+    }
+  })
 }
 
 export const ElementBeForbidden = (
@@ -32,24 +37,19 @@ export const ElementBeForbidden = (
     <img src="//www.wishufree.com/static/files/images__4e6a952a88e11972469c3ae0b.png" />
   </div>
 )
-const Image: FC<ImageProps> = (props) => {
+const BetterImage: FC<ImageProps> = (props) => {
   const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
   const originSrc = useMemo(() => {
-    return `/static/origin/${basename(props.src!)}`
+    return getOriginUrl(props.src!)
   }, [props.src])
 
   const handleDownload = async () => {
-    setLoading(true)
-    const exsited = await accessOriginImage(originSrc)
-    const url = exsited ? originSrc : props.src!
-    setLoading(false)
+    const access = await accessOriginImage(originSrc)
 
-    const [name] = url.split('?token=')
+    const [name] = props.src!.split('?token=')
     const a = document.createElement('a')
-    a.download = basename(props.src!)
-    a.href = url
-    a.download = name
+    a.download = basename(name)
+    a.href = access ? originSrc : props.src!
     a.click()
   }
 
@@ -77,21 +77,21 @@ const Image: FC<ImageProps> = (props) => {
       />
 
       <div className={styles.op}>
-        <div
-          className={classnames(styles.origin, styles.button)}
-          onClick={withValidateOriginImageIfExsited(() => setOpen(true))}
+        <AsyncButton
+          type="text"
+          style={{ color: '#fff' }}
+          request={withValidateOriginImageIfExsited(() => setOpen(true))}
         >
           查看原图
-        </div>
+        </AsyncButton>
 
-        <Spin spinning={loading}>
-          <div
-            className={classnames(styles.download, styles.button)}
-            onClick={handleDownload}
-          >
-            下载
-          </div>
-        </Spin>
+        <AsyncButton
+          type="text"
+          style={{ color: '#fff' }}
+          request={handleDownload}
+        >
+          下载
+        </AsyncButton>
       </div>
 
       <Modal
@@ -118,4 +118,4 @@ const Image: FC<ImageProps> = (props) => {
   )
 }
 
-export default Image
+export default BetterImage
