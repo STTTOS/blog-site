@@ -72,8 +72,7 @@ const BetterImage: FC<ImageProps> = (props) => {
     <div className={styles.wrapper}>
       <LazyLoadImage
         effect="blur"
-        placeholderSrc="//www.wishufree.com/static/files/1b73df93e4744d4eb4ae4ddb515ff9f9__3a173c97-d3a0-4071-8a75-e8b045bf36cb.jpeg"
-        style={{ display: 'block' }}
+        style={{ minHeight: 300, display: 'block', objectFit: 'cover' }}
         {...props}
       />
 
@@ -105,10 +104,11 @@ const BetterImage: FC<ImageProps> = (props) => {
             overflow: 'auto',
             maxHeight: '100%',
             textAlign: 'center',
-            outlineColor: '#5CB963'
+            outlineColor: '#5CB963',
+            position: 'relative'
           }}
         >
-          <img src={originSrc} style={{ maxWidth: 'calc(100vw - 100px)' }} />
+          <img src={originSrc} style={{ maxWidth: 'calc(100vw - 30px)' }} />
           <CloseCircleOutlined
             onClick={() => setOpen(false)}
             className={styles.icon}

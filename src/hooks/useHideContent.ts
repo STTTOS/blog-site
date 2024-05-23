@@ -1,10 +1,10 @@
 import { useRef, useState, useEffect } from 'react'
 
 import { revalidateTime } from '@/config'
-import { useGoAuth, sessionSecurekey } from '@/page/Auth'
+import { useGoAuth, sessionSecurekey } from '@/page/auth'
 
 // 在离开页面时, 开始计时, 如果超过30s, 则隐藏内容, 跳转到鉴权页面
-export const useHideContent = (hide = true) => {
+export const useHideContent = (hide = false) => {
   const ref = useRef<NodeJS.Timeout>()
   const [shouldHide, setShouldHide] = useState(false)
 

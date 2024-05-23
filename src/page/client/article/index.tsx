@@ -70,7 +70,7 @@ const Index: React.FC = () => {
       </Tag>
     ))
 
-  useHideContent()
+  useHideContent(detail?.secure)
   useEffect(() => {
     if (!authorId) return
     getUserCardData({ id: authorId })

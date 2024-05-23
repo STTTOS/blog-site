@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie'
 import { useEffect } from 'react'
 import { SHA256 } from 'crypto-js'
 import { useRequest } from 'ahooks'
@@ -21,6 +22,7 @@ const Auth = () => {
     if (access) {
       sessionStorage.setItem(sessionSecurekey, encrypted)
       history.replace(decodeURIComponent(query.get('from') || ''))
+      Cookies.set('secureKey', encrypted)
     } else {
       message.error('密码不正确')
     }
