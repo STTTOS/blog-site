@@ -29,8 +29,11 @@ export const useHideContent = (hide = false) => {
       }
     }
     window.addEventListener('visibilitychange', handleVisibilityChange)
-    return () =>
+    window.addEventListener('pagehide', start)
+    return () => {
       window.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('pagehide', start)
+    }
   }, [hide])
 
   useEffect(() => {
