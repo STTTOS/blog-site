@@ -73,6 +73,7 @@ const BetterImage: FC<ImageProps> = (props) => {
       <LazyLoadImage
         effect="blur"
         placeholderSrc="//:www.wishufree.com/static/7855d7716bd637e33ae511c05.png"
+        style={{ display: 'block' }}
         {...props}
       />
 

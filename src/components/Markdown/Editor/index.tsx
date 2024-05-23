@@ -22,8 +22,7 @@ const Index: React.FC<IProps> = ({ onChange = () => void 0, value }) => {
   // eslint-disable-next-line no-unused-vars
   const handleUpload = async (file: File) => {
     const request = mode === 'secure' ? uploadImageProtected : upload
-    const url = await request({ file })
-    return `\n${url}`
+    return await request({ file })
   }
   const { isPrivate } = useEditOptions()
 
