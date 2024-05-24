@@ -12,7 +12,6 @@ import AsyncButton from '../AsyncButton'
 interface ImageProps {
   src?: string
   alt?: string
-  isPrivate?: boolean
 }
 
 function getOriginUrl(src: string) {
@@ -64,18 +63,9 @@ const BetterImage: FC<ImageProps> = (props) => {
     }
   }
 
-  if (props.isPrivate) {
-    return ElementBeForbidden
-  }
-
   return (
     <div className={styles.wrapper}>
-      <LazyLoadImage
-        effect="blur"
-        placeholderSrc="//www.wishufree.com/static/files/1b73df93e4744d4eb4ae4ddb515ff9f9__3a173c97-d3a0-4071-8a75-e8b045bf36cb.jpeg"
-        style={{ display: 'block' }}
-        {...props}
-      />
+      <LazyLoadImage effect="blur" style={{ display: 'block' }} {...props} />
 
       <div className={styles.op}>
         <AsyncButton

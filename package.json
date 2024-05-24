@@ -22,6 +22,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@mui/joy": "^5.0.0-beta.36",
     "@mui/material": "^5.15.15",
     "@types/lodash": "^4.14.186",
     "@wangeditor/editor": "^5.1.22",
@@ -42,7 +43,6 @@
     "markdown-navbar": "^1.4.3",
     "particles-bg": "^2.5.5",
     "path-browserify": "^1.0.1",
-    "plyr-react": "^5.3.0",
     "prism-react-renderer": "^2.3.1",
     "qs": "^6.11.0",
     "query-string": "^9.0.0",

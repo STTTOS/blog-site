@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import 'plyr-react/plyr.css'
 import remarkGfm from 'remark-gfm'
 import remarkIns from 'remark-ins'
@@ -12,6 +11,7 @@ import { CopyOutlined } from '@ant-design/icons'
 import { themes, Highlight, RenderProps } from 'prism-react-renderer'
 
 import copy from '@/utils/copy'
+import Video from '@/components/Video'
 import Image, { ElementBeForbidden } from '@/components/Image'
 
 const renderChildren = ({
@@ -49,15 +49,13 @@ const Parser: FC<{ children: string; isPrivate?: boolean }> = ({
       components={{
         // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
         img({ node, ...props }) {
-          return <Image {...props} isPrivate={isPrivate} />
+          if (isPrivate) return ElementBeForbidden
+
+          return <Image {...props} key={props.src} />
         },
         video(props) {
           if (isPrivate) return ElementBeForbidden
-          return (
-            <video controls style={{ width: '100%' }}>
-              <source src={props.src} type="video/mp4" />
-            </video>
-          )
+          return <Video src={props.src} />
         },
         code(props) {
           const { children, className } = props
