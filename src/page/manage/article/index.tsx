@@ -134,7 +134,7 @@ const Index = () => {
                   <Button
                     onClick={() => onAddOrUpdateClick({ mode: 'secure' })}
                   >
-                    加密模式
+                    安全模式
                   </Button>
                 )
               },
