@@ -1,3 +1,5 @@
+@header-height: 125px;
+
 .container {
   display: flex;
   flex-direction: column;
@@ -10,7 +12,7 @@
   .header {
     padding: 24px 24px 4px;
     flex-shrink: 0;
-    height: 115px;
+    height: @header-height;
 
     :global {
       .ant-input {
@@ -31,7 +33,7 @@
   }
   .markdown {
     // flex: 1;
-    height: calc(100% - 115px);
+    height: calc(100% - @header-height);
   }
   .switch {
     width: 110px;

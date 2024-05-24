@@ -94,7 +94,7 @@ const Index = () => {
             {mode === 'secure' && (
               <span>
                 <InfoCircleOutlined style={{ marginRight: 4 }} />
-                你当前处于加密编辑模式, 文本内容以及图片都会被加密处理,
+                你当前处于安全编辑模式, 文本内容以及图片都会被加密处理,
                 并且会开启安全密码访问, 可在
                 <Link to="/manage/author" target="_blank">
                   用户管理

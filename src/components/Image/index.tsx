@@ -12,7 +12,6 @@ import AsyncButton from '../AsyncButton'
 interface ImageProps {
   src?: string
   alt?: string
-  isPrivate?: boolean
 }
 
 function getOriginUrl(src: string) {
@@ -62,10 +61,6 @@ const BetterImage: FC<ImageProps> = (props) => {
         message.info('该图片并未压缩, 已展示原图')
       }
     }
-  }
-
-  if (props.isPrivate) {
-    return ElementBeForbidden
   }
 
   return (
