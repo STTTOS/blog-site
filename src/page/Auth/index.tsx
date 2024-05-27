@@ -9,7 +9,7 @@ import styles from './index.module.less'
 import { veirfySecureKey } from '@/service/user'
 import { history } from '@/components/BrowserRouter'
 
-export const sessionSecurekey = 'secureKey'
+export const sessionSecureKey = 'secureKey'
 const Auth = () => {
   const [query] = useSearchParams()
   const params = useParams()
@@ -19,7 +19,7 @@ const Auth = () => {
 
     const access = await runAsync({ secureKey: encrypted, id: params.id })
     if (access) {
-      sessionStorage.setItem(sessionSecurekey, encrypted)
+      sessionStorage.setItem(sessionSecureKey, encrypted)
       history.replace(decodeURIComponent(query.get('from') || ''))
     } else {
       message.error('密码不正确')
@@ -86,7 +86,7 @@ export const useGoAuth = () => {
 export const useNeedAuth = ({ isNeed }: { isNeed: () => Promise<boolean> }) => {
   const { goAuth } = useGoAuth()
   const { loading, runAsync } = useRequest(isNeed, { manual: true })
-  const key = sessionStorage.getItem(sessionSecurekey)
+  const key = sessionStorage.getItem(sessionSecureKey)
 
   useEffect(() => {
     if (!key) {

@@ -33,6 +33,7 @@ function forceJumpTo(path: string, mode: 'href' | 'route' = 'route') {
     history.push(path)
   }
 }
+
 async function betterRequest<R>(
   url: string,
   params?: Record<string, any>,
@@ -40,12 +41,15 @@ async function betterRequest<R>(
   options?: RequestOptionsInit & { origin?: boolean }
 ) {
   try {
-    const response = await request<Promise<ResBasic<R>>>(join('/', url), {
-      method: 'POST',
-      data: file || params,
-      requestType: file ? 'form' : 'json',
-      ...options
-    })
+    const response = await request<Promise<ResBasic<R>>>(
+      url.startsWith('http') ? url : join('/', url),
+      {
+        method: 'POST',
+        data: file || params,
+        requestType: file ? 'form' : 'json',
+        ...options
+      }
+    )
     if (options?.origin) return response
 
     const { code, data, msg } = response
@@ -79,5 +83,10 @@ async function betterRequest<R>(
     throw error
   }
 }
-
+betterRequest.get = (
+  url: string,
+  options: Parameters<typeof betterRequest>[3]
+) => {
+  return betterRequest(url, undefined, undefined, { ...options, method: 'get' })
+}
 export default betterRequest

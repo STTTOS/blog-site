@@ -1,11 +1,11 @@
 import { useRequest } from 'ahooks'
 
-import { useGoAuth, sessionSecurekey } from '@/page/Auth'
+import { useGoAuth, sessionSecureKey } from '@/page/Auth'
 import { getArticleDetail, isArticleNeedPwd } from '@/service/article'
 
 async function getData(id: number, onNav: () => void) {
   const isNeedPwd = await isArticleNeedPwd({ id })
-  const secureKey = sessionStorage.getItem(sessionSecurekey)
+  const secureKey = sessionStorage.getItem(sessionSecureKey)
   if (isNeedPwd && !secureKey) {
     onNav()
     return null

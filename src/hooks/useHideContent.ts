@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 
 import { revalidateTime } from '@/config'
-import { useGoAuth, sessionSecurekey } from '@/page/Auth'
+import { useGoAuth, sessionSecureKey } from '@/page/Auth'
 
 // 在离开页面时, 开始计时, 如果超过30s, 则隐藏内容, 跳转到鉴权页面
 export const useHideContent = (hide = true) => {
@@ -12,7 +12,7 @@ export const useHideContent = (hide = true) => {
   const start = () => {
     ref.current = setTimeout(() => {
       setShouldHide(true)
-      sessionStorage.removeItem(sessionSecurekey)
+      sessionStorage.removeItem(sessionSecureKey)
     }, revalidateTime * 1000)
   }
   const reset = () => {
