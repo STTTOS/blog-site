@@ -58,7 +58,15 @@ code {
   color: #5cb963 !important;
 }
 
-.custom-html-style p {
-  overflow-wrap: break-word;
-  font-size: 16px !important;
+.custom-html-style {
+  p {
+    overflow-wrap: break-word;
+  }
+
+  *:not(h1, h2, h3, h4, h5, h6) {
+    font-size: 16px !important;
+  }
+  pre * {
+    font-size: 14px !important;
+  }
 }
