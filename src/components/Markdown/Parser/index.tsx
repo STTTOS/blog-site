@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-import 'plyr-react/plyr.css'
 import remarkGfm from 'remark-gfm'
 import remarkIns from 'remark-ins'
 import { memo, type FC } from 'react'

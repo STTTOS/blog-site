@@ -31,6 +31,14 @@ export default defineConfig({
       '/static': {
         changeOrigin: true,
         target
+      },
+      '/xuan': {
+        changeOrigin: true,
+        target
+      },
+      '/images': {
+        changeOrigin: true,
+        target
       }
     }
   },
