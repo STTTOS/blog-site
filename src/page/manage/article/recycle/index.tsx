@@ -24,7 +24,7 @@ const Recycle = () => {
     {
       title: '删除剩余时间(天)',
       render(_, { deletedAt }) {
-        return dayjs().add(30, 'day').diff(deletedAt, 'day')
+        return dayjs(deletedAt).add(30, 'day').diff(Date.now(), 'day')
       }
     },
     ...getColumns([], false).filter(
