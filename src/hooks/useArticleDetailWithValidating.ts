@@ -1,6 +1,6 @@
 import { useRequest } from 'ahooks'
 
-import { useGoAuth, sessionSecureKey } from '@/page/Auth'
+import { useGoAuth, sessionSecureKey } from '@/page/auth'
 import { getArticleDetail, isArticleNeedPwd } from '@/service/article'
 
 async function getData(id: number, onNav: () => void) {
