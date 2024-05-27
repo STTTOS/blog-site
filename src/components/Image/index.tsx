@@ -8,7 +8,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component'
 
 import styles from './index.module.less'
 import AsyncButton from '../AsyncButton'
-import { sessionSecureKey } from '@/page/Auth'
+import { sessionSecureKey } from '@/page/auth'
 
 interface ImageProps {
   src?: string
@@ -145,10 +145,11 @@ const BetterImage: FC<ImageProps> = (props) => {
             overflow: 'auto',
             maxHeight: '100%',
             textAlign: 'center',
-            outlineColor: '#5CB963'
+            outlineColor: '#5CB963',
+            position: 'relative'
           }}
         >
-          <img src={originSrc} style={{ maxWidth: 'calc(100vw - 100px)' }} />
+          <img src={originSrc} style={{ maxWidth: 'calc(100vw - 30px)' }} />
           <CloseCircleOutlined
             onClick={() => setOpen(false)}
             className={styles.icon}
