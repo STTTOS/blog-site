@@ -8,13 +8,19 @@ import menuItems from './menuItems'
 import { useUserInfo } from '@/model'
 import styles from './index.module.less'
 import { logoImg } from '@/globalConfig'
+import { getUser } from '@/service/user'
+import { ResBasic } from '@/utils/types'
 import Loading from '@/components/Loading'
+import Redirect from '@/components/Redirect'
 import PopoverHandle from '@/layout/popoverHandle'
 
 const { Content, Header, Footer, Sider } = Layout
 
 const ManageLayout = () => {
-  const { user, loading, fetch } = useUserInfo()
+  const { set } = useUserInfo()
+  const [error, setError] = useState<{ response: ResBasic<null> }>()
+  const [loading, setLoading] = useState(true)
+
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const [collapsed, setCollapsed] = useState(false)
@@ -29,6 +35,10 @@ const ManageLayout = () => {
     if (loading) return <Loading />
 
     if (pathname.includes('markdown')) return <Outlet />
+
+    if (error?.response.code === 401) {
+      return <Redirect to="/login" />
+    }
 
     return (
       <Layout className={styles.container}>
@@ -66,12 +76,16 @@ const ManageLayout = () => {
         </Layout>
       </Layout>
     )
-  }, [user, loading, pathname, collapsed, activeKey])
+  }, [loading, pathname, collapsed, activeKey, error])
 
   // useNewFeatureInfo()
 
   useEffect(() => {
-    fetch()
+    getUser('manage')
+      .then(set, setError)
+      .finally(() => {
+        setLoading(false)
+      })
   }, [])
   return children
 }

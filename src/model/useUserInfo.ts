@@ -10,6 +10,8 @@ interface UserState {
   loading: boolean
   /**清空用户信息 */
   reset: () => void
+  // eslint-disable-next-line no-unused-vars
+  set: (user: User) => void
 }
 const useUserInfo = create<UserState>((set) => ({
   user: undefined,
@@ -24,6 +26,9 @@ const useUserInfo = create<UserState>((set) => ({
     } finally {
       set({ loading: false })
     }
+  },
+  set(user: User) {
+    set({ user })
   },
   reset() {
     set({ user: undefined })

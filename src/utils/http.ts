@@ -55,10 +55,7 @@ async function betterRequest<R>(
     const { code, data, msg } = response
 
     if (code === 401) {
-      forceJumpTo(
-        `/login?from=${encodeURIComponent(location.pathname)}`,
-        'href'
-      )
+      forceJumpTo(`/login?from=${encodeURIComponent(location.pathname)}`)
     } else if (code === 403) {
       forceJumpTo('/403')
       history.push('/403')

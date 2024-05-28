@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 interface RedirectProps {
   to: string
@@ -7,7 +7,7 @@ interface RedirectProps {
 const Redirect: React.FC<RedirectProps> = ({ to }) => {
   const nav = useNavigate()
 
-  useEffect(() => nav(to))
+  useEffect(() => nav(to), [to])
   return null
 }
 
