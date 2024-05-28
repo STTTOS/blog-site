@@ -1,6 +1,7 @@
 import type { MenuInfo } from 'rc-menu/lib/interface'
 
 import { Menu, Layout } from 'antd'
+import { useRequest } from 'ahooks'
 import { useMemo, useState, useEffect } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 
@@ -9,17 +10,14 @@ import { useUserInfo } from '@/model'
 import styles from './index.module.less'
 import { logoImg } from '@/globalConfig'
 import { getUser } from '@/service/user'
-import { ResBasic } from '@/utils/types'
 import Loading from '@/components/Loading'
-import Redirect from '@/components/Redirect'
 import PopoverHandle from '@/layout/popoverHandle'
 
 const { Content, Header, Footer, Sider } = Layout
 
 const ManageLayout = () => {
   const { set } = useUserInfo()
-  const [error, setError] = useState<{ response: ResBasic<null> }>()
-  const [loading, setLoading] = useState(true)
+  const { loading, data } = useRequest(() => getUser('manage'))
 
   const navigate = useNavigate()
   const { pathname } = useLocation()
@@ -35,10 +33,6 @@ const ManageLayout = () => {
     if (loading) return <Loading />
 
     if (pathname.includes('markdown')) return <Outlet />
-
-    if (error?.response.code === 401) {
-      return <Redirect to="/login" />
-    }
 
     return (
       <Layout className={styles.container}>
@@ -76,17 +70,13 @@ const ManageLayout = () => {
         </Layout>
       </Layout>
     )
-  }, [loading, pathname, collapsed, activeKey, error])
+  }, [loading, pathname, collapsed, activeKey])
 
   // useNewFeatureInfo()
 
   useEffect(() => {
-    getUser('manage')
-      .then(set, setError)
-      .finally(() => {
-        setLoading(false)
-      })
-  }, [])
+    if (data) set(data)
+  }, [data])
   return children
 }
 
