@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+import { pick } from 'ramda'
+import { Card } from '@mui/joy'
 import remarkGfm from 'remark-gfm'
 import remarkIns from 'remark-ins'
 import { memo, type FC } from 'react'
@@ -46,11 +48,14 @@ const Parser: FC<{ children: string; isPrivate?: boolean }> = ({
       rehypePlugins={[[rehypeVideo, { details: false }]]}
       remarkPlugins={[remarkGfm, remarkIns, remarkBreaks]}
       components={{
-        // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-        img({ node, ...props }) {
+        img(props) {
           if (isPrivate) return ElementBeForbidden
 
-          return <Image {...props} key={props.src} />
+          return (
+            <Card component="div" style={{ marginBottom: 10 }}>
+              <Image {...pick(['src', 'alt'], props)} key={props.src} />
+            </Card>
+          )
         },
         video(props) {
           if (isPrivate) return ElementBeForbidden
