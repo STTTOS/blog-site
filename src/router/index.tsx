@@ -74,6 +74,11 @@ const routers: MyRoute[] = [
         ]
       },
       {
+        path: 'timeline',
+        title: '时间轴',
+        element: lazy(() => import('@/page/manage/timeline'))
+      },
+      {
         path: 'tool',
         element: lazy(() => import('@/page/manage/tool')),
         title: '工具管理'
@@ -124,6 +129,11 @@ const routers: MyRoute[] = [
       {
         path: 'article/list',
         element: lazy(() => import('@/page/client/articleList'))
+      },
+      {
+        path: 'timeline/:id',
+        title: '时间轴',
+        element: lazy(() => import('@/page/client/timeline'))
       },
       {
         path: 'tag',

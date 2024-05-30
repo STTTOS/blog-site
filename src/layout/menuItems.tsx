@@ -33,6 +33,11 @@ const menuItems: MenuItem[] = [
     ]
   },
   {
+    key: 'timeline',
+    label: '时间轴',
+    icon: <FileWordOutlined />
+  },
+  {
     key: 'tool',
     label: '工具管理',
     icon: <ToolOutlined />

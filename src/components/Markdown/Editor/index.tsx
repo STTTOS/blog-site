@@ -1,3 +1,4 @@
+import { CSSProperties } from 'react'
 import MdEditor from 'react-markdown-editor-lite'
 import 'react-markdown-editor-lite/lib/index.css'
 import { useSearchParams } from 'react-router-dom'
@@ -15,8 +16,9 @@ interface IProps {
   value?: string
   // eslint-disable-next-line no-unused-vars
   onChange?: (val: string) => void
+  style?: CSSProperties
 }
-const Index: React.FC<IProps> = ({ onChange = () => void 0, value }) => {
+const Index: React.FC<IProps> = ({ onChange = () => void 0, value, style }) => {
   const [query] = useSearchParams()
   const mode = query.get('mode') as EditMode
   // eslint-disable-next-line no-unused-vars
@@ -29,8 +31,8 @@ const Index: React.FC<IProps> = ({ onChange = () => void 0, value }) => {
   return (
     <MdEditor
       value={value}
+      style={style}
       key={String(isPrivate)}
-      style={{ height: '100%' }}
       onImageUpload={handleUpload}
       imageAccept=".png,.jpeg,.jpg"
       onChange={({ text }) => onChange(text)}

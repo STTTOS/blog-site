@@ -1,11 +1,16 @@
 import { pick } from 'ramda'
-import { FC, useState } from 'react'
 import Masonry from 'react-masonry-css'
+import { FC, useMemo, useState } from 'react'
 import 'yet-another-react-lightbox/styles.css'
+import { PlusOutlined } from '@ant-design/icons'
 import Lightbox from 'yet-another-react-lightbox'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 
 import './index.less'
+import styles from './index.module.less'
+import Upload from '@/components/Upload'
+import { upload } from '@/service/common'
+import { MomentImage } from '@/service/timeline/types'
 
 const breakpointColumnsObj = {
   default: 4,
@@ -13,34 +18,57 @@ const breakpointColumnsObj = {
   1300: 2,
   500: 1
 }
-const images = [
-  {
-    src: 'https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg'
-  },
-  {
-    src: 'https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg'
-  },
-  {
-    src: 'https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg'
-  }
-]
 interface GalleryProps {
-  images: Array<{ src: string }>
+  images: MomentImage[]
+  mode: 'edit' | 'view'
+  // eslint-disable-next-line no-unused-vars
+  onChange: (newList: MomentImage[]) => void
+  momentId: number
 }
-const Gallery: FC<GalleryProps> = () => {
+const Gallery: FC<GalleryProps> = ({ images, mode, onChange, momentId }) => {
   const [index, setIndex] = useState(0)
   const [open, setOpen] = useState(false)
   const handleClick = ({ index }: { index: number }) => {
     setIndex(index)
     setOpen(true)
   }
+  const maxSort = useMemo(() => {
+    return Math.max(...images.map((item) => item.sort))
+  }, [images])
+
+  const uploadButton = useMemo(() => {
+    if (mode == 'edit')
+      return (
+        <Upload
+          multiple
+          showFileList={false}
+          onChange={(url) => {
+            onChange(images.concat({ sort: maxSort + 1, src: url, momentId }))
+          }}
+          request={(file) => upload({ file })}
+        >
+          <PlusOutlined
+            style={{
+              padding: 80,
+              border: '1px solid',
+              fontSize: 80,
+              cursor: 'pointer',
+              marginBottom: 12
+            }}
+          />
+        </Upload>
+      )
+    return null
+  }, [mode, maxSort, momentId])
   return (
-    <div>
+    <div className={styles.wrapper}>
       <Masonry
         breakpointCols={breakpointColumnsObj}
         className="my-masonry-grid"
         columnClassName="my-masonry-grid_column"
       >
+        {uploadButton}
+
         {images.map((photo, index) => (
           <div key={index}>
             <LazyLoadImage
