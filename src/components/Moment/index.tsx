@@ -187,6 +187,9 @@ const Moment: FC<MomentProps> = ({
 
         <Gallery
           mode={mode}
+          onDelete={(url) =>
+            setImageSet((list) => list.filter((item) => item.src !== url))
+          }
           momentId={id}
           onChange={(url) => {
             setImageSet((list) => {

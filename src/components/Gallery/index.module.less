@@ -6,10 +6,35 @@
     }
   }
 }
+
 .upload {
   display: flex;
   flex-direction: column;
   align-items: center;
   border: 1px dashed #5cb963;
   padding: 40px;
+}
+
+.item {
+  position: relative;
+  transition: all ease-in-out 0.23s;
+
+  &:hover {
+    transform: scale(1.1);
+
+    .close {
+      display: block;
+    }
+  }
+}
+
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  color: rgb(138, 31, 31);
+  font-size: 18px;
+  display: none;
+  cursor: pointer;
 }

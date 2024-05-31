@@ -5,6 +5,7 @@ import { FC, useMemo, useState } from 'react'
 import 'yet-another-react-lightbox/styles.css'
 import { PlusOutlined } from '@ant-design/icons'
 import Lightbox from 'yet-another-react-lightbox'
+import { CloseCircleOutlined } from '@ant-design/icons'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 
 import './index.less'
@@ -25,8 +26,16 @@ interface GalleryProps {
   // eslint-disable-next-line no-unused-vars
   onChange: (url: string) => void
   momentId?: number
+  // eslint-disable-next-line no-unused-vars
+  onDelete: (url: string) => void
 }
-const Gallery: FC<GalleryProps> = ({ images, mode, onChange, momentId }) => {
+const Gallery: FC<GalleryProps> = ({
+  images,
+  mode,
+  onChange,
+  momentId,
+  onDelete
+}) => {
   const [index, setIndex] = useState(0)
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -78,12 +87,18 @@ const Gallery: FC<GalleryProps> = ({ images, mode, onChange, momentId }) => {
         {uploadButton}
 
         {images.map((photo, index) => (
-          <div key={index}>
+          <div key={index} className={styles.item}>
             <LazyLoadImage
               src={photo.src}
               onClick={() => handleClick({ index })}
               style={{ cursor: 'pointer' }}
             />
+            {mode === 'edit' && (
+              <CloseCircleOutlined
+                className={styles.close}
+                onClick={() => onDelete(photo.src)}
+              />
+            )}
           </div>
         ))}
       </Masonry>
