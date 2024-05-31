@@ -12,6 +12,7 @@ import { useScroll, useRequest } from 'ahooks'
 import { useMemo, useState, useCallback } from 'react'
 import { Params } from 'ahooks/lib/useAntdTable/types'
 
+import { useUserInfo } from '@/model'
 import styles from './index.module.less'
 import CreateTimeline from './CreateTimeline'
 import { defaultTimelineCover } from '@/config'
@@ -40,6 +41,7 @@ const TimelineDetail = () => {
   const query = useParams()
   const [showAddMoment, setShowAddMoment] = useState(false)
   const timelineId = Number(query.id)
+  const { user } = useUserInfo()
   const isAdd = timelineId < 1
   const { runAsync: create } = useRequest(createTimeline, {
     manual: true
@@ -74,6 +76,9 @@ const TimelineDetail = () => {
       }
     }
   )
+  const showOp = useMemo(() => {
+    return user?.id === timelineDetail?.user.id
+  }, [timelineDetail, user])
   const handleSave = async () => {
     setShowAddMoment(false)
     await fetchMoments()
@@ -89,11 +94,12 @@ const TimelineDetail = () => {
       <Moment
         {...props}
         key={props.id}
-        hideDate={isSameDay(props.createdAt, list[i - 1]?.createdAt)}
-        timelineId={timelineId}
-        onDelete={(id) => setList(list.filter((item) => item.id !== id))}
-        onCancel={() => setShowAddMoment(false)}
         onSave={handleSave}
+        timelineId={timelineId}
+        userId={timelineDetail?.user.id}
+        onDelete={(id) => setList(list.filter((item) => item.id !== id))}
+        hideDate={isSameDay(props.createdAt, list[i - 1]?.createdAt)}
+        onCancel={() => setShowAddMoment(false)}
       />
     ))
   }, [list, timelineId, showAddMoment])
@@ -123,13 +129,15 @@ const TimelineDetail = () => {
       <div className={styles.wrapper}>
         <div className={styles.top} style={{ opacity }}>
           <span>{title}</span>
-          <CreateMoment
-            className={classNames(styles.add, styles.small)}
-            onClick={() => {
-              handleAdd()
-              window.scrollTo({ top: 0, behavior: 'smooth' })
-            }}
-          />
+          {showOp && (
+            <CreateMoment
+              className={classNames(styles.add, styles.small)}
+              onClick={() => {
+                handleAdd()
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }}
+            />
+          )}
         </div>
         <header className={styles.header}>
           <img src={cover} className={styles.cover} />
@@ -146,10 +154,12 @@ const TimelineDetail = () => {
 
         <main className={styles.main}>
           <Spin spinning={loading}>
-            <CreateMoment
-              className={classNames(styles.add, styles.large)}
-              onClick={handleAdd}
-            />
+            {showOp && (
+              <CreateMoment
+                className={classNames(styles.add, styles.large)}
+                onClick={handleAdd}
+              />
+            )}
             {showAddMoment && (
               <Moment
                 mode="edit"

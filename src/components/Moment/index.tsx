@@ -5,6 +5,7 @@ import { FC, useMemo, useState, useEffect } from 'react'
 import { Space, Button, Divider, Dropdown, DatePicker } from 'antd'
 
 import Gallery from '../Gallery'
+import { useUserInfo } from '@/model'
 import styles from './index.module.less'
 import { Editor, Viewer } from '../Markdown'
 import DateDisplay from '@/components/DateDisplay'
@@ -19,6 +20,7 @@ type MomentProps = {
   onCancel: () => void
   onSave: () => void
   hideDate?: boolean
+  userId?: number
 } & Partial<MomentType>
 const Moment: FC<MomentProps> = ({
   id,
@@ -30,9 +32,12 @@ const Moment: FC<MomentProps> = ({
   timelineId,
   onCancel,
   onSave,
-  hideDate
+  hideDate,
+  userId
 }) => {
   const isAdd = !id
+  const { user } = useUserInfo()
+  const showOp = user?.id === userId
   const [timePicked, setTimePicked] = useState(dayjs().toISOString())
   const [draft, setDraft] = useState<string>()
   const [mode, setMode] = useState<EditMode>(defaultMode)
@@ -108,7 +113,7 @@ const Moment: FC<MomentProps> = ({
           {createdAt && dayjs(createdAt).format('HH:mm')}
         </span>
 
-        {!isAdd && (
+        {!isAdd && showOp && (
           <Dropdown
             menu={{
               items: [
