@@ -3,7 +3,7 @@ import { prop } from 'ramda'
 import { useRequest } from 'ahooks'
 import { MoreOutlined } from '@ant-design/icons'
 import { FC, useMemo, useState, useEffect } from 'react'
-import { Space, Button, Divider, Dropdown, DatePicker } from 'antd'
+import { Space, Button, Divider, message, Dropdown, DatePicker } from 'antd'
 
 import Gallery from '../Gallery'
 import { useUserInfo } from '@/model'
@@ -52,6 +52,10 @@ const Moment: FC<MomentProps> = ({
   })
 
   const handleSave = async () => {
+    if (imgSet.length === 0 && !draft) {
+      message.error('内容不可为空')
+      return
+    }
     if (isAdd) {
       await add({
         content: draft,
@@ -152,7 +156,7 @@ const Moment: FC<MomentProps> = ({
       </div>
 
       <div style={{ minWidth: 96, flexShrink: 0 }}>{dateElement}</div>
-      <main>
+      <main className={styles.main}>
         {mode === 'edit' && (
           <Space className={styles.op}>
             <Button

@@ -2,6 +2,19 @@
   display: flex;
   position: relative;
 
+  &:not(:last-of-type) {
+    &::after {
+      content: '';
+      position: absolute;
+      width: 60%;
+      height: 1px;
+      background-color: #eee;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+    }
+  }
+
   main {
     padding-right: 26px;
     flex-grow: 1;
@@ -30,7 +43,12 @@
 .op {
   margin-bottom: 8px;
 }
+
 .time {
   font-size: 13px;
   color: #7d7d7d;
+}
+
+.main {
+  // border-bottom: 1px solid #7d7d7d;
 }
