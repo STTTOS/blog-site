@@ -6,7 +6,9 @@ import { message } from 'antd'
 import { User } from '../user/types'
 import request from '../../utils/http'
 
-const createTimeline = async (params: Omit<Timeline, 'id' | 'user'>) => {
+const createTimeline = async (
+  params: Omit<Timeline, 'id' | 'user' | 'userId'>
+) => {
   const {
     data: { id }
   } = await request<{ id: number }>('api/timeline/create', params)

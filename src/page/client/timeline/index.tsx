@@ -9,8 +9,8 @@ import { Avatar } from '@mui/joy'
 import classNames from 'classnames'
 import { useParams } from 'react-router'
 import { useScroll, useRequest } from 'ahooks'
-import { useMemo, useState, useCallback } from 'react'
 import { Params } from 'ahooks/lib/useAntdTable/types'
+import { useMemo, useState, useCallback } from 'react'
 
 import { useUserInfo } from '@/model'
 import styles from './index.module.less'
@@ -77,8 +77,9 @@ const TimelineDetail = () => {
     }
   )
   const showOp = useMemo(() => {
-    return user?.id === timelineDetail?.user.id
+    return user?.id === timelineDetail?.userId
   }, [timelineDetail, user])
+
   const handleSave = async () => {
     setShowAddMoment(false)
     await fetchMoments()
@@ -96,7 +97,7 @@ const TimelineDetail = () => {
         key={props.id}
         onSave={handleSave}
         timelineId={timelineId}
-        userId={timelineDetail?.user.id}
+        userId={timelineDetail?.userId}
         onDelete={(id) => setList(list.filter((item) => item.id !== id))}
         hideDate={isSameDay(props.createdAt, list[i - 1]?.createdAt)}
         onCancel={() => setShowAddMoment(false)}
@@ -123,7 +124,6 @@ const TimelineDetail = () => {
   const handleAdd = useCallback(() => {
     setShowAddMoment(true)
   }, [])
-
   return (
     <Spin spinning={fetchingTimeline}>
       <div className={styles.wrapper}>
