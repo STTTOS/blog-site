@@ -1,19 +1,7 @@
 .wrapper {
   display: flex;
   position: relative;
-
-  &:not(:last-of-type) {
-    &::after {
-      content: '';
-      position: absolute;
-      width: 60%;
-      height: 1px;
-      background-color: #eee;
-      left: 50%;
-      bottom: 0;
-      transform: translateX(-50%);
-    }
-  }
+  padding-top: 30px;
 
   main {
     padding-right: 26px;
@@ -49,6 +37,25 @@
   color: #7d7d7d;
 }
 
-.main {
-  // border-bottom: 1px solid #7d7d7d;
+.viewer {
+  :global {
+    .editor-container > .section > .section-container {
+      padding: 0 !important;
+    }
+  }
+}
+
+.divider {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 60%;
+    height: 1px;
+    background-color: #eee;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+  }
 }

@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import { CSSProperties } from 'react'
 import MdEditor from 'react-markdown-editor-lite'
 
@@ -7,11 +8,12 @@ import styles from './index.module.less'
 interface IProps {
   value?: string
   style?: CSSProperties
+  className?: string
 }
-const Index: React.FC<IProps> = ({ value, style }) => {
+const Index: React.FC<IProps> = ({ value, style, className }) => {
   return (
     <MdEditor
-      className={styles.wrapper}
+      className={classNames(styles.wrapper, className)}
       style={style}
       value={value}
       config={{

@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import { prop } from 'ramda'
 import { useRequest } from 'ahooks'
+import classNames from 'classnames'
 import { MoreOutlined } from '@ant-design/icons'
 import { FC, useMemo, useState, useEffect } from 'react'
 import { Space, Button, Divider, message, Dropdown, DatePicker } from 'antd'
@@ -156,7 +157,7 @@ const Moment: FC<MomentProps> = ({
       </div>
 
       <div style={{ minWidth: 96, flexShrink: 0 }}>{dateElement}</div>
-      <main className={styles.main}>
+      <main className={classNames(styles.main, hideDate && styles.divider)}>
         {mode === 'edit' && (
           <Space className={styles.op}>
             <Button
@@ -175,7 +176,11 @@ const Moment: FC<MomentProps> = ({
         {mode === 'edit' ? (
           <Editor value={draft} onChange={setDraft} style={{ height: 400 }} />
         ) : (
-          <Viewer value={draft} />
+          <Viewer
+            value={draft}
+            className={styles.viewer}
+            style={{ padding: 0 }}
+          />
         )}
 
         {mode === 'edit' && <Divider />}

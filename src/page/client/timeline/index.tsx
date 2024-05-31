@@ -10,15 +10,15 @@ import classNames from 'classnames'
 import { useParams } from 'react-router'
 import { useScroll, useRequest } from 'ahooks'
 import { Params } from 'ahooks/lib/useAntdTable/types'
-import { useMemo, useState, useCallback } from 'react'
+import { useMemo, useState, ReactNode, useCallback } from 'react'
 
 import { useUserInfo } from '@/model'
 import styles from './index.module.less'
+import Moment from '@/components/Moment'
 import CreateTimeline from './CreateTimeline'
 import { defaultTimelineCover } from '@/config'
 import { history } from '@/components/BrowserRouter'
 import CreateMoment from '@/components/CreateMoment'
-import Moment, { EditMode } from '@/components/Moment'
 import { Moment as MomentType } from '@/service/timeline/types'
 import { getMoments, getTimeline, createTimeline } from '@/service/timeline'
 
@@ -52,9 +52,7 @@ const TimelineDetail = () => {
     history.replace(`/timeline/${id}`)
   }
 
-  const [list, setList] = useState<
-    Array<Partial<MomentType> & { mode?: EditMode }>
-  >([])
+  const [list, setList] = useState<MomentType[]>([])
   const scroll = useScroll(null, ({ top }) => top < criticalPoint + step)
   const [pageParams] = useState<Params[0]>({
     current: 1,
@@ -91,19 +89,32 @@ const TimelineDetail = () => {
           <em className={styles.tips}>什么都没有...</em>
         </div>
       )
-    return list.map((props, i) => (
-      <Moment
-        {...props}
-        key={props.id}
-        onSave={handleSave}
-        timelineId={timelineId}
-        userId={timelineDetail?.userId}
-        onDelete={(id) => setList(list.filter((item) => item.id !== id))}
-        hideDate={isSameDay(props.createdAt, list[i - 1]?.createdAt)}
-        onCancel={() => setShowAddMoment(false)}
-      />
-    ))
-  }, [list, timelineId, showAddMoment])
+
+    const map: Map<number, boolean> = new Map()
+    const results: ReactNode[] = []
+    list.forEach((props, i) => {
+      const { createdAt } = props
+      const year = dayjs(createdAt).year()
+
+      if (!map.get(year)) {
+        map.set(year, true)
+        results.push(<h2>{year}年</h2>)
+      }
+      results.push(
+        <Moment
+          {...props}
+          key={props.id}
+          onSave={handleSave}
+          timelineId={timelineId}
+          userId={timelineDetail?.userId}
+          onDelete={(id) => setList(list.filter((item) => item.id !== id))}
+          hideDate={isSameDay(props.createdAt, list[i - 1]?.createdAt)}
+          onCancel={() => setShowAddMoment(false)}
+        />
+      )
+    })
+    return results
+  }, [list, timelineId])
 
   const opacity = useMemo(() => {
     const top = scroll?.top || 0
