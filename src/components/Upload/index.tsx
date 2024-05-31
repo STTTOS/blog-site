@@ -62,7 +62,9 @@ const Index: React.FC<IUploadProps> = ({
 
   const handlePreview = async (file: UploadFile) => {
     // 仅预览图片
-    if (!['.png', '.jpg', '.jpeg'].includes(path.extname(file.url!))) {
+    if (
+      !['.png', '.jpg', '.jpeg'].includes(path.extname(file.url!).toLowerCase())
+    ) {
       const anchor = document.createElement('a')
       anchor.target = '_blank'
       anchor.href = file.url!
@@ -228,7 +230,7 @@ const Index: React.FC<IUploadProps> = ({
       </Upload>
 
       <Modal
-        visible={previewVisible}
+        open={previewVisible}
         title={previewTitle}
         footer={null}
         onCancel={handleCancel}

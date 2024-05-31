@@ -1,6 +1,6 @@
 import type { TableColumnProps } from 'antd'
 
-import { useAntdTable } from 'ahooks'
+import { useRequest, useAntdTable } from 'ahooks'
 import { Form, Space, Button, Popconfirm } from 'antd'
 
 import { useUserInfo } from '@/model'
@@ -9,8 +9,12 @@ import SearchBar from '@/components/SearchBar'
 import SafeTable from '@/components/SafeTable'
 import { Timeline } from '@/service/timeline/types'
 import { history } from '@/components/BrowserRouter'
-import { deleteTimeline, getTimelineList } from '@/service/timeline'
 import { searchBarFields, columns as tableColumns } from './staticModel'
+import {
+  createTimeline,
+  deleteTimeline,
+  getTimelineList
+} from '@/service/timeline'
 
 const Index = () => {
   const [form] = Form.useForm()
@@ -26,7 +30,7 @@ const Index = () => {
     reset()
   }
   const handleCreate = () => {
-    history.push('/')
+    history.push('/timeline/-1')
   }
 
   const columns: TableColumnProps<Timeline>[] = [

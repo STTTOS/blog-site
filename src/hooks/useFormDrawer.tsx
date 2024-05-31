@@ -11,35 +11,39 @@ interface IOpenDrawer
   > {
   content: ReactElement
   refresh?: () => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-unused-vars
+  onOk?: (values: Record<string, any>) => void
 }
 
-type CallBack = () => Promise<unknown>
+type CallBack = () => Promise<any>
 export interface IFormWithDrawer {
   // eslint-disable-next-line no-unused-vars
-  register?: (fn: CallBack) => unknown
+  register?: (fn: CallBack) => void
 }
 
-const useFormDrawer = () => {
+const useFormDrawer = (config?: Partial<IOpenDrawer>) => {
   const [visible, setVisible] = useState(false)
   const [confirmLoading, setConfirmLoading] = useState(false)
-  const [DrawerProps, setDrawerProps] = useState<IOpenDrawer>({
+  const [drawerProps, setDrawerProps] = useState<IOpenDrawer>({
+    ...config,
     content: <Fragment />
   })
   const callbackRef = useRef<CallBack>(() => Promise.resolve(true))
 
-  const { content, refresh = () => void 0, ...rest } = DrawerProps
+  const { content, refresh = () => void 0, onOk, ...rest } = drawerProps
 
   const closeDrawer = () => setVisible(false)
 
-  const openDrawer = (config: IOpenDrawer) => {
-    setDrawerProps(config)
+  const openDrawer = (props?: IOpenDrawer) => {
+    setDrawerProps({ ...drawerProps, ...props })
     setVisible(true)
   }
 
   const handleOk = async () => {
     try {
       setConfirmLoading(true)
-      await callbackRef.current?.call(null)
+      const values = await callbackRef.current?.call(null)
+      onOk?.(values)
       closeDrawer()
       refresh()
     } catch (error) {

@@ -2,6 +2,7 @@ import { CSSProperties } from 'react'
 import MdEditor from 'react-markdown-editor-lite'
 
 import Parser from '../Parser'
+import styles from './index.module.less'
 
 interface IProps {
   value?: string
@@ -10,6 +11,7 @@ interface IProps {
 const Index: React.FC<IProps> = ({ value, style }) => {
   return (
     <MdEditor
+      className={styles.wrapper}
       style={style}
       value={value}
       config={{

@@ -7,7 +7,8 @@ import {
   BookOutlined,
   SettingOutlined,
   FileWordOutlined,
-  FileTextOutlined
+  FileTextOutlined,
+  InstagramOutlined
 } from '@ant-design/icons'
 
 type MenuItem = Required<MenuProps>['items'][number]
@@ -35,7 +36,7 @@ const menuItems: MenuItem[] = [
   {
     key: 'timeline',
     label: '时间轴',
-    icon: <FileWordOutlined />
+    icon: <InstagramOutlined />
   },
   {
     key: 'tool',

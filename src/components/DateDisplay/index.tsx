@@ -5,7 +5,7 @@ import React, { FC, useMemo } from 'react'
 import styles from './index.module.less'
 
 interface DateProps {
-  date: string
+  date?: string
   className?: string
 }
 const DateDisplay: FC<DateProps> = ({ date, className }) => {

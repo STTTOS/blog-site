@@ -6,9 +6,12 @@ import { message } from 'antd'
 import { User } from '../user/types'
 import request from '../../utils/http'
 
-const createTimeline = async (params: Omit<Timeline, 'id'>) => {
-  await request('api/timeline/create', params)
+const createTimeline = async (params: Omit<Timeline, 'id' | 'user'>) => {
+  const {
+    data: { id }
+  } = await request<{ id: number }>('api/timeline/create', params)
   message.success('时间轴创建成功')
+  return id
 }
 const getTimelineList = async (
   pageParams: Params[0],
@@ -40,7 +43,7 @@ const deleteTimeline = async (params: Pick<Timeline, 'id'>) => {
   await request(`api/timeline/delete/${params.id}`)
   message.success('删除成功')
 }
-const addMoment = async ({ timelineId, ...params }: Moment) => {
+const addMoment = async ({ timelineId, ...params }: Partial<Moment>) => {
   await request(`api/timeline/moment/add/${timelineId}`, params)
   message.success('发布成功')
 }

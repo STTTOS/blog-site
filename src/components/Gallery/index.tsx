@@ -1,4 +1,6 @@
+import { Spin } from 'antd'
 import { pick } from 'ramda'
+import { useRequest } from 'ahooks'
 import Masonry from 'react-masonry-css'
 import { FC, useMemo, useState } from 'react'
 import 'yet-another-react-lightbox/styles.css'
@@ -23,7 +25,7 @@ interface GalleryProps {
   mode: 'edit' | 'view'
   // eslint-disable-next-line no-unused-vars
   onChange: (newList: MomentImage[]) => void
-  momentId: number
+  momentId?: number
 }
 const Gallery: FC<GalleryProps> = ({ images, mode, onChange, momentId }) => {
   const [index, setIndex] = useState(0)
@@ -32,7 +34,10 @@ const Gallery: FC<GalleryProps> = ({ images, mode, onChange, momentId }) => {
     setIndex(index)
     setOpen(true)
   }
+  const { loading, runAsync } = useRequest(upload, { manual: true })
   const maxSort = useMemo(() => {
+    if (images.length === 0) return 0
+
     return Math.max(...images.map((item) => item.sort))
   }, [images])
 
@@ -41,25 +46,29 @@ const Gallery: FC<GalleryProps> = ({ images, mode, onChange, momentId }) => {
       return (
         <Upload
           multiple
+          listType="text"
           showFileList={false}
           onChange={(url) => {
             onChange(images.concat({ sort: maxSort + 1, src: url, momentId }))
           }}
-          request={(file) => upload({ file })}
+          request={(file) => runAsync({ file })}
         >
-          <PlusOutlined
-            style={{
-              padding: 80,
-              border: '1px solid',
-              fontSize: 80,
-              cursor: 'pointer',
-              marginBottom: 12
-            }}
-          />
+          <Spin spinning={loading}>
+            <div className={styles.upload}>
+              <PlusOutlined
+                style={{
+                  fontSize: 80,
+                  cursor: 'pointer',
+                  color: '#5CB963'
+                }}
+              />
+              <span>上传图片</span>
+            </div>
+          </Spin>
         </Upload>
       )
     return null
-  }, [mode, maxSort, momentId])
+  }, [mode, maxSort, momentId, loading])
   return (
     <div className={styles.wrapper}>
       <Masonry

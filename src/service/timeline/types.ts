@@ -18,5 +18,5 @@ export interface Moment {
 export interface MomentImage {
   sort: number
   src: string
-  momentId: number
+  momentId?: number
 }
