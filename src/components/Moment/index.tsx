@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { prop } from 'ramda'
 import { useRequest } from 'ahooks'
 import { MoreOutlined } from '@ant-design/icons'
 import { FC, useMemo, useState, useEffect } from 'react'
@@ -178,7 +179,15 @@ const Moment: FC<MomentProps> = ({
         <Gallery
           mode={mode}
           momentId={id}
-          onChange={setImageSet}
+          onChange={(url) => {
+            setImageSet((list) => {
+              const newSort = (() => {
+                if (list.length === 0) return 1
+                return Math.max(...list.map(prop('sort'))) + 1
+              })()
+              return list.concat({ src: url, sort: newSort })
+            })
+          }}
           images={[...imgSet].sort((a, b) => a.sort - b.sort)}
         />
       </main>

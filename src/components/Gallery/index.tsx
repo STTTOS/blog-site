@@ -1,6 +1,5 @@
 import { Spin } from 'antd'
 import { pick } from 'ramda'
-import { useRequest } from 'ahooks'
 import Masonry from 'react-masonry-css'
 import { FC, useMemo, useState } from 'react'
 import 'yet-another-react-lightbox/styles.css'
@@ -24,23 +23,17 @@ interface GalleryProps {
   images: MomentImage[]
   mode: 'edit' | 'view'
   // eslint-disable-next-line no-unused-vars
-  onChange: (newList: MomentImage[]) => void
+  onChange: (url: string) => void
   momentId?: number
 }
 const Gallery: FC<GalleryProps> = ({ images, mode, onChange, momentId }) => {
   const [index, setIndex] = useState(0)
   const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
   const handleClick = ({ index }: { index: number }) => {
     setIndex(index)
     setOpen(true)
   }
-  const { loading, runAsync } = useRequest(upload, { manual: true })
-  const maxSort = useMemo(() => {
-    if (images.length === 0) return 0
-
-    return Math.max(...images.map((item) => item.sort))
-  }, [images])
-
   const uploadButton = useMemo(() => {
     if (mode == 'edit')
       return (
@@ -48,10 +41,16 @@ const Gallery: FC<GalleryProps> = ({ images, mode, onChange, momentId }) => {
           multiple
           listType="text"
           showFileList={false}
-          onChange={(url) => {
-            onChange(images.concat({ sort: maxSort + 1, src: url, momentId }))
+          request={async (file) => {
+            try {
+              setLoading(true)
+              const url = await upload({ file })
+              onChange(url)
+              return url
+            } finally {
+              setLoading(false)
+            }
           }}
-          request={(file) => runAsync({ file })}
         >
           <Spin spinning={loading}>
             <div className={styles.upload}>
@@ -68,7 +67,7 @@ const Gallery: FC<GalleryProps> = ({ images, mode, onChange, momentId }) => {
         </Upload>
       )
     return null
-  }, [mode, maxSort, momentId, loading])
+  }, [mode, momentId, loading])
   return (
     <div className={styles.wrapper}>
       <Masonry
