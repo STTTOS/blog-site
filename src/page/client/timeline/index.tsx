@@ -13,6 +13,7 @@ import { Params } from 'ahooks/lib/useAntdTable/types'
 import { useMemo, useState, ReactNode, useCallback } from 'react'
 
 import { useUserInfo } from '@/model'
+import useTitle from '@/hooks/useTitle'
 import styles from './index.module.less'
 import Moment from '@/components/Moment'
 import CreateTimeline from './CreateTimeline'
@@ -74,6 +75,7 @@ const TimelineDetail = () => {
       }
     }
   )
+  useTitle(timelineDetail?.title)
   const showOp = useMemo(() => {
     return user?.id === timelineDetail?.userId
   }, [timelineDetail, user])

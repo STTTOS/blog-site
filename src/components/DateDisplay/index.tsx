@@ -12,7 +12,7 @@ const DateDisplay: FC<DateProps> = ({ date, className }) => {
   const [month, day] = useMemo(() => {
     const time = dayjs(date)
     const [month, day] = [time.get('month') + 1, time.get('D')]
-    return [month, day]
+    return [month, [0, day].join('').slice(-2)]
   }, [date])
   return (
     <div className={classNames(styles.wrapper, className)}>

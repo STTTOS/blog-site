@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+
 /* eslint-disable @typescript-eslint/ban-types */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // 封装antd table
 // 1. 统一处理表格空值: 默认为: - (empty_default_value)
@@ -17,7 +19,9 @@ const CellComponent = ({
   [key: string]: unknown
   children: React.ReactNode[]
   // @ts-ignore Type '{}' is not assignable to type 'ReactNode
-}) => <td {...props}>{children[1] ?? '-'}</td>
+}) => {
+  return <td {...props}>{children[1] || '-'}</td>
+}
 
 const SafeTable = <T extends object = any>({
   columns = [],

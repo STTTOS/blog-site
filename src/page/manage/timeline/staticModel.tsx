@@ -20,7 +20,14 @@ const columns: TableColumnProps<Timeline>[] = [
   },
   {
     title: '简介',
-    dataIndex: 'desc'
+    dataIndex: 'desc',
+    onCell() {
+      return {
+        style: {
+          whiteSpace: 'pre'
+        }
+      }
+    }
   },
   {
     title: '用户',
