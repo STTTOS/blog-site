@@ -1,17 +1,16 @@
 import type { IFormWithDrawer } from '@/hooks/useFormDrawer'
 import type { ICreateFormConfig } from '@/utils/createForm/types'
 
-import { SHA256 } from 'crypto-js'
 import { useEffect, useCallback } from 'react'
 
 import createForm from '@/utils/createForm'
-import { User } from '@/service/user/types'
-import { addUser, updateUser } from '@/service/user'
+import { updateTimeline } from '@/service/timeline'
+import { Timeline } from '@/service/timeline/types'
 import { drawerFormComponents } from './staticModel'
 
-type IProps = IFormWithDrawer & { data?: User }
+type IProps = IFormWithDrawer & { data: Timeline }
 
-const AuthorDrawerContent: React.FC<IProps> = ({
+const TimelineDrawerContent: React.FC<IProps> = ({
   register = () => void 0,
   data
 }) => {
@@ -21,30 +20,18 @@ const AuthorDrawerContent: React.FC<IProps> = ({
       itemsRequire: false,
       data
     },
-    components: drawerFormComponents(data ? 'edit' : 'add')
+    components: drawerFormComponents
   }
   const { formStructure, form } = createForm(config)
 
   const handleFinish = useCallback(async () => {
-    const { password, secureKey, ...rest }: Omit<User, 'id' | 'createdAt'> =
-      await form.validateFields()
-    const params = {
-      password: password && SHA256(password).toString(),
-      secureKey: secureKey && SHA256(secureKey).toString(),
-      ...rest
-    }
+    const values: Timeline = await form.validateFields()
 
-    if (data) {
-      await updateUser({
-        ...params,
-        id: data.id
-      })
-
-      return
-    }
-
-    await addUser(params)
-  }, [])
+    await updateTimeline({
+      ...values,
+      id: data.id
+    })
+  }, [data])
 
   // 向父组件的提交按钮, 注册`handleFinish`
   useEffect(() => {
@@ -54,4 +41,4 @@ const AuthorDrawerContent: React.FC<IProps> = ({
   return <div>{formStructure}</div>
 }
 
-export default AuthorDrawerContent
+export default TimelineDrawerContent

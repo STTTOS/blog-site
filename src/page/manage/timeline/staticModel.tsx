@@ -1,8 +1,12 @@
 import type { TableColumnProps } from 'antd'
 import type { Timeline } from '@/service/timeline/types'
 
-import { DatePicker } from 'antd'
 import { Link } from 'react-router-dom'
+import { Input, DatePicker } from 'antd'
+
+import Upload from '@/components/Upload'
+import { upload } from '@/service/common'
+import { IComponentsConfig } from '@/utils/createForm/types'
 
 const columns: TableColumnProps<Timeline>[] = [
   {
@@ -37,61 +41,22 @@ const searchBarFields = [
 ]
 
 // eslint-disable-next-line no-unused-vars
-// const drawerFormComponents: (type: 'add' | 'edit') => IComponent[] = (type) => {
-//   return [
-//     {
-//       label: '账户',
-//       name: 'username',
-//       require: true,
-//       element: <Input />,
-//       range: [6, 16],
-//       rules: ['username']
-//     },
-//     {
-//       label: '密码',
-//       name: 'password',
-//       range: [6, 18],
-//       require: type === 'add',
-//       element: <Password />
-//     },
-//     {
-//       label: '安全密码',
-//       name: 'secureKey',
-//       range: [6, 18],
-//       element: <Password />
-//     },
-//     { label: '昵称', name: 'name', require: true },
-//     {
-//       label: '贡献者',
-//       name: 'isContributor',
-//       element: <Switch />,
-//       valuePropName: 'checked'
-//     },
-//     {
-//       label: '头像',
-//       name: 'avatar',
-//       element: <Upload request={(file) => upload({ file })} />
-//     },
-//     {
-//       label: '卡片背景',
-//       name: 'backgroundUrl',
-//       element: <Upload request={(file) => upload({ file })} />
-//     },
-//     {
-//       label: '角色',
-//       name: 'role',
-//       element: (
-//         <Select
-//           options={[
-//             { label: '管理员', value: 'admin' },
-//             { label: '普通用户', value: 'user' }
-//           ]}
-//         />
-//       )
-//     },
-//     { label: '个人签名', name: 'desc' },
-//     { label: '邮箱', name: 'email' },
-//     { label: 'github', name: 'github' }
-//   ]
-// }
-export { columns, searchBarFields }
+const drawerFormComponents: IComponentsConfig = [
+  {
+    label: '标题',
+    name: 'title',
+    require: true
+  },
+  {
+    label: '简介',
+    name: 'desc',
+    element: <Input.TextArea rows={3} />
+  },
+  {
+    label: '背景图',
+    name: 'cover',
+    require: true,
+    element: <Upload request={(file) => upload({ file })} />
+  }
+]
+export { columns, searchBarFields, drawerFormComponents }

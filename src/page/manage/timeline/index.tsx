@@ -1,28 +1,28 @@
 import type { TableColumnProps } from 'antd'
 
-import { useRequest, useAntdTable } from 'ahooks'
+import { useAntdTable } from 'ahooks'
 import { Form, Space, Button, Popconfirm } from 'antd'
 
 import { useUserInfo } from '@/model'
 import styles from './index.module.less'
 import SearchBar from '@/components/SearchBar'
 import SafeTable from '@/components/SafeTable'
+import useFormDrawer from '@/hooks/useFormDrawer'
 import { Timeline } from '@/service/timeline/types'
+import TimelineDrawerContent from './DrawerContent'
 import { history } from '@/components/BrowserRouter'
+import { deleteTimeline, getTimelineList } from '@/service/timeline'
 import { searchBarFields, columns as tableColumns } from './staticModel'
-import {
-  createTimeline,
-  deleteTimeline,
-  getTimelineList
-} from '@/service/timeline'
 
 const Index = () => {
   const [form] = Form.useForm()
   const { user } = useUserInfo()
+  const { Drawer, openDrawer } = useFormDrawer()
   const {
     tableProps,
     search: { submit, reset },
-    loading
+    loading,
+    refresh
   } = useAntdTable(getTimelineList, { form, cacheKey: '/manage/timeline' })
 
   const deleteData = async (id: number) => {
@@ -33,6 +33,13 @@ const Index = () => {
     history.push('/timeline/-1')
   }
 
+  const handleUpdate = (data: Timeline) => {
+    openDrawer({
+      title: '编辑',
+      content: <TimelineDrawerContent data={data} />,
+      refresh
+    })
+  }
   const columns: TableColumnProps<Timeline>[] = [
     ...tableColumns,
     {
@@ -40,14 +47,17 @@ const Index = () => {
       width: 140,
       render: (_, record) => (
         <Space size="middle">
-          <Popconfirm
-            title="确定删除此时间轴吗?会一并删除所有关联数据"
-            onConfirm={() => deleteData(record.id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <a>Delete</a>
-          </Popconfirm>
+          {record.userId === user?.id && (
+            <Popconfirm
+              title="确定删除此时间轴吗?会一并删除所有关联数据"
+              onConfirm={() => deleteData(record.id)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <a>delete</a>
+            </Popconfirm>
+          )}
+          <a onClick={() => handleUpdate(record)}>update</a>
         </Space>
       )
     }
@@ -73,7 +83,7 @@ const Index = () => {
       </div>
 
       <SafeTable columns={columns} rowKey="id" {...tableProps} />
-      {/* {Drawer} */}
+      {Drawer}
     </div>
   )
 }

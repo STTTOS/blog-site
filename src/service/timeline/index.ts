@@ -45,6 +45,11 @@ const deleteTimeline = async (params: Pick<Timeline, 'id'>) => {
   await request(`api/timeline/delete/${params.id}`)
   message.success('删除成功')
 }
+
+const updateTimeline = async (params: Pick<Timeline, 'id'>) => {
+  await request(`api/timeline/update/${params.id}`, params)
+  message.success('修改成功')
+}
 const addMoment = async ({ timelineId, ...params }: Partial<Moment>) => {
   await request(`api/timeline/moment/add/${timelineId}`, params)
   message.success('发布成功')
@@ -83,5 +88,6 @@ export {
   getTimelineList,
   getMoments,
   deleteTimeline,
-  deleteMoment
+  deleteMoment,
+  updateTimeline
 }
