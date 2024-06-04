@@ -37,7 +37,7 @@ function isSameDay(date1?: string, date2?: string) {
 }
 
 const criticalPoint = 380
-const step = 40
+const step = 60
 const TimelineDetail = () => {
   const query = useParams()
   const [showAddMoment, setShowAddMoment] = useState(false)
