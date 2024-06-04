@@ -18,6 +18,7 @@ interface Message {
 interface MessageBoxProps {
   // total: number
   // list: Message[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any
 }
 // 消息盒子

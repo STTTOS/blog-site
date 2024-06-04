@@ -15,6 +15,7 @@ interface IOpenDrawer
   onOk?: (values: Record<string, any>) => void
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type CallBack = () => Promise<any>
 export interface IFormWithDrawer {
   // eslint-disable-next-line no-unused-vars
@@ -28,7 +29,7 @@ const useFormDrawer = (config?: Partial<IOpenDrawer>) => {
     ...config,
     content: <Fragment />
   })
-  const callbackRef = useRef<CallBack>(() => Promise.resolve(true))
+  const callbackRef = useRef<CallBack>(() => Promise.resolve({}))
 
   const { content, refresh = () => void 0, onOk, ...rest } = drawerProps
 

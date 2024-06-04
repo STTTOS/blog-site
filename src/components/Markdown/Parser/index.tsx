@@ -39,10 +39,11 @@ const SyntaxHighlighter = memo(({ children, language }: any) => {
     </Highlight>
   )
 })
-const Parser: FC<{ children: string; isPrivate?: boolean }> = ({
-  children,
-  isPrivate
-}) => {
+const Parser: FC<{
+  children: string
+  isPrivate?: boolean
+  secure?: boolean
+}> = ({ children, isPrivate, secure = false }) => {
   return (
     <Markdown
       rehypePlugins={[[rehypeVideo, { details: false }]]}
@@ -53,7 +54,11 @@ const Parser: FC<{ children: string; isPrivate?: boolean }> = ({
 
           return (
             <Card component="div" style={{ marginBottom: 10 }}>
-              <Image {...pick(['src', 'alt'], props)} key={props.src} />
+              <Image
+                {...pick(['src', 'alt'], props)}
+                key={props.src}
+                secure={secure}
+              />
             </Card>
           )
         },

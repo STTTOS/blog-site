@@ -13,13 +13,15 @@ import { sessionSecureKey } from '@/page/auth'
 interface ImageProps {
   src?: string
   alt?: string
+  /**是否安全访问模式, 如果是, 则使用xhr在请求头中带上secureKey手动请求 */
+  secure?: boolean
 }
 
-function getOriginUrl(src: string) {
+export function getOriginUrl(src: string) {
   if (src.startsWith('https:')) return src.replace('/compressed', '/origin')
   return `/static/origin/${basename(src)}`
 }
-function accessOriginImage(src: string) {
+export function accessOriginImage(src: string) {
   return new Promise<boolean>((resolve) => {
     const img = new Image()
     img.src = src
@@ -31,7 +33,10 @@ function accessOriginImage(src: string) {
     }
   })
 }
-
+export function getFilename(src: string) {
+  const [name] = src.split('?token=')
+  return basename(name)
+}
 export const ElementBeForbidden = (
   <div style={{ textAlign: 'center' }}>
     <img src="//www.wishufree.com/static/files/images__4e6a952a88e11972469c3ae0b.png" />
@@ -60,31 +65,34 @@ async function loadImage(src: string) {
     }
   })
 }
-const BetterImage: FC<ImageProps> = (props) => {
+const placeholderImageSrc =
+  '//www.wishufree.com/static/files/1b73df93e4744d4eb4ae4ddb515ff9f9__3a173c97-d3a0-4071-8a75-e8b045bf36cb.jpeg'
+const BetterImage: FC<ImageProps> = ({ src, secure = false, alt }) => {
   const [open, setOpen] = useState(false)
   const [loadError, setLoadError] = useState(false)
   const [loadingImage, setLoadingImage] = useState(false)
   // 原图地址
   const originSrc = useMemo(() => {
-    return getOriginUrl(props.src!)
-  }, [props.src])
-  // 手动控制图片的请求
+    return getOriginUrl(src!)
+  }, [src])
+
+  // 如果是安全模式, 手动控制图片的请求
   // 先加载占位图片
-  const [imgSrc, setImgSrc] = useState(
-    '//www.wishufree.com/static/files/1b73df93e4744d4eb4ae4ddb515ff9f9__3a173c97-d3a0-4071-8a75-e8b045bf36cb.jpeg'
-  )
+  const [imgSrc, setImgSrc] = useState(() => {
+    if (secure) return placeholderImageSrc
+    return src
+  })
 
   const handleDownload = async () => {
     const access = await accessOriginImage(originSrc)
 
-    const [name] = props.src!.split('?token=')
     const a = document.createElement('a')
-    a.download = basename(name)
-    a.href = access ? originSrc : props.src!
+    a.download = getFilename(src!)
+    a.href = access ? originSrc : src!
     a.click()
   }
 
-  const withValidateOriginImageIfExsited = (callback: () => any) => {
+  const withValidateOriginImageIfExsited = (callback: () => void) => {
     return async function () {
       const access = await accessOriginImage(originSrc)
       if (access) {
@@ -96,19 +104,21 @@ const BetterImage: FC<ImageProps> = (props) => {
   }
 
   useEffect(() => {
-    if (props.src && loadingImage) {
-      loadImage(props.src).then(({ success, url }) => {
+    if (src && loadingImage && secure) {
+      loadImage(src).then(({ success, url }) => {
         setImgSrc(url)
         setLoadError(!success)
       })
     }
-  }, [props.src, loadingImage])
+  }, [src, loadingImage, secure])
   return (
     <div className={styles.wrapper}>
       <LazyLoadImage
+        alt={alt}
         effect="blur"
         style={{ display: 'block' }}
         src={imgSrc}
+        placeholderSrc={secure ? '' : placeholderImageSrc}
         onError={() => setLoadError(true)}
         onLoad={() => {
           setLoadingImage(true)

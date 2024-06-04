@@ -1,18 +1,20 @@
 import { Spin } from 'antd'
-import { pick } from 'ramda'
 import Masonry from 'react-masonry-css'
-import { FC, useMemo, useState } from 'react'
 import 'yet-another-react-lightbox/styles.css'
 import { PlusOutlined } from '@ant-design/icons'
 import Lightbox from 'yet-another-react-lightbox'
 import { CloseCircleOutlined } from '@ant-design/icons'
+import 'yet-another-react-lightbox/plugins/counter.css'
+import { FC, useMemo, useState, useCallback } from 'react'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
+import { Zoom, Counter, Download } from 'yet-another-react-lightbox/plugins'
 
 import './index.less'
 import styles from './index.module.less'
 import Upload from '@/components/Upload'
 import { upload } from '@/service/common'
 import { MomentImage } from '@/service/timeline/types'
+import { getFilename, getOriginUrl, accessOriginImage } from '../Image'
 
 const breakpointColumnsObj = {
   default: 4,
@@ -77,6 +79,12 @@ const Gallery: FC<GalleryProps> = ({
       )
     return null
   }, [mode, momentId, loading])
+
+  const getDownloadUrl = useCallback(async (src: string) => {
+    const originAccess = await accessOriginImage(src)
+    const url = originAccess ? getOriginUrl(src!) : src
+    return url
+  }, [])
   return (
     <div className={styles.wrapper}>
       <Masonry
@@ -104,10 +112,29 @@ const Gallery: FC<GalleryProps> = ({
       </Masonry>
 
       <Lightbox
-        slides={images.map((props) => pick(['src'], props))}
+        slides={images.map((props, i) => {
+          return {
+            src: i === index ? getOriginUrl(props.src) : props.src
+          }
+        })}
         open={open}
+        on={{
+          view({ index: currentIndex }) {
+            setIndex(currentIndex)
+          }
+        }}
         close={() => setOpen(false)}
         index={index}
+        plugins={[Zoom, Download, Counter]}
+        counter={{ container: { style: { top: 'unset', bottom: 0 } } }}
+        download={{
+          async download({ saveAs, slide }) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore right
+            const url = await getDownloadUrl(slide.src)
+            saveAs(url, getFilename(url))
+          }
+        }}
       />
     </div>
   )

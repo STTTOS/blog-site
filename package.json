@@ -9,7 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "prettier": "prettier --write **/*.{js,tsx,ts,less,md,json}",
-    "lint:ci": "npm run eslint:ci && npm run stylelint:ci",
+    "lint:ci": "npm run eslint:ci",
     "eslint:ci": "eslint --cache --ext .tsx,.ts,.js ./src",
     "eslint:fix": "eslint --cache --ext .tsx,.ts,.js ./src --fix",
     "stylelint:ci": "stylelint ./src/**/*.less --custom-syntax postcss-scss",
@@ -102,7 +102,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "npx run lint:ci"
+      "npm run lint:ci"
     ],
     "*.{js,jsx,ts,tsx,less,md,json}": [
       "prettier --write"

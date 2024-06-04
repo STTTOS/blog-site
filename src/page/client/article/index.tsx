@@ -131,7 +131,7 @@ const Index: React.FC = () => {
                 )}
               </div>
 
-              <Viewer value={content} />
+              <Viewer value={content} secure={detail?.secure} />
             </div>
 
             {isPrivate && <Avatars artcileId={id} />}

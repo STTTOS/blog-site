@@ -100,7 +100,7 @@ const TimelineDetail = () => {
 
       if (!map.get(year)) {
         map.set(year, true)
-        results.push(<h2>{year}年</h2>)
+        results.push(<h2 key={year}>{year}年</h2>)
       }
       results.push(
         <Moment

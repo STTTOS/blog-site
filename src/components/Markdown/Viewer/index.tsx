@@ -9,8 +9,9 @@ interface IProps {
   value?: string
   style?: CSSProperties
   className?: string
+  secure?: boolean
 }
-const Index: React.FC<IProps> = ({ value, style, className }) => {
+const Index: React.FC<IProps> = ({ value, style, className, secure }) => {
   return (
     <MdEditor
       className={classNames(styles.wrapper, className)}
@@ -23,7 +24,7 @@ const Index: React.FC<IProps> = ({ value, style, className }) => {
           html: true
         }
       }}
-      renderHTML={(text) => <Parser>{text}</Parser>}
+      renderHTML={(text) => <Parser secure={secure}>{text}</Parser>}
     />
   )
 }
