@@ -53,7 +53,7 @@ const Parser: FC<{
           if (isPrivate) return ElementBeForbidden
 
           return (
-            <Card component="div" style={{ marginBottom: 10 }}>
+            <Card style={{ marginBottom: 10 }}>
               <Image
                 {...pick(['src', 'alt'], props)}
                 key={props.src}

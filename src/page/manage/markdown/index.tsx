@@ -12,6 +12,7 @@ import useEditOptions from '@/model/editOptions'
 import { Article } from '@/service/article/types'
 import { history } from '@/components/BrowserRouter'
 import { useHideContent } from '@/hooks/useHideContent'
+import { useGoAuth, sessionSecureKey } from '@/page/auth'
 import useArticleDetailWithValidating from '@/hooks/useArticleDetailWithValidating'
 
 export let unblock: () => void = () => void 0
@@ -22,6 +23,7 @@ const Index = () => {
   const mode = params.get('mode') as EditMode
   const ref = useRef<Partial<Article>>(null)
   const { id } = query
+  const { goAuth } = useGoAuth()
 
   const { isPrivate, setPrivateMode } = useEditOptions()
   const {
@@ -71,6 +73,11 @@ const Index = () => {
     return unblock
   }, [id, title, content])
 
+  useEffect(() => {
+    if (!id && mode === 'secure' && !sessionStorage.getItem(sessionSecureKey)) {
+      goAuth('-1')
+    }
+  }, [id, mode])
   return (
     <Spin spinning={loading}>
       <div className={styles.container}>

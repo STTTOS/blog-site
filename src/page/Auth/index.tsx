@@ -17,7 +17,10 @@ const Auth = () => {
   const handleVerifyPwd = async (secureKey: string) => {
     const encrypted = SHA256(secureKey).toString()
 
-    const access = await runAsync({ secureKey: encrypted, id: params.id })
+    const access = await runAsync({
+      secureKey: encrypted,
+      id: params.id === '-1' ? undefined : params.id
+    })
     if (access) {
       sessionStorage.setItem(sessionSecureKey, encrypted)
       history.replace(decodeURIComponent(query.get('from') || ''))
@@ -74,9 +77,9 @@ export const useGoAuth = () => {
   const location = useLocation()
 
   const params = useParams()
-  const goAuth = () => {
+  const goAuth = (id?: string) => {
     history.replace(
-      `/auth/${params.id}?from=${encodeURIComponent(
+      `/auth/${id || params.id}?from=${encodeURIComponent(
         location.pathname + location.search
       )}`
     )
