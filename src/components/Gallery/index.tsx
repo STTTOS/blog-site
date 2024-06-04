@@ -6,8 +6,14 @@ import Lightbox from 'yet-another-react-lightbox'
 import { CloseCircleOutlined } from '@ant-design/icons'
 import 'yet-another-react-lightbox/plugins/counter.css'
 import { FC, useMemo, useState, useCallback } from 'react'
+import 'yet-another-react-lightbox/plugins/thumbnails.css'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
-import { Zoom, Counter, Download } from 'yet-another-react-lightbox/plugins'
+import {
+  Zoom,
+  Counter,
+  Download,
+  Thumbnails
+} from 'yet-another-react-lightbox/plugins'
 
 import './index.less'
 import styles from './index.module.less'
@@ -125,7 +131,7 @@ const Gallery: FC<GalleryProps> = ({
         }}
         close={() => setOpen(false)}
         index={index}
-        plugins={[Zoom, Download, Counter]}
+        plugins={[Zoom, Download, Counter, Thumbnails]}
         counter={{ container: { style: { top: 'unset', bottom: 0 } } }}
         download={{
           async download({ saveAs, slide }) {
