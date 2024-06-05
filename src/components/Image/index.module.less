@@ -29,8 +29,11 @@
   left: 0;
   justify-content: flex-end;
   padding-right: 6%;
-  background-color: rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(1px);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
   padding: 10px 12px;
   cursor: zoom-in;
 }
@@ -42,6 +45,7 @@
   color: #d1bdbd;
   font-size: 20px;
 }
+
 .download {
   background-color: #fff;
   font-size: 20px;
