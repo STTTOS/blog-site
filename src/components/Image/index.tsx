@@ -1,13 +1,12 @@
-import { message } from 'antd'
 import Modal from '@mui/material/Modal'
 import { basename } from 'path-browserify'
 import { CloseCircleOutlined } from '@ant-design/icons'
+import { CloudDownloadOutlined } from '@ant-design/icons'
 import { type FC, useMemo, useState, useEffect } from 'react'
 import 'react-lazy-load-image-component/src/effects/blur.css'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 
 import styles from './index.module.less'
-import AsyncButton from '../AsyncButton'
 import { sessionSecureKey } from '@/page/auth'
 
 interface ImageProps {
@@ -76,6 +75,7 @@ const BetterImage: FC<ImageProps> = ({ src, secure = false, alt }) => {
     return getOriginUrl(src!)
   }, [src])
 
+  const [previewSrc, setPreviewSrc] = useState(src)
   // 如果是安全模式, 手动控制图片的请求
   // 先加载占位图片
   const [imgSrc, setImgSrc] = useState(() => {
@@ -92,17 +92,6 @@ const BetterImage: FC<ImageProps> = ({ src, secure = false, alt }) => {
     a.click()
   }
 
-  const withValidateOriginImageIfExsited = (callback: () => void) => {
-    return async function () {
-      const access = await accessOriginImage(originSrc)
-      if (access) {
-        callback()
-      } else {
-        message.info('该图片并未压缩, 已展示原图')
-      }
-    }
-  }
-
   useEffect(() => {
     if (src && loadingImage && secure) {
       loadImage(src).then(({ success, url }) => {
@@ -111,12 +100,22 @@ const BetterImage: FC<ImageProps> = ({ src, secure = false, alt }) => {
       })
     }
   }, [src, loadingImage, secure])
+
+  useEffect(() => {
+    if (open) {
+      accessOriginImage(originSrc).then((access) => {
+        if (access) {
+          setPreviewSrc(originSrc)
+        }
+      })
+    }
+  }, [originSrc, src, open])
   return (
     <div className={styles.wrapper}>
       <LazyLoadImage
         alt={alt}
         effect="blur"
-        style={{ display: 'block' }}
+        style={{ display: 'block', cursor: 'zoom-in' }}
         src={imgSrc}
         placeholderSrc={secure ? '' : placeholderImageSrc}
         onError={() => setLoadError(true)}
@@ -126,22 +125,11 @@ const BetterImage: FC<ImageProps> = ({ src, secure = false, alt }) => {
       />
 
       {!loadError && (
-        <div className={styles.op}>
-          <AsyncButton
-            type="text"
-            style={{ color: '#fff' }}
-            request={withValidateOriginImageIfExsited(() => setOpen(true))}
-          >
-            查看原图
-          </AsyncButton>
-
-          <AsyncButton
-            type="text"
-            style={{ color: '#fff' }}
-            request={handleDownload}
-          >
-            下载
-          </AsyncButton>
+        <div className={styles.op} onClick={() => setOpen(true)}>
+          <CloudDownloadOutlined
+            onClick={handleDownload}
+            className={styles.download}
+          />
         </div>
       )}
 
@@ -159,7 +147,7 @@ const BetterImage: FC<ImageProps> = ({ src, secure = false, alt }) => {
             position: 'relative'
           }}
         >
-          <img src={originSrc} style={{ maxWidth: 'calc(100vw - 30px)' }} />
+          <img src={previewSrc} style={{ maxWidth: 'calc(100vw - 30px)' }} />
           <CloseCircleOutlined
             onClick={() => setOpen(false)}
             className={styles.icon}
