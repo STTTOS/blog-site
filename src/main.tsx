@@ -10,15 +10,20 @@ import './main.less'
 import routers from './router'
 import useTimeout from './hooks/useTimeout'
 import { countWeb } from './service/common'
+import { useShare } from './hooks/useShare'
 import BrowserRouter from './components/BrowserRouter'
 
 dayjs.locale('zh-cn')
 dayjs.extend(relativeTime)
-const Index = () => useRoutes(routers)
-
-const App = () => {
+const Content = () => {
+  const routes = useRoutes(routers)
   useTimeout(() => countWeb(), 5 * 1000, process.env.NODE_ENV === 'development')
 
+  useShare()
+  return routes
+}
+
+const App = () => {
   return (
     // <StrictMode>
     <BrowserRouter>
@@ -32,7 +37,7 @@ const App = () => {
           }
         }}
       >
-        <Index />
+        <Content />
       </ConfigProvider>
     </BrowserRouter>
     // </StrictMode>

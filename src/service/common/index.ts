@@ -88,6 +88,17 @@ async function getCountWeb() {
   return viewCount
 }
 
+async function getTencentJSApi(url: string) {
+  const { data } = await request<{
+    signature: string
+    timestamp: number
+    noncestr: string
+  }>('api/jsSDK/tencent/getSignature', {
+    url
+  })
+  return data
+}
+
 export {
   confirmAuth,
   upload,
@@ -96,5 +107,6 @@ export {
   uploadTempFile,
   uploadPersistentFile,
   uploadFile,
-  uploadImageProtected
+  uploadImageProtected,
+  getTencentJSApi
 }
