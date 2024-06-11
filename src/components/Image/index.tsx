@@ -8,6 +8,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component'
 
 import styles from './index.module.less'
 import { sessionSecureKey } from '@/page/auth'
+import { placeholderImageSrc } from '@/config'
 
 interface ImageProps {
   src?: string
@@ -64,8 +65,7 @@ async function loadImage(src: string) {
     }
   })
 }
-const placeholderImageSrc =
-  '//www.wishufree.com/static/files/1b73df93e4744d4eb4ae4ddb515ff9f9__3a173c97-d3a0-4071-8a75-e8b045bf36cb.jpeg'
+
 const BetterImage: FC<ImageProps> = ({ src, secure = false, alt }) => {
   const [open, setOpen] = useState(false)
   const [loadError, setLoadError] = useState(false)
