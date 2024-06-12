@@ -175,6 +175,7 @@ const MessageBox: FC<MessageBoxProps> = () => {
               height={600}
               next={loadMore}
               hasMore={hasMore}
+              endMessage={<div className={styles.noMore}>No More Data...</div>}
               dataLength={list.length}
               loader={<div className={styles.loading}>Loading ...</div>}
             >

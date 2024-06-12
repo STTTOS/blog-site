@@ -3,7 +3,7 @@ import type { Tool } from '@/service/tool/types'
 import type { IComponentsConfig } from '@/utils/createForm/types'
 
 import Upload from '@/components/Upload'
-import { upload } from '@/service/common'
+import { uploadPersistentFile } from '@/service/common'
 
 const colums: TableColumnProps<Tool>[] = [
   {
@@ -28,7 +28,7 @@ const drawerFormComponents: IComponentsConfig = [
     name: 'scriptUrl',
     element: (
       <Upload
-        request={(file) => upload({ file })}
+        request={(file) => uploadPersistentFile({ file })}
         maxCount={5}
         listType="text"
         accept="js"
@@ -40,7 +40,7 @@ const drawerFormComponents: IComponentsConfig = [
     name: 'cssHref',
     element: (
       <Upload
-        request={(file) => upload({ file })}
+        request={(file) => uploadPersistentFile({ file })}
         maxCount={5}
         listType="text"
         accept="css"
