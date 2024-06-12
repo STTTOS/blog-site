@@ -97,7 +97,7 @@ const MessageBox: FC<MessageBoxProps> = () => {
                 )
               })
               refreshCount()
-              articleId && window.open(`/article/${articleId}`)
+              articleId && window.open(`/article/${articleId}#comment-${id}`)
             }}
           >
             <List.Item.Meta
@@ -151,7 +151,6 @@ const MessageBox: FC<MessageBoxProps> = () => {
             </div>
           }
           style={{ width: 600 }}
-          id="s"
         >
           {list.length === 0 ? (
             <Empty />

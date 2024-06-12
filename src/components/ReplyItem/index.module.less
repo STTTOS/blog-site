@@ -1,35 +1,46 @@
 .container {
   display: flex;
+  border: 1px solid transparent;
 }
+
 .avatar {
   flex-shrink: 0;
   margin-right: 6px;
 }
+
 .main {
   flex-grow: 1;
+
   .content {
     padding: 6px 0;
-    font-family: PingFang SC, HarmonyOS_Regular, Helvetica Neue, Microsoft YaHei, sans-serif;
+    font-family: PingFang SC, HarmonyOS_Regular, Helvetica Neue, Microsoft YaHei,
+      sans-serif;
     font-weight: 400;
-    color: #18191C;
+    color: #18191c;
     font-size: 15px;
   }
+
   .extra {
-    color: #9499A0;
+    color: #9499a0;
     font-size: 13px;
   }
+
   .time {
     margin-right: 12px;
   }
-  .reply{
+
+  .reply {
     cursor: pointer;
   }
+
   .replyComponent {
     margin: 12px 0;
   }
 }
+
 .header {
   padding-top: 8px;
+
   .name {
     font-family: PingFang SC;
     color: #61666d;
@@ -37,7 +48,29 @@
     font-weight: 500;
     font-size: 13px;
   }
+
   .contributor {
-    color: #FB7299;
+    color: #fb7299;
+  }
+}
+
+.alert {
+  animation: blink 3s ease-in-out;
+}
+
+@keyframes blink {
+  0% {
+    border-color: transparent;
+    transform: scale(1);
+  }
+
+  50% {
+    border-color: red;
+    transform: scale(1.05);
+  }
+
+  100% {
+    border-color: transparent;
+    transform: scale(1);
   }
 }

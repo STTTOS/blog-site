@@ -1,5 +1,6 @@
 import type { Comment } from '@/service/comments/types'
 
+import classNames from 'classnames'
 import { FC, useState } from 'react'
 import { Avatar, Divider } from 'antd'
 
@@ -43,8 +44,14 @@ const ReplyItem: FC<ReplyItemProps> = ({
     onRefresh?.()
   }
 
+  const elementId = `comment-${id}`
+  const alertElement = `#${elementId}` === location.hash
+
   return (
-    <div className={styles.container}>
+    <div
+      className={classNames(styles.container, alertElement && styles.alert)}
+      id={elementId}
+    >
       <Avatar src={avatar} className={styles.avatar} size="large" />
       <div className={styles.main}>
         <div className={styles.header}>

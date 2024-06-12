@@ -1,8 +1,8 @@
-import type { FC } from 'react'
 import type { Comment } from '@/service/comments/types'
 
 import { Button } from 'antd'
 import { useRequest } from 'ahooks'
+import { type FC, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
 import Reply from '../Reply'
@@ -35,6 +35,19 @@ const Comments: FC<CommentsProps> = ({ articleId, avatar }) => {
       />
     ))
   }
+
+  useEffect(() => {
+    if (!data) return
+
+    const hash = location.hash
+    const target = document.querySelector(hash)
+    if (target) {
+      const { top } = target.getBoundingClientRect()
+      const scrollTop = document.documentElement.scrollTop
+      const offsetTop = top + scrollTop - 100
+      window.scrollTo({ top: offsetTop, behavior: 'smooth' })
+    }
+  }, [data])
 
   if (!user?.id) {
     return (
