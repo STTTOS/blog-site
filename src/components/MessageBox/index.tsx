@@ -1,3 +1,4 @@
+import qs from 'qs'
 import dayjs from 'dayjs'
 import { useRequest } from 'ahooks'
 import { MessageOutlined } from '@ant-design/icons'
@@ -18,6 +19,10 @@ interface Message {
   type: MessageType
   articleId?: number
   isRead: boolean
+  extra: {
+    articleId?: number
+    commentId?: number
+  }
 }
 interface MessageBoxProps {
   [key: string]: any
@@ -78,7 +83,15 @@ const MessageBox: FC<MessageBoxProps> = () => {
   }
   const listContent = useMemo(() => {
     return list.map(
-      ({ id, createdAt, content, sender, articleId, type, isRead }) => {
+      ({
+        id,
+        createdAt,
+        content,
+        sender,
+        type,
+        isRead,
+        extra: { articleId, commentId }
+      }) => {
         return (
           <List.Item
             key={id}
@@ -97,7 +110,10 @@ const MessageBox: FC<MessageBoxProps> = () => {
                 )
               })
               refreshCount()
-              articleId && window.open(`/article/${articleId}#comment-${id}`)
+              const query = qs.stringify({
+                targetId: commentId
+              })
+              articleId && window.open(`/article/${articleId}?${query}`)
             }}
           >
             <List.Item.Meta

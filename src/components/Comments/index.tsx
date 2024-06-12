@@ -39,8 +39,9 @@ const Comments: FC<CommentsProps> = ({ articleId, avatar }) => {
   useEffect(() => {
     if (!data) return
 
-    const hash = location.hash
-    const target = document.querySelector(hash)
+    const targetId = new URLSearchParams(location.search).get('targetId')
+    const target = document.getElementById(targetId!)
+
     if (target) {
       const { top } = target.getBoundingClientRect()
       const scrollTop = document.documentElement.scrollTop

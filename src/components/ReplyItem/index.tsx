@@ -28,9 +28,15 @@ const ReplyItem: FC<ReplyItemProps> = ({
   isContributor
 }) => {
   const [showReplay, setShowReply] = useState(false)
+  const targetId = Number(new URLSearchParams(location.search).get('targetId'))
   const renderChildrenReplies = (list: Comment[]) => {
     return list.map((data) => (
-      <SubReply {...data} key={data.id} refresh={onRefresh} />
+      <SubReply
+        {...data}
+        key={data.id}
+        refresh={onRefresh}
+        alert={data.id === targetId}
+      />
     ))
   }
   const handleReplyClick = (
@@ -44,21 +50,21 @@ const ReplyItem: FC<ReplyItemProps> = ({
     onRefresh?.()
   }
 
-  const elementId = `comment-${id}`
-  const alertElement = `#${elementId}` === location.hash
+  const alertElement = id === targetId
 
   return (
-    <div
-      className={classNames(styles.container, alertElement && styles.alert)}
-      id={elementId}
-    >
+    <div className={classNames(styles.container)} id={id as string}>
       <Avatar src={avatar} className={styles.avatar} size="large" />
       <div className={styles.main}>
         <div className={styles.header}>
           <span className={styles.name}>{name}</span>
           {isContributor && <em className={styles.contributor}>contributor</em>}
         </div>
-        <div className={styles.content}>{content}</div>
+        <div
+          className={classNames(alertElement && styles.alert, styles.content)}
+        >
+          {content}
+        </div>
         <div className={styles.extra}>
           <span className={styles.time}>{createdAt}</span>
           <span className={styles.reply} onClick={handleReplyClick}>
