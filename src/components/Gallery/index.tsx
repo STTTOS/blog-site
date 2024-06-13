@@ -19,7 +19,6 @@ import './index.less'
 import styles from './index.module.less'
 import Upload from '@/components/Upload'
 import { upload } from '@/service/common'
-import { placeholderImageSrc } from '@/config'
 import { MomentImage } from '@/service/timeline/types'
 import { getFilename, getOriginUrl, accessOriginImage } from '../Image'
 
@@ -107,7 +106,6 @@ const Gallery: FC<GalleryProps> = ({
               src={photo.src}
               onClick={() => handleClick({ index })}
               style={{ display: 'block', cursor: 'zoom-in' }}
-              placeholderSrc={placeholderImageSrc}
               effect="blur"
             />
             {mode === 'edit' && (

@@ -4,7 +4,11 @@ import { CloseCircleOutlined } from '@ant-design/icons'
 import { CloudDownloadOutlined } from '@ant-design/icons'
 import { type FC, useMemo, useState, useEffect } from 'react'
 import 'react-lazy-load-image-component/src/effects/blur.css'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
+import {
+  LazyLoadImage,
+  ScrollPosition,
+  trackWindowScroll
+} from 'react-lazy-load-image-component'
 
 import styles from './index.module.less'
 import { sessionSecureKey } from '@/page/auth'
@@ -15,6 +19,7 @@ interface ImageProps {
   alt?: string
   /**是否安全访问模式, 如果是, 则使用xhr在请求头中带上secureKey手动请求 */
   secure?: boolean
+  scrollPosition: ScrollPosition
 }
 
 export function getOriginUrl(src: string) {
@@ -66,7 +71,12 @@ async function loadImage(src: string) {
   })
 }
 
-const BetterImage: FC<ImageProps> = ({ src, secure = false, alt }) => {
+const BetterImage: FC<ImageProps> = ({
+  src,
+  secure = false,
+  alt,
+  scrollPosition
+}) => {
   const [open, setOpen] = useState(false)
   const [loadError, setLoadError] = useState(false)
   const [loadingImage, setLoadingImage] = useState(false)
@@ -115,10 +125,10 @@ const BetterImage: FC<ImageProps> = ({ src, secure = false, alt }) => {
       <LazyLoadImage
         alt={alt}
         effect="blur"
-        style={{ display: 'block', cursor: 'zoom-in' }}
+        style={{ display: 'block', cursor: 'zoom-in', margin: '0 auto' }}
         src={imgSrc}
-        placeholderSrc={secure ? '' : placeholderImageSrc}
         onError={() => setLoadError(true)}
+        scrollPosition={scrollPosition}
         onLoad={() => {
           setLoadingImage(true)
         }}
@@ -158,4 +168,4 @@ const BetterImage: FC<ImageProps> = ({ src, secure = false, alt }) => {
   )
 }
 
-export default BetterImage
+export default trackWindowScroll(BetterImage)

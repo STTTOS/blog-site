@@ -51,6 +51,12 @@ const Index: React.FC = () => {
     location.href = `/tools/${key}`
   }
 
+  useEffect(() => {
+    if (toolList) {
+      const title = toolList.find((item) => item.id === current)?.title
+      if (title) document.title = `木木记-${title}`
+    }
+  }, [toolList, current])
   return (
     <div>
       <Spin spinning={loading || fetchingTools}>
