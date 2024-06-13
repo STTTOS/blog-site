@@ -1,3 +1,4 @@
+import 'animate.css'
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import { ConfigProvider } from 'antd'

@@ -8,7 +8,7 @@ const fs = require('fs')
 // const base = process.env.NODE_ENV === 'development' ? '/' : 'https://xuan-1313104191.cos.ap-chengdu.myqcloud.com/base/blog';
 // https://vitejs.dev/config/
 const target = 'https://www.wishufree.com'
-// http://localhost:7500
+// 'http://localhost:7500'
 export default defineConfig({
   // base,
   plugins: [react()],
@@ -25,7 +25,7 @@ export default defineConfig({
         target,
         changeOrigin: true,
         cookieDomainRewrite: {
-          'wishufree.com': 'localhost'
+          // 'wishufree.com': 'localhost'
         }
       },
       '/static': {

@@ -37,7 +37,11 @@ const Index: React.FC<IProps> = ({ onChange = () => void 0, value, style }) => {
       imageAccept=".png,.jpeg,.jpg"
       onChange={({ text }) => onChange(text)}
       renderHTML={(text) => (
-        <Parser isPrivate={isPrivate} secure={mode === 'secure'}>
+        <Parser
+          isPrivate={isPrivate}
+          secure={mode === 'secure'}
+          onChange={onChange}
+        >
           {text}
         </Parser>
       )}

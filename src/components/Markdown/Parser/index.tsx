@@ -1,19 +1,18 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-import { pick } from 'ramda'
-import { Card } from '@mui/joy'
+import { message } from 'antd'
 import remarkGfm from 'remark-gfm'
 import remarkIns from 'remark-ins'
-import { memo, type FC } from 'react'
 import Markdown from 'react-markdown'
+import { memo, type FC } from 'react'
 import rehypeVideo from 'rehype-video'
 import remarkBreaks from 'remark-breaks'
+import { useLocation } from 'react-router'
 import { CopyOutlined } from '@ant-design/icons'
 import { themes, Highlight, RenderProps } from 'prism-react-renderer'
 
 import copy from '@/utils/copy'
+import CardImage from '../CardImage'
 import Video from '@/components/Video'
-import Image, { ElementBeForbidden } from '@/components/Image'
+import { ElementBeForbidden } from '@/components/Image'
 
 const renderChildren = ({
   style,
@@ -41,9 +40,25 @@ const SyntaxHighlighter = memo(({ children, language }: any) => {
 })
 const Parser: FC<{
   children: string
-  isPrivate?: boolean
   secure?: boolean
-}> = ({ children, isPrivate, secure = false }) => {
+  isPrivate?: boolean
+  // eslint-disable-next-line no-unused-vars
+  onChange?: (value: string) => void
+}> = ({ children, isPrivate, secure = false, onChange }) => {
+  const { pathname } = useLocation()
+  // 从children中找到目标url
+  // 用正则匹配 ![.*](url) 并删除
+  const handleDelete = (url: string) => {
+    const regex = new RegExp(`\\\n*\\!\\[[^[\\]]+\\]\\(\\\n*${url}\\\n*\\)`)
+    if (regex.test(children)) {
+      setTimeout(() => {
+        onChange?.(children.replace(regex, ''))
+      }, 300)
+      return true
+    }
+    message.info('错误: 未找到元素, 请手动删除链接')
+    return false
+  }
   return (
     <Markdown
       rehypePlugins={[[rehypeVideo, { details: false }]]}
@@ -53,13 +68,13 @@ const Parser: FC<{
           if (isPrivate) return ElementBeForbidden
 
           return (
-            <Card style={{ marginBottom: 10 }}>
-              <Image
-                {...pick(['src', 'alt'], props)}
-                key={props.src}
-                secure={secure}
-              />
-            </Card>
+            <CardImage
+              {...props}
+              secure={secure}
+              onDelete={
+                pathname.includes('markdown') ? handleDelete : undefined
+              }
+            />
           )
         },
         video(props) {
