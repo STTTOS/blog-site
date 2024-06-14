@@ -107,6 +107,7 @@ const drawerFormComponents: (type: 'add' | 'edit') => IComponent[] = (type) => {
     {
       label: '头像',
       name: 'avatar',
+      require: true,
       element: <Upload request={(file) => upload({ file })} />
     },
     {

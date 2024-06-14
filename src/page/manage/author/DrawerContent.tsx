@@ -19,7 +19,11 @@ const AuthorDrawerContent: React.FC<IProps> = ({
     formConfig: {
       layout: 'vertical',
       itemsRequire: false,
-      data
+      data,
+      initialValues: {
+        avatar:
+          '//www.wishufree.com/static/files/istockphoto-1389547625-612x612__5d084322-96f7-4099-bf55-89ff4befdf8e.jpg'
+      }
     },
     components: drawerFormComponents(data ? 'edit' : 'add')
   }
