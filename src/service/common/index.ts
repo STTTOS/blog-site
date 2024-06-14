@@ -63,6 +63,7 @@ async function uploadPersistentFile(params: { file: File }) {
     {},
     formData
   )
+  message.success('上传成功')
   return url
 }
 
