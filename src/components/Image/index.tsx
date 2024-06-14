@@ -113,15 +113,19 @@ const BetterImage: FC<ImageProps> = ({
 
   useEffect(() => {
     if (open) {
-      accessOriginImage(originSrc).then((access) => {
-        if (access) {
-          setPreviewSrc(originSrc)
-        }
-      })
+      if (secure) {
+        setPreviewSrc(imgSrc)
+      } else {
+        accessOriginImage(originSrc).then((access) => {
+          if (access) {
+            setPreviewSrc(originSrc)
+          }
+        })
+      }
     }
-  }, [originSrc, src, open])
+  }, [originSrc, src, open, secure, imgSrc])
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} key={src}>
       <LazyLoadImage
         alt={alt}
         effect="blur"
