@@ -29,7 +29,7 @@ const Title: FC<TitleProps> = ({ title, id, jumpAble, secure }) => {
         {secure ? <LockFilled /> : <UnlockOutlined />}
       </Space>
       {jumpAble ? (
-        <a href={`/article/${id}`} target="_blank">
+        <a href={`/article/${id}`} target="_blank" className={styles.title}>
           {title}
         </a>
       ) : (
