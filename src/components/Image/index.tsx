@@ -137,7 +137,10 @@ const BetterImage: FC<ImageProps> = ({
       {!loadError && (
         <div className={styles.op} onClick={() => setOpen(true)}>
           <CloudDownloadOutlined
-            onClick={handleDownload}
+            onClick={(e) => {
+              e.stopPropagation()
+              handleDownload()
+            }}
             className={styles.download}
           />
         </div>
