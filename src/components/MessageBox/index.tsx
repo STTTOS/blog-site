@@ -4,13 +4,13 @@ import { useRequest } from 'ahooks'
 import { MessageOutlined } from '@ant-design/icons'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useMemo, type FC, useState, useEffect } from 'react'
-import { List, Badge, Empty, Avatar, Button, Popover } from 'antd'
+import { Tag, List, Badge, Empty, Avatar, Button, Popover } from 'antd'
 
 import request from '@/utils/http'
 import styles from './index.module.less'
 import { User } from '@/service/user/types'
 
-type MessageType = 'reply' | 'like' | 'comment'
+type MessageType = 'reply' | 'like' | 'comment' | 'system'
 interface Message {
   createdAt: string
   content: string
@@ -22,6 +22,7 @@ interface Message {
   extra: {
     articleId?: number
     commentId?: number
+    link?: string
   }
 }
 interface MessageBoxProps {
@@ -81,6 +82,13 @@ const MessageBox: FC<MessageBoxProps> = () => {
     if (type === 'reply') return '回复了我的评论'
     else if (type === 'comment') return '评论了我的文章'
   }
+
+  const getTagProps = (type: MessageType) => {
+    if (type === 'reply') return ['blue', '回复']
+    if (type === 'comment') return ['cyan', '评论']
+    return ['red', '系统通知']
+  }
+
   const listContent = useMemo(() => {
     return list.map(
       ({
@@ -90,8 +98,24 @@ const MessageBox: FC<MessageBoxProps> = () => {
         sender,
         type,
         isRead,
-        extra: { articleId, commentId }
+        extra: { articleId, commentId, link }
       }) => {
+        // if (type === 'system') {
+        //   return (
+        //     <span>
+        //       <a href={link} target="_blank">
+        //         xx
+        //       </a>
+        //     </span>
+        //   )
+        // }
+        const [color, text] = getTagProps(type)
+
+        const avatar = (() => {
+          if (type === 'system')
+            return '//www.wishufree.com/static/files/premium_photo-1681489571344-b636f304a1e2__630b448a-bc78-4ddf-aedf-8175ff9ce133.jpeg'
+          return sender?.avatar
+        })()
         return (
           <List.Item
             key={id}
@@ -110,6 +134,11 @@ const MessageBox: FC<MessageBoxProps> = () => {
                 )
               })
               refreshCount()
+
+              if (type === 'system') {
+                window.open(link)
+                return
+              }
               const query = qs.stringify({
                 targetId: commentId
               })
@@ -117,9 +146,13 @@ const MessageBox: FC<MessageBoxProps> = () => {
             }}
           >
             <List.Item.Meta
-              avatar={<Avatar src={sender?.avatar} />}
+              avatar={<Avatar src={avatar} />}
               title={
                 <div style={{ display: 'flex' }}>
+                  <Tag color={color} className={styles.tag}>
+                    {text}
+                  </Tag>
+
                   <em style={{ whiteSpace: 'nowrap' }}>{sender?.name}</em>
                   <span style={{ marginLeft: 4, fontWeight: 'normal' }}>
                     {renderType(type)}
