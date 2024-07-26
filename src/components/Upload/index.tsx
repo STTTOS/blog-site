@@ -40,8 +40,8 @@ const Index: React.FC<IUploadProps> = ({
   maxCount = 1,
   uploadText = '上传',
   showValue = false,
-  // 默认为10m
-  maxSize = 1024 * 10,
+  // 默认为30m
+  maxSize = 1024 * 30,
   showFileList = true,
   onChange = () => void 0,
   accept = 'jpg,png,jpeg',
