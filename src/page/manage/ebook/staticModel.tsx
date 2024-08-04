@@ -1,14 +1,15 @@
 import type { TableColumnProps } from 'antd'
 import type { Ebook } from '../../../service/ebook/types'
-import type { IComponentsConfig, IFormItemProps } from '@/utils/createForm/types'
+import type {
+  IFormItemProps,
+  IComponentsConfig
+} from '@/utils/createForm/types'
 
-import { InputNumber, Select, Tooltip } from 'antd'
-import {
-  QuestionCircleOutlined
-} from '@ant-design/icons'
+import { Select, Tooltip, InputNumber } from 'antd'
+import { QuestionCircleOutlined } from '@ant-design/icons'
 
 import Upload from '@/components/Upload'
-import { upload } from '@/service/common'
+import { uploadFile } from '@/service/common'
 import { ebookMap, ebookOptions } from './constants'
 import { supportedPreviewFile } from '@/globalConfig'
 import { getFileType } from '@/components/Upload/methods'
@@ -26,7 +27,13 @@ const colums: TableColumnProps<Ebook>[] = [
     dataIndex: 'name',
     render: (_, { eBookUrl, name }) => (
       <em>
-        {supportedPreviewFile.includes(getFileType(eBookUrl)) ? <a target="_blank" href={eBookUrl}>{name}</a> : name}
+        {supportedPreviewFile.includes(getFileType(eBookUrl)) ? (
+          <a target="_blank" href={eBookUrl}>
+            {name}
+          </a>
+        ) : (
+          name
+        )}
       </em>
     )
   },
@@ -52,31 +59,38 @@ const colums: TableColumnProps<Ebook>[] = [
 const searchBarFields: IFormItemProps<Ebook>[] = [
   { label: '电子书名称', name: 'name' },
   {
-    label: '分类', name: 'category',
+    label: '分类',
+    name: 'category',
     placeholder: '选择分类',
-    element: <Select
-      allowClear
-      mode="multiple"
-      options={ebookOptions} />
+    element: <Select allowClear mode="multiple" options={ebookOptions} />
   }
 ]
 
 const drawerFormComponents: IComponentsConfig = [
   { label: '电子书名称', name: 'name' },
   {
-    label: '电子书分类', name: 'category',
+    label: '电子书分类',
+    name: 'category',
     initialValue: 'other',
     element: <Select options={ebookOptions} allowClear />
   },
-  { label: '字数(千字)', name: 'words', require: false, element: <InputNumber /> },
   {
-    label: '文件', name: 'eBookUrl',
+    label: '字数(千字)',
+    name: 'words',
+    require: false,
+    element: <InputNumber />
+  },
+  {
+    label: '文件',
+    name: 'eBookUrl',
     extra: '支持pdf, epub格式',
-    element: <Upload
-      listType="text"
-      accept="epub,pdf"
-      request={(file) => upload({ file })}
-    />
+    element: (
+      <Upload
+        listType="text"
+        accept="epub,pdf"
+        request={(file) => uploadFile({ file })}
+      />
+    )
   }
 ]
 

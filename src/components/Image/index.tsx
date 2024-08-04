@@ -94,11 +94,15 @@ const BetterImage: FC<ImageProps> = ({
   })
 
   const handleDownload = async () => {
-    const access = await accessOriginImage(originSrc)
+    const url = await (async () => {
+      if (secure) return imgSrc
+      const access = await accessOriginImage(originSrc)
+      return access ? originSrc : imgSrc
+    })()
 
     const a = document.createElement('a')
     a.download = getFilename(src!)
-    a.href = access ? originSrc : src!
+    a.href = url!
     a.click()
   }
 
