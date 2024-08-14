@@ -41,7 +41,7 @@ const Moment: FC<MomentProps> = ({
   const { user } = useUserInfo()
   const showOp = user?.id === userId
   const [timePicked, setTimePicked] = useState(dayjs().toISOString())
-  const [draft, setDraft] = useState<string>()
+  const [draft, setDraft] = useState<string>('')
   const [mode, setMode] = useState<EditMode>(defaultMode)
   const [imgSet, setImageSet] = useState<MomentImage[]>([])
   const { runAsync: save, loading } = useRequest(updateMoment, { manual: true })
@@ -89,7 +89,7 @@ const Moment: FC<MomentProps> = ({
     onCancel()
   }
   useEffect(() => {
-    setDraft(content)
+    if (content) setDraft(content)
   }, [content])
 
   useEffect(() => {
