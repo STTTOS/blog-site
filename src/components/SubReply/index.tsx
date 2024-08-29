@@ -75,15 +75,12 @@ const SubReply: FC<
   return (
     <div className={classNames(styles.container)}>
       <Avatar src={avatar} className={styles.avatar} />
-      <div className={styles.main}>
+      <div className={classNames(alert && wrapperStyles.alert, styles.main)}>
         <span className={styles['user-info']}>
           <span className={styles.name}>{name}</span>
           {isContributor && <em className={styles.contributor}>contributor</em>}
         </span>
-        <span
-          className={classNames(alert && wrapperStyles.alert, styles.content)}
-          id={id as string}
-        >
+        <span className={styles.content} id={id as string}>
           {renderTargetUser({
             ...content,
             name: parentUser?.name,
