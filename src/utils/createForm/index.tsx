@@ -90,7 +90,16 @@ const useForm = ({
     return components
   }
 
-  useEffect(() => form.setFieldsValue(data), [data, form])
+  useEffect(() => {
+    if (data) {
+      const keys = Object.keys(data)
+      keys.forEach((key) => {
+        const value = data[key]
+        // 排除data中为空的值
+        if (value) form.setFieldValue(key, value)
+      })
+    }
+  }, [data, form])
 
   const formStructure = (
     <Form form={form} {...formConfig}>
