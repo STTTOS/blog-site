@@ -14,7 +14,6 @@ import {
 } from '@/service/article'
 
 const Recycle = () => {
-  // const {data, loading} = useRequest(getArticleRecycleList)
   const { tableProps, refresh } = useAntdTable(getArticleRecycleList)
   const handleRecover = async (id: number) => {
     await recoverAritcle({ id })
@@ -37,7 +36,9 @@ const Recycle = () => {
         <Space size="middle">
           <Popconfirm
             title="删除后将不可找回"
-            onConfirm={() => deleteAriclePhysically({ id })}
+            onConfirm={() =>
+              deleteAriclePhysically({ id }).then(() => refresh())
+            }
             okText="Yes"
             cancelText="No"
           >
