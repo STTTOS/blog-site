@@ -9,6 +9,7 @@ import SubReply from '../SubReply'
 import { useUserInfo } from '@/model'
 import styles from './index.module.less'
 import DeleteReply from '../DeleteReply'
+import UserProfile from '../UserProfile'
 
 interface ReplyItemProps extends Comment {
   articleId: number
@@ -56,10 +57,14 @@ const ReplyItem: FC<ReplyItemProps> = ({
 
   return (
     <div className={classNames(styles.container)} id={id as string}>
-      <Avatar src={avatar} className={styles.avatar} size="large" />
+      <UserProfile userId={authorId as number}>
+        <Avatar src={avatar} className={styles.avatar} size="large" />
+      </UserProfile>
       <div className={styles.main}>
         <div className={styles.header}>
-          <span className={styles.name}>{name}</span>
+          <UserProfile userId={authorId as number}>
+            <span className={styles.name}>{name}</span>
+          </UserProfile>
           {isContributor && <em className={styles.contributor}>contributor</em>}
         </div>
         <div

@@ -8,6 +8,7 @@ import Reply from '../Reply'
 import { useUserInfo } from '@/model'
 import styles from './index.module.less'
 import DeleteReply from '../DeleteReply'
+import UserProfile from '../UserProfile'
 import { User } from '@/service/user/types'
 import wrapperStyles from '@/components/ReplyItem/index.module.less'
 
@@ -58,14 +59,19 @@ const SubReply: FC<
   const renderTargetUser = ({
     message,
     at_name_to_id,
-    name
+    name,
+    id
   }: Comment['content'] & Pick<User, 'id' | 'name'>) => {
     if (at_name_to_id) {
       const reg = new RegExp(`@(${Object.keys(at_name_to_id).join('|')})`, 'g')
       const parts = message.split(reg)
       return parts.map((item) => {
         if (at_name_to_id[item] && item === name) {
-          return <span className={styles.user_can_hover}>@{item}</span>
+          return (
+            <UserProfile userId={id}>
+              <span className={styles.user_can_hover}>@{item}</span>
+            </UserProfile>
+          )
         }
         return item
       })
@@ -74,10 +80,14 @@ const SubReply: FC<
   }
   return (
     <div className={classNames(styles.container)}>
-      <Avatar src={avatar} className={styles.avatar} />
+      <UserProfile userId={authorId as number}>
+        <Avatar src={avatar} className={styles.avatar} />
+      </UserProfile>
       <div className={classNames(alert && wrapperStyles.alert, styles.main)}>
         <span className={styles['user-info']}>
-          <span className={styles.name}>{name}</span>
+          <UserProfile userId={authorId as number}>
+            <span className={styles.name}>{name}</span>
+          </UserProfile>
           {isContributor && <em className={styles.contributor}>contributor</em>}
         </span>
         <span className={styles.content} id={id as string}>
