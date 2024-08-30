@@ -36,6 +36,7 @@ const UserProfile: FC<UserProfileProps> = ({ userId, children }) => {
 
   return (
     <Popover
+      open={open && !!dataCache.get(id)}
       overlayInnerStyle={{
         padding: 4,
         borderRadius: 12,
