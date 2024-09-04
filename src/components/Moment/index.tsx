@@ -159,7 +159,7 @@ const Moment: FC<MomentProps> = ({
         () =>
           likeMoment({ id, timelineId }).then(() =>
             setLikes((pre) => [
-              { id: userId, avatar: user?.avatar },
+              { id: user?.id, avatar: user?.avatar },
               ...(pre || [])
             ])
           )
