@@ -9,6 +9,7 @@ import { Tag, Card, Avatar, Tooltip, Skeleton } from 'antd'
 import { EyeOutlined, MailOutlined, GithubOutlined } from '@ant-design/icons'
 
 import { useUserInfo } from '@/model'
+import useTitle from '@/hooks/useTitle'
 import styles from './index.module.less'
 import Avatars from '@/components/Avatars'
 import useTimeout from '@/hooks/useTimeout'
@@ -70,6 +71,7 @@ const Index: React.FC = () => {
       </Tag>
     ))
 
+  useTitle(title)
   useHideContent(detail?.secure)
   useEffect(() => {
     if (!authorId) return

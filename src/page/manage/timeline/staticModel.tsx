@@ -1,12 +1,12 @@
 import type { TableColumnProps } from 'antd'
 import type { Timeline } from '@/service/timeline/types'
+import type { IComponentsConfig } from '@/utils/createForm/types'
 
 import { Link } from 'react-router-dom'
 import { Input, DatePicker } from 'antd'
 
 import Upload from '@/components/Upload'
 import { upload } from '@/service/common'
-import { IComponentsConfig } from '@/utils/createForm/types'
 
 const columns: TableColumnProps<Timeline>[] = [
   {
@@ -34,7 +34,8 @@ const columns: TableColumnProps<Timeline>[] = [
     render(_, { user: { username, name } }) {
       return name || username
     }
-  }
+  },
+  { title: '创建时间', dataIndex: 'createdAt' }
 ]
 
 const searchBarFields = [
@@ -47,7 +48,6 @@ const searchBarFields = [
   }
 ]
 
-// eslint-disable-next-line no-unused-vars
 const drawerFormComponents: IComponentsConfig = [
   {
     label: '标题',
