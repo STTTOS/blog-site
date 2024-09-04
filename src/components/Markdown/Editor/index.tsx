@@ -4,6 +4,7 @@ import 'react-markdown-editor-lite/lib/index.css'
 import { useSearchParams } from 'react-router-dom'
 
 import Parser from '../Parser'
+import styles from './index.module.less'
 import video from '../plugins/videoUpload'
 import useEditOptions from '@/model/editOptions'
 import { EditMode } from '@/page/manage/article'
@@ -30,6 +31,7 @@ const Index: React.FC<IProps> = ({ onChange = () => void 0, value, style }) => {
 
   return (
     <MdEditor
+      className={styles.wrapper}
       value={value}
       style={style}
       key={String(isPrivate)}

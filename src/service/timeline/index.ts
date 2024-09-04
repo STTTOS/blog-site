@@ -2,12 +2,13 @@ import type { Moment, Timeline } from './types'
 import type { Params } from 'ahooks/lib/usePagination/types'
 
 import { message } from 'antd'
+import { SortOrder } from 'antd/es/table/interface'
 
 import { User } from '../user/types'
 import request from '../../utils/http'
 
 const createTimeline = async (
-  params: Omit<Timeline, 'id' | 'user' | 'userId'>
+  params: Omit<Timeline, 'id' | 'user' | 'userId' | 'createdAt'>
 ) => {
   const {
     data: { id }
@@ -17,7 +18,7 @@ const createTimeline = async (
 }
 const getTimelineList = async (
   pageParams: Params[0],
-  params: { id?: string }
+  params: { id?: string; order?: SortOrder }
 ) => {
   const { data } = await request<{ list: Timeline[]; total: number }>(
     'api/timeline/list',
@@ -55,16 +56,19 @@ const addMoment = async ({ timelineId, ...params }: Partial<Moment>) => {
   message.success('发布成功')
 }
 
-const updateMoment = async ({
-  id,
-  ...params
-}: Partial<Omit<Moment, 'timelineId'>>) => {
+const updateMoment = async ({ id, ...params }: Partial<Moment>) => {
   await request(`api/timeline/moment/update/${id}`, params)
   message.success('修改成功')
 }
 const deleteMoment = async (params: Pick<Moment, 'id'>) => {
   await request(`api/timeline/moment/delete/${params.id}`)
   message.success('删除成功')
+}
+const likeMoment = async ({
+  id,
+  timelineId
+}: Partial<Pick<Moment, 'id'> & { timelineId: Timeline['id'] }>) => {
+  await request(`api/timeline/moment/like/${id}`, { timelineId })
 }
 const getMoments = async (params: Pick<Timeline, 'id'> & Params[0]) => {
   const {
@@ -89,5 +93,6 @@ export {
   getMoments,
   deleteTimeline,
   deleteMoment,
-  updateTimeline
+  updateTimeline,
+  likeMoment
 }

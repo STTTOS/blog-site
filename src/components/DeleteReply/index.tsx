@@ -8,23 +8,17 @@ import { deleteComment } from '@/service/comments'
 interface DeleteReplyProps {
   id: Key
   userId: Key
-  hasChildren?: boolean
   refresh?: () => void
 }
-const DeleteReply: FC<DeleteReplyProps> = ({
-  id,
-  userId,
-  refresh,
-  hasChildren = false
-}) => {
+const DeleteReply: FC<DeleteReplyProps> = ({ id, userId, refresh }) => {
   const { user } = useUserInfo()
   const { loading, runAsync } = useRequest(deleteComment, { manual: true })
 
   const handleDelete = useCallback(async () => {
-    await runAsync({ id, hasChildren })
+    await runAsync({ id })
     refresh?.()
     message.success('删除成功')
-  }, [id, hasChildren])
+  }, [id])
 
   if (!user || user.id !== userId) return null
 

@@ -6,8 +6,10 @@ import { Avatar, Divider } from 'antd'
 
 import Reply from '../Reply'
 import SubReply from '../SubReply'
+import { useUserInfo } from '@/model'
 import styles from './index.module.less'
 import DeleteReply from '../DeleteReply'
+import UserProfile from '../UserProfile'
 
 interface ReplyItemProps extends Comment {
   articleId: number
@@ -22,11 +24,12 @@ const ReplyItem: FC<ReplyItemProps> = ({
   articleId,
   createdAt,
   avatar,
-  replies = [],
+  children = [],
   name,
   authorId,
   isContributor
 }) => {
+  const { user } = useUserInfo()
   const [showReplay, setShowReply] = useState(false)
   const targetId = Number(new URLSearchParams(location.search).get('targetId'))
   const renderChildrenReplies = (list: Comment[]) => {
@@ -54,35 +57,37 @@ const ReplyItem: FC<ReplyItemProps> = ({
 
   return (
     <div className={classNames(styles.container)} id={id as string}>
-      <Avatar src={avatar} className={styles.avatar} size="large" />
+      <UserProfile userId={authorId as number}>
+        <Avatar src={avatar} className={styles.avatar} size="large" />
+      </UserProfile>
       <div className={styles.main}>
         <div className={styles.header}>
-          <span className={styles.name}>{name}</span>
+          <UserProfile userId={authorId as number}>
+            <span className={styles.name}>{name}</span>
+          </UserProfile>
           {isContributor && <em className={styles.contributor}>contributor</em>}
         </div>
         <div
           className={classNames(alertElement && styles.alert, styles.content)}
         >
-          {content}
+          {content.message}
         </div>
         <div className={styles.extra}>
           <span className={styles.time}>{createdAt}</span>
-          <span className={styles.reply} onClick={handleReplyClick}>
-            回复
-          </span>
-          <DeleteReply
-            id={id}
-            userId={authorId}
-            refresh={onRefresh}
-            hasChildren={replies.length > 0}
-          />
+          {user?.id && user.id !== authorId && (
+            <span className={styles.reply} onClick={handleReplyClick}>
+              回复
+            </span>
+          )}
+          <DeleteReply id={id} userId={authorId} refresh={onRefresh} />
         </div>
-        {renderChildrenReplies(replies)}
+        {renderChildrenReplies(children)}
         {showReplay && (
           <Reply
             avatar={selfAvatar}
             articleId={articleId}
             parentCommentId={id}
+            rootId={id}
             placeholder={`@${name}:  `}
             className={styles.replyComponent}
             onRefresh={handleReplied}

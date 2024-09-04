@@ -7,13 +7,12 @@ interface AddCommentRequest {
 }
 
 export async function addComment(
-  params: Pick<Comment, 'content' | 'parentCommentId'> & AddCommentRequest
+  params: Pick<Comment, 'content' | 'parentCommentId' | 'rootId'> &
+    AddCommentRequest
 ) {
   await request('api/comment/add', params)
 }
-export async function deleteComment(
-  params: Pick<Comment, 'id'> & { hasChildren: boolean }
-) {
+export async function deleteComment(params: Pick<Comment, 'id'>) {
   await request('api/comment/delete', params)
 }
 export async function getComments(params: { articleId: number }) {

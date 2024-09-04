@@ -64,18 +64,17 @@ const Index = () => {
       title: '是否可见',
       render(_, { id, private: isPrivate, authorId }) {
         return (
-          authorId === user?.id && (
-            <Switch
-              loading={operating}
-              checkedChildren="是"
-              unCheckedChildren="否"
-              checked={!isPrivate}
-              onChange={async (checked) => {
-                await runAsync({ id, isPrivate: !checked })
-                refresh()
-              }}
-            />
-          )
+          <Switch
+            loading={operating}
+            disabled={authorId !== user?.id}
+            checkedChildren="是"
+            unCheckedChildren="否"
+            checked={!isPrivate}
+            onChange={async (checked) => {
+              await runAsync({ id, isPrivate: !checked })
+              refresh()
+            }}
+          />
         )
       }
     },

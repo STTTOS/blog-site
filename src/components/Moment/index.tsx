@@ -4,15 +4,32 @@ import { useRequest } from 'ahooks'
 import classNames from 'classnames'
 import { MoreOutlined } from '@ant-design/icons'
 import { FC, useMemo, useState, useEffect } from 'react'
-import { Space, Button, Divider, message, Dropdown, DatePicker } from 'antd'
+import { LikeFilled, LikeOutlined } from '@ant-design/icons'
+import {
+  Space,
+  Button,
+  Avatar,
+  Divider,
+  message,
+  Dropdown,
+  DatePicker
+} from 'antd'
 
 import Gallery from '../Gallery'
 import { useUserInfo } from '@/model'
 import styles from './index.module.less'
+import AsyncButton from '../AsyncButton'
+import UserProfile from '../UserProfile'
+import { User } from '@/service/user/types'
 import { Editor, Viewer } from '../Markdown'
 import DateDisplay from '@/components/DateDisplay'
-import { addMoment, deleteMoment, updateMoment } from '@/service/timeline'
 import { MomentImage, Moment as MomentType } from '@/service/timeline/types'
+import {
+  addMoment,
+  likeMoment,
+  deleteMoment,
+  updateMoment
+} from '@/service/timeline'
 
 export type EditMode = 'edit' | 'view'
 type MomentProps = {
@@ -23,6 +40,7 @@ type MomentProps = {
   onSave: () => void
   hideDate?: boolean
   userId?: number
+  likes?: Partial<User>[]
 } & Partial<MomentType>
 const Moment: FC<MomentProps> = ({
   id,
@@ -35,13 +53,14 @@ const Moment: FC<MomentProps> = ({
   onCancel,
   onSave,
   hideDate,
-  userId
+  userId,
+  likes: _likes
 }) => {
   const isAdd = !id
   const { user } = useUserInfo()
-  const showOp = user?.id === userId
+  const [likes, setLikes] = useState(_likes)
   const [timePicked, setTimePicked] = useState(dayjs().toISOString())
-  const [draft, setDraft] = useState<string>()
+  const [draft, setDraft] = useState<string>('')
   const [mode, setMode] = useState<EditMode>(defaultMode)
   const [imgSet, setImageSet] = useState<MomentImage[]>([])
   const { runAsync: save, loading } = useRequest(updateMoment, { manual: true })
@@ -51,6 +70,10 @@ const Moment: FC<MomentProps> = ({
   const { runAsync: remove, loading: deleting } = useRequest(deleteMoment, {
     manual: true
   })
+
+  const canEdit = useMemo(() => {
+    return user?.id === userId
+  }, [user, userId])
 
   const handleSave = async () => {
     if (imgSet.length === 0 && !draft) {
@@ -68,7 +91,8 @@ const Moment: FC<MomentProps> = ({
       await save({
         id,
         content: draft,
-        images: imgSet
+        images: imgSet,
+        timelineId
       })
     }
     onSave()
@@ -82,20 +106,82 @@ const Moment: FC<MomentProps> = ({
   const handleCancel = async () => {
     if (isAdd) {
       onCancel()
+      return
     }
-    setDraft(content)
+    setDraft(content || '')
     setMode('view')
     setImageSet(images || [])
     onCancel()
   }
   useEffect(() => {
-    setDraft(content)
+    if (content) setDraft(content)
   }, [content])
 
   useEffect(() => {
     setImageSet(images || [])
   }, [images])
 
+  const items = useMemo(() => {
+    if (!user?.id) return []
+
+    const operationsOfOwner = [
+      {
+        label: (
+          <Button
+            type="text"
+            style={{ padding: 0, width: 60 }}
+            onClick={() => setMode('edit')}
+          >
+            编辑
+          </Button>
+        ),
+        key: '1'
+      },
+      {
+        label: (
+          <Button
+            type="text"
+            style={{ padding: 0, width: 60 }}
+            onClick={handleDelete}
+            loading={deleting}
+          >
+            删除
+          </Button>
+        ),
+        key: '2'
+      }
+    ]
+    const [icon, action] = (function getIconAndAction() {
+      if (user?.id && likes?.map((item) => item.id).includes(user.id)) {
+        return [<LikeFilled />, async () => void 0]
+      }
+      return [
+        <LikeOutlined />,
+        () =>
+          likeMoment({ id, timelineId }).then(() =>
+            setLikes((pre) => [
+              { id: user?.id, avatar: user?.avatar },
+              ...(pre || [])
+            ])
+          )
+      ]
+    })()
+    const operationsOfOthers = [
+      {
+        label: (
+          <AsyncButton
+            style={{ padding: 0, width: 60 }}
+            icon={icon}
+            request={action}
+          ></AsyncButton>
+        ),
+        key: '3'
+      }
+    ]
+
+    if (canEdit) return operationsOfOwner.concat(operationsOfOthers)
+    return operationsOfOthers
+  }, [canEdit, deleting, handleDelete, id, timelineId, likes, user])
   const dateElement = useMemo(() => {
     if (isAdd)
       return (
@@ -112,43 +198,36 @@ const Moment: FC<MomentProps> = ({
 
     return <DateDisplay date={createdAt} className={styles.date} />
   }, [hideDate, isAdd])
+
+  const likeUsers = useMemo(() => {
+    if (!likes || likes.length === 0) return null
+
+    const users = likes.map((user) => (
+      <UserProfile userId={user.id}>
+        <Avatar src={user.avatar} />
+      </UserProfile>
+    ))
+    return (
+      <>
+        <Divider />
+        <div className={styles.likes}>
+          <LikeFilled className={styles.likes_icon} />
+          {users}
+        </div>
+      </>
+    )
+  }, [likes])
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} id={id ? String(id) : undefined}>
       <div className={styles.extra}>
         <span className={styles.time}>
           {createdAt && dayjs(createdAt).format('HH:mm')}
         </span>
 
-        {!isAdd && showOp && (
+        {!isAdd && (
           <Dropdown
             menu={{
-              items: [
-                {
-                  label: (
-                    <Button
-                      type="text"
-                      style={{ padding: 0, width: 60 }}
-                      onClick={() => setMode('edit')}
-                    >
-                      编辑
-                    </Button>
-                  ),
-                  key: '1'
-                },
-                {
-                  label: (
-                    <Button
-                      type="text"
-                      style={{ padding: 0, width: 60 }}
-                      onClick={handleDelete}
-                      loading={deleting}
-                    >
-                      删除
-                    </Button>
-                  ),
-                  key: '2'
-                }
-              ]
+              items
             }}
           >
             <MoreOutlined className={styles.more} />
@@ -202,6 +281,7 @@ const Moment: FC<MomentProps> = ({
           }}
           images={[...imgSet].sort((a, b) => a.sort - b.sort)}
         />
+        {likeUsers}
       </main>
     </div>
   )

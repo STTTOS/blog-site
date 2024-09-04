@@ -1,5 +1,5 @@
 import type { FC, Key } from 'react'
-import type { Comment } from '@/service/comments/types'
+import type { MessageContent } from '@/service/comments/types'
 
 import { useRequest } from 'ahooks'
 import { Form, Input, Avatar, Button, message } from 'antd'
@@ -12,29 +12,53 @@ const { TextArea } = Input
 interface ReplyProps {
   articleId: number
   parentCommentId?: Key
+  rootId?: Key
   className?: string
   placeholder?: string
   onRefresh?: () => void
   avatar?: string
+  parentUserName?: string
+  parentUserId?: number
 }
+
 const Reply: FC<ReplyProps> = ({
   articleId,
   avatar,
+  rootId,
   parentCommentId,
+  parentUserId,
   className = '',
   placeholder = '下面我简单喵两句',
+  parentUserName = '',
   onRefresh
 }) => {
   const [form] = Form.useForm()
   const { loading, runAsync } = useRequest(addComment, { manual: true })
   const { user } = useUserInfo()
 
-  const handleSubmit = async ({ content }: Comment) => {
+  const handleSubmit = async ({ content: input }: { content: string }) => {
     if (!user) {
       message.warning('先登录再发表评论哦')
       return
     }
-    await runAsync({ content, articleId, parentCommentId })
+    const finalContent = parentUserName
+      ? `回复 @${parentUserName} : ${input}`
+      : input
+
+    const content: MessageContent = {
+      message: finalContent
+    }
+    if (parentUserName && parentUserId) {
+      content.at_name_to_id = {
+        [parentUserName]: parentUserId
+      }
+    }
+    await runAsync({
+      articleId,
+      rootId,
+      parentCommentId,
+      content
+    })
     onRefresh?.()
     form.resetFields()
   }

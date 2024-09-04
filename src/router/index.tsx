@@ -161,7 +161,7 @@ const routers: MyRoute[] = [
 
 function format(routers: MyRoute[], basePath = ''): RouteObject[] {
   const result = routers.map(
-    ({ path, children, element, redirect, title = '木木记', ...rest }) => {
+    ({ path, children, element, redirect, title, ...rest }) => {
       const nextPath = join(basePath, path || '')
 
       // 如果element不存在, 则将子元素铺平

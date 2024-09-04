@@ -1,10 +1,11 @@
 import qs from 'qs'
 import dayjs from 'dayjs'
 import { useRequest } from 'ahooks'
+import { useInterval } from 'ahooks'
 import { MessageOutlined } from '@ant-design/icons'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useMemo, type FC, useState, useEffect } from 'react'
 import { Tag, List, Badge, Empty, Avatar, Button, Popover } from 'antd'
+import { useMemo, type FC, useState, useEffect, CSSProperties } from 'react'
 
 import request from '@/utils/http'
 import styles from './index.module.less'
@@ -23,6 +24,8 @@ interface Message {
     articleId?: number
     commentId?: number
     link?: string
+    momentId?: string
+    timelineId?: string
   }
 }
 interface MessageBoxProps {
@@ -46,7 +49,7 @@ const readableDateStr = (time: string) => {
   // 如果是3天内, 直接调用fromNow
   return date.fromNow()
 }
-const pageSize = 10
+const pageSize = 30
 // 消息盒子
 const MessageBox: FC<MessageBoxProps> = () => {
   const [list, setList] = useState<Message[]>([])
@@ -83,9 +86,10 @@ const MessageBox: FC<MessageBoxProps> = () => {
     else if (type === 'comment') return '评论了我的文章'
   }
 
-  const getTagProps = (type: MessageType) => {
+  const getTagProps = (type: MessageType): [CSSProperties['color'], string] => {
     if (type === 'reply') return ['blue', '回复']
     if (type === 'comment') return ['cyan', '评论']
+    if (type === 'like') return ['pink', '点赞']
     return ['red', '系统通知']
   }
 
@@ -98,17 +102,8 @@ const MessageBox: FC<MessageBoxProps> = () => {
         sender,
         type,
         isRead,
-        extra: { articleId, commentId, link }
+        extra: { articleId, commentId, link, momentId, timelineId }
       }) => {
-        // if (type === 'system') {
-        //   return (
-        //     <span>
-        //       <a href={link} target="_blank">
-        //         xx
-        //       </a>
-        //     </span>
-        //   )
-        // }
         const [color, text] = getTagProps(type)
 
         const avatar = (() => {
@@ -137,6 +132,10 @@ const MessageBox: FC<MessageBoxProps> = () => {
 
               if (type === 'system') {
                 window.open(link)
+                return
+              }
+              if (type === 'like') {
+                window.open(`/timeline/${timelineId}#${momentId}`)
                 return
               }
               const query = qs.stringify({
@@ -185,6 +184,16 @@ const MessageBox: FC<MessageBoxProps> = () => {
   useEffect(() => {
     loadMore()
   }, [])
+
+  // 每2min重新拉取一次消息
+  useInterval(
+    () => {
+      runAsync()
+      refreshCount()
+    },
+    2 * 60 * 1000,
+    { immediate: false }
+  )
   return (
     <Popover
       content={

@@ -10,7 +10,6 @@ import SafeTable from '@/components/SafeTable'
 import useFormDrawer from '@/hooks/useFormDrawer'
 import { Timeline } from '@/service/timeline/types'
 import TimelineDrawerContent from './DrawerContent'
-import { history } from '@/components/BrowserRouter'
 import { deleteTimeline, getTimelineList } from '@/service/timeline'
 import { searchBarFields, columns as tableColumns } from './staticModel'
 
@@ -30,7 +29,7 @@ const Index = () => {
     reset()
   }
   const handleCreate = () => {
-    history.push('/timeline/-1')
+    window.open('/timeline/-1')
   }
 
   const handleUpdate = (data: Timeline) => {
@@ -57,7 +56,9 @@ const Index = () => {
               <a>delete</a>
             </Popconfirm>
           )}
-          <a onClick={() => handleUpdate(record)}>update</a>
+          {user?.id === record.userId && (
+            <a onClick={() => handleUpdate(record)}>update</a>
+          )}
         </Space>
       )
     }
@@ -82,7 +83,12 @@ const Index = () => {
         </Button>
       </div>
 
-      <SafeTable columns={columns} rowKey="id" {...tableProps} />
+      <SafeTable
+        columns={columns}
+        rowKey="id"
+        showSorterTooltip={{ target: 'sorter-icon' }}
+        {...tableProps}
+      />
       {Drawer}
     </div>
   )
