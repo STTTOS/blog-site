@@ -23,7 +23,15 @@ const Index = () => {
     search: { submit, reset },
     loading,
     refresh
-  } = useAntdTable(getTimelineList, { form, cacheKey: '/manage/timeline' })
+  } = useAntdTable(
+    ({ pageSize, current, sorter }, search) => {
+      return getTimelineList(
+        { pageSize, current },
+        { ...search, order: sorter?.order || 'descend' }
+      )
+    },
+    { form, cacheKey: '/manage/timeline' }
+  )
 
   const deleteData = async (id: number) => {
     await deleteTimeline({ id })
@@ -82,7 +90,12 @@ const Index = () => {
         </Button>
       </div>
 
-      <SafeTable columns={columns} rowKey="id" {...tableProps} />
+      <SafeTable
+        columns={columns}
+        rowKey="id"
+        showSorterTooltip={{ target: 'sorter-icon' }}
+        {...tableProps}
+      />
       {Drawer}
     </div>
   )

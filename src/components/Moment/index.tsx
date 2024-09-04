@@ -207,10 +207,13 @@ const Moment: FC<MomentProps> = ({
       </UserProfile>
     ))
     return (
-      <div className={styles.likes}>
-        <LikeFilled className={styles.likes_icon} />
-        {users}
-      </div>
+      <>
+        <Divider />
+        <div className={styles.likes}>
+          <LikeFilled className={styles.likes_icon} />
+          {users}
+        </div>
+      </>
     )
   }, [likes])
   return (
@@ -277,7 +280,6 @@ const Moment: FC<MomentProps> = ({
           }}
           images={[...imgSet].sort((a, b) => a.sort - b.sort)}
         />
-        <Divider />
         {likeUsers}
       </main>
     </div>

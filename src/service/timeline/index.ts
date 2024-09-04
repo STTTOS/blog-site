@@ -2,6 +2,7 @@ import type { Moment, Timeline } from './types'
 import type { Params } from 'ahooks/lib/usePagination/types'
 
 import { message } from 'antd'
+import { SortOrder } from 'antd/es/table/interface'
 
 import { User } from '../user/types'
 import request from '../../utils/http'
@@ -17,7 +18,7 @@ const createTimeline = async (
 }
 const getTimelineList = async (
   pageParams: Params[0],
-  params: { id?: string }
+  params: { id?: string; order?: SortOrder }
 ) => {
   const { data } = await request<{ list: Timeline[]; total: number }>(
     'api/timeline/list',
