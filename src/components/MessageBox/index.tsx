@@ -1,6 +1,7 @@
 import qs from 'qs'
 import dayjs from 'dayjs'
 import { useRequest } from 'ahooks'
+import { useInterval } from 'ahooks'
 import { MessageOutlined } from '@ant-design/icons'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useMemo, type FC, useState, useEffect } from 'react'
@@ -46,7 +47,7 @@ const readableDateStr = (time: string) => {
   // 如果是3天内, 直接调用fromNow
   return date.fromNow()
 }
-const pageSize = 10
+const pageSize = 30
 // 消息盒子
 const MessageBox: FC<MessageBoxProps> = () => {
   const [list, setList] = useState<Message[]>([])
@@ -100,15 +101,6 @@ const MessageBox: FC<MessageBoxProps> = () => {
         isRead,
         extra: { articleId, commentId, link }
       }) => {
-        // if (type === 'system') {
-        //   return (
-        //     <span>
-        //       <a href={link} target="_blank">
-        //         xx
-        //       </a>
-        //     </span>
-        //   )
-        // }
         const [color, text] = getTagProps(type)
 
         const avatar = (() => {
@@ -185,6 +177,16 @@ const MessageBox: FC<MessageBoxProps> = () => {
   useEffect(() => {
     loadMore()
   }, [])
+
+  // 每2min重新拉取一次消息
+  useInterval(
+    () => {
+      runAsync()
+      refreshCount()
+    },
+    2 * 60 * 1000,
+    { immediate: false }
+  )
   return (
     <Popover
       content={
