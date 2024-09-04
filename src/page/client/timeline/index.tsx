@@ -106,6 +106,7 @@ const TimelineDetail = () => {
         <Moment
           {...props}
           key={props.id}
+          id={props.id}
           onSave={handleSave}
           timelineId={timelineId}
           userId={timelineDetail?.userId}

@@ -4,8 +4,8 @@ import { useRequest } from 'ahooks'
 import { useInterval } from 'ahooks'
 import { MessageOutlined } from '@ant-design/icons'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useMemo, type FC, useState, useEffect } from 'react'
 import { Tag, List, Badge, Empty, Avatar, Button, Popover } from 'antd'
+import { useMemo, type FC, useState, useEffect, CSSProperties } from 'react'
 
 import request from '@/utils/http'
 import styles from './index.module.less'
@@ -24,6 +24,8 @@ interface Message {
     articleId?: number
     commentId?: number
     link?: string
+    momentId?: string
+    timelineId?: string
   }
 }
 interface MessageBoxProps {
@@ -84,9 +86,10 @@ const MessageBox: FC<MessageBoxProps> = () => {
     else if (type === 'comment') return '评论了我的文章'
   }
 
-  const getTagProps = (type: MessageType) => {
+  const getTagProps = (type: MessageType): [CSSProperties['color'], string] => {
     if (type === 'reply') return ['blue', '回复']
     if (type === 'comment') return ['cyan', '评论']
+    if (type === 'like') return ['pink', '点赞']
     return ['red', '系统通知']
   }
 
@@ -99,7 +102,7 @@ const MessageBox: FC<MessageBoxProps> = () => {
         sender,
         type,
         isRead,
-        extra: { articleId, commentId, link }
+        extra: { articleId, commentId, link, momentId, timelineId }
       }) => {
         const [color, text] = getTagProps(type)
 
@@ -129,6 +132,10 @@ const MessageBox: FC<MessageBoxProps> = () => {
 
               if (type === 'system') {
                 window.open(link)
+                return
+              }
+              if (type === 'like') {
+                window.open(`/timeline/${timelineId}#${momentId}`)
                 return
               }
               const query = qs.stringify({

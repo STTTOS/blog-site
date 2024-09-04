@@ -66,6 +66,12 @@ const deleteMoment = async (params: Pick<Moment, 'id'>) => {
   await request(`api/timeline/moment/delete/${params.id}`)
   message.success('删除成功')
 }
+const likeMoment = async ({
+  id,
+  timelineId
+}: Partial<Pick<Moment, 'id'> & { timelineId: Timeline['id'] }>) => {
+  await request(`api/timeline/moment/like/${id}`, { timelineId })
+}
 const getMoments = async (params: Pick<Timeline, 'id'> & Params[0]) => {
   const {
     data: { list, total }
@@ -89,5 +95,6 @@ export {
   getMoments,
   deleteTimeline,
   deleteMoment,
-  updateTimeline
+  updateTimeline,
+  likeMoment
 }
