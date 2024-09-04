@@ -7,7 +7,7 @@ export interface Timeline {
   cover: string
   user: Pick<User, 'username' | 'id' | 'name' | 'avatar'>
   userId: number
-  createdAt: string
+  createdAt?: string
 }
 export interface Moment {
   id: number

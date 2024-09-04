@@ -91,7 +91,8 @@ const Moment: FC<MomentProps> = ({
       await save({
         id,
         content: draft,
-        images: imgSet
+        images: imgSet,
+        timelineId
       })
     }
     onSave()

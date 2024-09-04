@@ -1,6 +1,7 @@
 import type { TableColumnProps } from 'antd'
 
 import { useAntdTable } from 'ahooks'
+import { Link } from 'react-router-dom'
 import { Form, Space, Button, Popconfirm } from 'antd'
 
 import { useUserInfo } from '@/model'
@@ -40,6 +41,19 @@ const Index = () => {
     })
   }
   const columns: TableColumnProps<Timeline>[] = [
+    {
+      title: '标题',
+      dataIndex: 'title',
+      render: (_, { id, title, userId }) => {
+        if (user?.id !== userId) return <span>{title}</span>
+
+        return (
+          <Link to={`/timeline/${id}`} target="_blank">
+            {title}
+          </Link>
+        )
+      }
+    },
     ...tableColumns,
     {
       title: '操作',

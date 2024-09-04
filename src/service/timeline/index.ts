@@ -8,7 +8,7 @@ import { User } from '../user/types'
 import request from '../../utils/http'
 
 const createTimeline = async (
-  params: Omit<Timeline, 'id' | 'user' | 'userId'>
+  params: Omit<Timeline, 'id' | 'user' | 'userId' | 'createdAt'>
 ) => {
   const {
     data: { id }
@@ -56,10 +56,7 @@ const addMoment = async ({ timelineId, ...params }: Partial<Moment>) => {
   message.success('发布成功')
 }
 
-const updateMoment = async ({
-  id,
-  ...params
-}: Partial<Omit<Moment, 'timelineId'>>) => {
+const updateMoment = async ({ id, ...params }: Partial<Moment>) => {
   await request(`api/timeline/moment/update/${id}`, params)
   message.success('修改成功')
 }
