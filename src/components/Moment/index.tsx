@@ -214,7 +214,7 @@ const Moment: FC<MomentProps> = ({
     )
   }, [likes])
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} id={id ? String(id) : undefined}>
       <div className={styles.extra}>
         <span className={styles.time}>
           {createdAt && dayjs(createdAt).format('HH:mm')}

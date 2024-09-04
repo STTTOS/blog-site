@@ -10,7 +10,7 @@ import classNames from 'classnames'
 import { useParams } from 'react-router'
 import { useScroll, useRequest } from 'ahooks'
 import { Params } from 'ahooks/lib/useAntdTable/types'
-import { useMemo, useState, ReactNode, useCallback } from 'react'
+import { useMemo, useState, ReactNode, useEffect, useCallback } from 'react'
 
 import { useUserInfo } from '@/model'
 import useTitle from '@/hooks/useTitle'
@@ -106,7 +106,6 @@ const TimelineDetail = () => {
         <Moment
           {...props}
           key={props.id}
-          id={props.id}
           onSave={handleSave}
           timelineId={timelineId}
           userId={timelineDetail?.userId}
@@ -137,6 +136,14 @@ const TimelineDetail = () => {
 
   const handleAdd = useCallback(() => {
     setShowAddMoment(true)
+  }, [])
+
+  useEffect(() => {
+    setTimeout(() => {
+      document.getElementById(location.hash.slice(1))?.scrollIntoView({
+        behavior: 'smooth'
+      })
+    }, 300)
   }, [])
   return (
     <Spin spinning={fetchingTimeline}>
