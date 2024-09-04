@@ -2,7 +2,6 @@ import type { TableColumnProps } from 'antd'
 import type { Timeline } from '@/service/timeline/types'
 import type { IComponentsConfig } from '@/utils/createForm/types'
 
-import dayjs from 'dayjs'
 import { Link } from 'react-router-dom'
 import { Input, DatePicker } from 'antd'
 
@@ -39,10 +38,11 @@ const columns: TableColumnProps<Timeline>[] = [
   {
     key: 'createdAt',
     title: '创建时间',
-    dataIndex: 'createdAt',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) =>
-      dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf()
+    dataIndex: 'createdAt'
+  },
+  {
+    title: '最近一次更新时间',
+    dataIndex: 'updatedAt'
   }
 ]
 

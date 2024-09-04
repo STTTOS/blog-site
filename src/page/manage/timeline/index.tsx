@@ -10,7 +10,6 @@ import SafeTable from '@/components/SafeTable'
 import useFormDrawer from '@/hooks/useFormDrawer'
 import { Timeline } from '@/service/timeline/types'
 import TimelineDrawerContent from './DrawerContent'
-import { history } from '@/components/BrowserRouter'
 import { deleteTimeline, getTimelineList } from '@/service/timeline'
 import { searchBarFields, columns as tableColumns } from './staticModel'
 
@@ -23,22 +22,14 @@ const Index = () => {
     search: { submit, reset },
     loading,
     refresh
-  } = useAntdTable(
-    ({ pageSize, current, sorter }, search) => {
-      return getTimelineList(
-        { pageSize, current },
-        { ...search, order: sorter?.order || 'descend' }
-      )
-    },
-    { form, cacheKey: '/manage/timeline' }
-  )
+  } = useAntdTable(getTimelineList, { form, cacheKey: '/manage/timeline' })
 
   const deleteData = async (id: number) => {
     await deleteTimeline({ id })
     reset()
   }
   const handleCreate = () => {
-    history.push('/timeline/-1')
+    window.open('/timeline/-1')
   }
 
   const handleUpdate = (data: Timeline) => {
@@ -65,7 +56,9 @@ const Index = () => {
               <a>delete</a>
             </Popconfirm>
           )}
-          <a onClick={() => handleUpdate(record)}>update</a>
+          {user?.id === record.userId && (
+            <a onClick={() => handleUpdate(record)}>update</a>
+          )}
         </Space>
       )
     }
