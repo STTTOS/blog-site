@@ -41,12 +41,8 @@ const Reply: FC<ReplyProps> = ({
       message.warning('先登录再发表评论哦')
       return
     }
-    const finalContent = parentUserName
-      ? `回复 @${parentUserName} : ${input}`
-      : input
-
     const content: MessageContent = {
-      message: finalContent
+      message: input
     }
     if (parentUserName && parentUserId) {
       content.at_name_to_id = {
