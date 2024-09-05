@@ -141,7 +141,7 @@ const TimelineDetail = () => {
   useEffect(() => {
     setTimeout(() => {
       document.getElementById(location.hash.slice(1))?.scrollIntoView({
-        behavior: 'smooth'
+        behavior: 'instant'
       })
     }, 300)
   }, [])
