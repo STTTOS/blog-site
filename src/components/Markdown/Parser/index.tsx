@@ -49,7 +49,9 @@ const Parser: FC<{
   // 从children中找到目标url
   // 用正则匹配 ![.*](url) 并删除
   const handleDelete = (url: string) => {
-    const regex = new RegExp(`\\\n*\\!\\[[^[\\]]+\\]\\(\\\n*${url}\\\n*\\)`)
+    const regex = new RegExp(
+      `\\\n*\\!\\[[^[\\]]+\\]\\(\\\n*${url.replaceAll('?', '\\?')}\\\n*\\)`
+    )
     if (regex.test(children)) {
       setTimeout(() => {
         onChange?.(children.replace(regex, ''))

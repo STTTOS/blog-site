@@ -12,7 +12,8 @@ import {
   Divider,
   message,
   Dropdown,
-  DatePicker
+  DatePicker,
+  Popconfirm
 } from 'antd'
 
 import Gallery from '../Gallery'
@@ -113,6 +114,13 @@ const Moment: FC<MomentProps> = ({
     setImageSet(images || [])
     onCancel()
   }
+
+  const handleEdit = () => {
+    setMode('edit')
+    document.getElementById(String(id))?.scrollIntoView({
+      behavior: 'smooth'
+    })
+  }
   useEffect(() => {
     if (content) setDraft(content)
   }, [content])
@@ -130,7 +138,7 @@ const Moment: FC<MomentProps> = ({
           <Button
             type="text"
             style={{ padding: 0, width: 60 }}
-            onClick={() => setMode('edit')}
+            onClick={handleEdit}
           >
             编辑
           </Button>
@@ -139,14 +147,15 @@ const Moment: FC<MomentProps> = ({
       },
       {
         label: (
-          <Button
-            type="text"
-            style={{ padding: 0, width: 60 }}
-            onClick={handleDelete}
-            loading={deleting}
-          >
-            删除
-          </Button>
+          <Popconfirm title="确认删除吗" onConfirm={handleDelete}>
+            <Button
+              type="text"
+              style={{ padding: 0, width: 60 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              删除
+            </Button>
+          </Popconfirm>
         ),
         key: '2'
       }
@@ -219,22 +228,6 @@ const Moment: FC<MomentProps> = ({
   }, [likes])
   return (
     <div className={styles.wrapper} id={id ? String(id) : undefined}>
-      <div className={styles.extra}>
-        <span className={styles.time}>
-          {createdAt && dayjs(createdAt).format('HH:mm')}
-        </span>
-
-        {!isAdd && (
-          <Dropdown
-            menu={{
-              items
-            }}
-          >
-            <MoreOutlined className={styles.more} />
-          </Dropdown>
-        )}
-      </div>
-
       <div style={{ minWidth: 96, flexShrink: 0 }}>{dateElement}</div>
       <main className={classNames(styles.main, hideDate && styles.divider)}>
         {mode === 'edit' && (
@@ -281,6 +274,21 @@ const Moment: FC<MomentProps> = ({
           }}
           images={[...imgSet].sort((a, b) => a.sort - b.sort)}
         />
+        <div className={styles.extra}>
+          <span className={styles.time}>
+            {createdAt && dayjs(createdAt).format('HH:mm')}
+          </span>
+
+          {!isAdd && (
+            <Dropdown
+              menu={{
+                items
+              }}
+            >
+              <MoreOutlined className={styles.more} />
+            </Dropdown>
+          )}
+        </div>
         {likeUsers}
       </main>
     </div>
