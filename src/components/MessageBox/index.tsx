@@ -73,14 +73,15 @@ const MessageBox: FC<MessageBoxProps> = () => {
     { manual: true }
   )
 
-  const loadMore = async () => {
+  const loadData = async (page?: number) => {
     if (loading) return
 
-    const res = await runAsync(current + 1)
+    const res = await runAsync(page ? page : current + 1)
     setList(list.concat(res.list))
     setTotal(res.total)
     setCurrent((pre) => pre + 1)
   }
+
   const renderType = (type: MessageType) => {
     if (type === 'reply') return '回复了我的评论'
     else if (type === 'comment') return '评论了我的文章'
@@ -182,13 +183,13 @@ const MessageBox: FC<MessageBoxProps> = () => {
   }, [list])
 
   useEffect(() => {
-    loadMore()
+    loadData()
   }, [])
 
   // 每2min重新拉取一次消息
   useInterval(
     () => {
-      runAsync()
+      loadData()
       refreshCount()
     },
     2 * 60 * 1000,
@@ -215,7 +216,7 @@ const MessageBox: FC<MessageBoxProps> = () => {
           ) : (
             <InfiniteScroll
               height={600}
-              next={loadMore}
+              next={loadData}
               hasMore={hasMore}
               endMessage={<div className={styles.noMore}>No More Data...</div>}
               dataLength={list.length}
