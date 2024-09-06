@@ -64,6 +64,20 @@ const colums: TableColumnProps<User>[] = [
 
 const searchBarFields = [
   { label: '昵称', name: 'name' },
+  {
+    label: '身份',
+    name: 'role',
+    placeholder: '请选择身份',
+    element: (
+      <Select
+        allowClear
+        options={[
+          { value: 'user', label: '普通用户' },
+          { value: 'admin', label: '管理员' }
+        ]}
+      />
+    )
+  },
   { label: '邮箱', name: 'email' },
   {
     name: 'time',
