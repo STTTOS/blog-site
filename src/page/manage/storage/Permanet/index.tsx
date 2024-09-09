@@ -56,7 +56,7 @@ const Index = () => {
           accept="*"
           listType="text"
           maxCount={10}
-          maxSize={600 * 1024}
+          maxSize={200 * 1024}
           showFileList={false}
           uploadButtonText="上传文件"
           request={async (file) => {

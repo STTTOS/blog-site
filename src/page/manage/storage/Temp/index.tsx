@@ -17,7 +17,7 @@ const Temp = () => {
         accept="*"
         listType="text"
         showFileList={false}
-        maxSize={600 * 1024}
+        maxSize={300 * 1024}
         onChange={(url) => {
           setFileList((pre) => pre.concat(url))
         }}
