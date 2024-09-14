@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import { prop } from 'ramda'
 import { useRequest } from 'ahooks'
 import classNames from 'classnames'
+import { useNavigate } from 'react-router'
 import { MoreOutlined } from '@ant-design/icons'
 import { FC, useMemo, useState, useEffect } from 'react'
 import { LikeFilled, LikeOutlined } from '@ant-design/icons'
@@ -59,6 +60,7 @@ const Moment: FC<MomentProps> = ({
 }) => {
   const isAdd = !id
   const { user } = useUserInfo()
+  const nav = useNavigate()
   const [likes, setLikes] = useState(_likes)
   const [timePicked, setTimePicked] = useState(dayjs().toISOString())
   const [draft, setDraft] = useState<string>('')
@@ -73,7 +75,7 @@ const Moment: FC<MomentProps> = ({
   })
 
   const canEdit = useMemo(() => {
-    return user?.id === userId
+    return user?.id && user.id === userId
   }, [user, userId])
 
   const handleSave = async () => {
@@ -130,8 +132,6 @@ const Moment: FC<MomentProps> = ({
   }, [images])
 
   const items = useMemo(() => {
-    if (!user?.id) return []
-
     const operationsOfOwner = [
       {
         label: (
@@ -166,13 +166,16 @@ const Moment: FC<MomentProps> = ({
       }
       return [
         <LikeOutlined />,
-        () =>
-          likeMoment({ id, timelineId }).then(() =>
+        async () => {
+          // 登录用户
+          if (user?.id) {
+            await likeMoment({ id, timelineId })
             setLikes((pre) => [
               { id: user?.id, avatar: user?.avatar },
               ...(pre || [])
             ])
-          )
+          } else nav(`/login?from=${encodeURIComponent(location.pathname)}`)
+        }
       ]
     })()
     const operationsOfOthers = [
