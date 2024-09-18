@@ -116,7 +116,7 @@ const TimelineDetail = () => {
       )
     })
     return results
-  }, [list, timelineId])
+  }, [list, timelineId, timelineDetail])
 
   const opacity = useMemo(() => {
     const top = scroll?.top || 0
