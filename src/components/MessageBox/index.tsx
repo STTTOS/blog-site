@@ -77,7 +77,7 @@ const MessageBox: FC<MessageBoxProps> = () => {
     if (loading) return
 
     const res = await runAsync(page ? page : current + 1)
-    setList(list.concat(res.list))
+    setList(page === 1 ? res.list : list.concat(res.list))
     setTotal(res.total)
     setCurrent((pre) => pre + 1)
   }
@@ -189,7 +189,7 @@ const MessageBox: FC<MessageBoxProps> = () => {
   // 每2min重新拉取一次消息
   useInterval(
     () => {
-      loadData()
+      loadData(1)
       refreshCount()
     },
     2 * 60 * 1000,
