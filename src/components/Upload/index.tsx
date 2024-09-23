@@ -7,8 +7,8 @@ import type { UploadRequestOption } from 'rc-upload/lib/interface'
 
 import path from 'path-browserify'
 import { propEq, complement } from 'ramda'
-import React, { useState, useEffect } from 'react'
-import { Modal, Upload, Button, message } from 'antd'
+import { Spin, Modal, Upload, Button, message } from 'antd'
+import React, { useMemo, useState, useEffect } from 'react'
 import {
   PlusOutlined,
   UploadOutlined,
@@ -17,6 +17,7 @@ import {
 
 import useAsync from '@/hooks/useAsync'
 import switchRender from '@/utils/switchRender'
+import AsyncTaskManager from '@/utils/asyncTaskManager'
 import {
   getFileType,
   convertFileListToUrl,
@@ -50,13 +51,20 @@ const Index: React.FC<IUploadProps> = ({
   uploadButtonText = '点击上传',
   ...rest
 }) => {
+  const taskManager = useMemo(() => {
+    return new AsyncTaskManager()
+  }, [])
+
   const [previewVisible, setPreviewVisible] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
   const [previewTitle, setPreviewTitle] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const [fileList, setFileList] = useState<FileListItem[]>([])
-  const { execute: submit, loading } = useAsync(request, { immediate: false })
-  const showDisabled = loading || showValue
+  const { execute: submit } = useAsync(request, { immediate: false })
+  const shouldDisable = useMemo(() => {
+    return loading || showValue
+  }, [loading, showValue])
 
   const handleCancel = () => setPreviewVisible(false)
 
@@ -166,19 +174,21 @@ const Index: React.FC<IUploadProps> = ({
   }
 
   const handleCustomRequest = async ({ file }: UploadRequestOption) => {
-    const { name } = file as File
-    const url = await submit(file as File)
+    taskManager.addTask(async () => {
+      const { name } = file as File
+      const url = await submit(file as File)
 
-    const newList = fileList
-      .concat({
-        name,
-        url,
-        uid: url
-      })
-      .slice(-maxCount)
-    const newUrl = convertFileListToUrl(newList.slice(-maxCount))
-    setFileList(newList)
-    onChange(newUrl)
+      const newList = fileList
+        .concat({
+          name,
+          url,
+          uid: url
+        })
+        .slice(-maxCount)
+      const newUrl = convertFileListToUrl(newList.slice(-maxCount))
+      setFileList(newList)
+      onChange(newUrl)
+    })
   }
 
   const textButton = (
@@ -206,6 +216,10 @@ const Index: React.FC<IUploadProps> = ({
 
     setFileList(convertUrlToFileList(value))
   }, [value])
+
+  useEffect(() => {
+    taskManager.onStatusChange(setLoading)
+  }, [])
   return (
     <>
       <Upload
@@ -213,20 +227,22 @@ const Index: React.FC<IUploadProps> = ({
         showUploadList
         accept={accept}
         listType={listType}
-        disabled={showDisabled}
+        disabled={shouldDisable}
         onRemove={handleRemove}
         onPreview={handlePreview}
         beforeUpload={beforeUpload}
         customRequest={handleCustomRequest}
         fileList={showFileList ? fileList : []}
       >
-        {!showValue &&
-          (children ||
-            switchRender(
-              pictureButton,
-              textButton,
-              listType === 'picture-card'
-            ))}
+        <Spin spinning={loading}>
+          {!showValue &&
+            (children ||
+              switchRender(
+                pictureButton,
+                textButton,
+                listType === 'picture-card'
+              ))}
+        </Spin>
       </Upload>
 
       <Modal

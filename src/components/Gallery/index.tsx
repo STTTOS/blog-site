@@ -1,4 +1,3 @@
-import { Spin } from 'antd'
 import Masonry from 'react-masonry-css'
 import 'yet-another-react-lightbox/styles.css'
 import { PlusOutlined } from '@ant-design/icons'
@@ -47,7 +46,6 @@ const Gallery: FC<GalleryProps> = ({
 }) => {
   const [index, setIndex] = useState(0)
   const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
   const handleClick = ({ index }: { index: number }) => {
     setIndex(index)
     setOpen(true)
@@ -60,32 +58,25 @@ const Gallery: FC<GalleryProps> = ({
           listType="text"
           showFileList={false}
           request={async (file) => {
-            try {
-              setLoading(true)
-              const url = await upload({ file })
-              onChange(url)
-              return url
-            } finally {
-              setLoading(false)
-            }
+            const url = await upload({ file })
+            onChange(url)
+            return url
           }}
         >
-          <Spin spinning={loading}>
-            <div className={styles.upload}>
-              <PlusOutlined
-                style={{
-                  fontSize: 80,
-                  cursor: 'pointer',
-                  color: '#5CB963'
-                }}
-              />
-              <span>上传图片</span>
-            </div>
-          </Spin>
+          <div className={styles.upload}>
+            <PlusOutlined
+              style={{
+                fontSize: 80,
+                cursor: 'pointer',
+                color: '#5CB963'
+              }}
+            />
+            <span>上传图片</span>
+          </div>
         </Upload>
       )
     return null
-  }, [mode, momentId, loading])
+  }, [mode, momentId])
 
   const getDownloadUrl = useCallback(async (src: string) => {
     const originAccess = await accessOriginImage(src)
