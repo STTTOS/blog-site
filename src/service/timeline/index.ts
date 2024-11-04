@@ -83,7 +83,9 @@ const getMoments = async (params: Pick<Timeline, 'id'> & Params[0]) => {
   }
 }
 const getSharedMoment = async (params: Pick<Moment, 'id'>) => {
-  const { data } = await request<any>(`api/timeline/moment/share/${params.id}`)
+  const { data } = await request<Moment>(
+    `api/timeline/moment/share/${params.id}`
+  )
   return data
 }
 

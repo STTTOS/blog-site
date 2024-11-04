@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import Masonry from 'react-masonry-css'
 import 'yet-another-react-lightbox/styles.css'
 import { PlusOutlined } from '@ant-design/icons'
@@ -32,17 +33,19 @@ interface GalleryProps {
   images: MomentImage[]
   mode: 'edit' | 'view'
   // eslint-disable-next-line no-unused-vars
-  onChange: (url: string) => void
+  onChange?: (url: string) => void
   momentId?: number
   // eslint-disable-next-line no-unused-vars
-  onDelete: (url: string) => void
+  onDelete?: (url: string) => void
+  className?: string
 }
 const Gallery: FC<GalleryProps> = ({
   images,
   mode,
   onChange,
   momentId,
-  onDelete
+  onDelete,
+  className = ''
 }) => {
   const [index, setIndex] = useState(0)
   const [open, setOpen] = useState(false)
@@ -59,7 +62,7 @@ const Gallery: FC<GalleryProps> = ({
           showFileList={false}
           request={async (file) => {
             const url = await upload({ file })
-            onChange(url)
+            onChange?.(url)
             return url
           }}
         >
@@ -84,7 +87,7 @@ const Gallery: FC<GalleryProps> = ({
     return url
   }, [])
   return (
-    <div className={styles.wrapper}>
+    <div className={classNames(styles.wrapper, className)}>
       <Masonry
         breakpointCols={breakpointColumnsObj}
         className="my-masonry-grid"
@@ -104,7 +107,7 @@ const Gallery: FC<GalleryProps> = ({
             {mode === 'edit' && (
               <CloseCircleOutlined
                 className={styles.close}
-                onClick={() => onDelete(photo.src)}
+                onClick={() => onDelete?.(photo.src)}
               />
             )}
           </div>

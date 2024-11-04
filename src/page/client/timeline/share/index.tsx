@@ -5,6 +5,7 @@ import { FC, useState } from 'react'
 import { useParams } from 'react-router'
 
 import styles from './index.module.less'
+import Gallery from '@/components/Gallery'
 import LoadingBar from '@/components/LoadingBar'
 import { getSharedMoment } from '@/service/timeline'
 import { Viewer, Catalogue } from '@/components/Markdown'
@@ -17,7 +18,7 @@ const Share: FC = () => {
     defaultParams: [{ id: Number(query.id) }]
   })
 
-  const { content } = data || {}
+  const { content, images } = data || {}
 
   return (
     <div className={styles.wrapper}>
@@ -38,16 +39,12 @@ const Share: FC = () => {
 
       <LoadingBar detail={!loading} />
 
-      <div
-        className={styles.main}
-        style={
-          {
-            // marginLeft: showCategory ? 246 + 28 + 6 : 24
-          }
-        }
-      >
+      <div className={styles.main}>
         <Skeleton title active loading={loading} paragraph={{ rows: 16 }}>
           <Viewer value={content} />
+          {images && images.length > 0 && (
+            <Gallery images={images} mode="view" className={styles.gallery} />
+          )}
         </Skeleton>
       </div>
     </div>
