@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react'
 import { Spin, Input, Space, Button, Switch, Tooltip } from 'antd'
-import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons'
+import { Link, useParams, useNavigate, useSearchParams } from 'react-router-dom'
 
 import { EditMode } from '../article'
 import styles from './index.module.less'
@@ -19,6 +19,7 @@ export let unblock: () => void = () => void 0
 const Index = () => {
   const { Modal, openModal } = useFormModal({ destroyOnClose: false })
   const query = useParams()
+  const nav = useNavigate()
   const [params] = useSearchParams()
   const mode = params.get('mode') as EditMode
   const ref = useRef<Partial<Article>>(null)
@@ -89,13 +90,16 @@ const Index = () => {
               bordered={false}
               onChange={hancleChange}
             />
-            <Button
-              disabled={!title || !content}
-              onClick={pushhArticle}
-              type="primary"
-            >
-              发布
-            </Button>
+            <Space size="large">
+              <Button onClick={() => nav(-1)}>取消</Button>
+              <Button
+                disabled={!title || !content}
+                onClick={pushhArticle}
+                type="primary"
+              >
+                发布
+              </Button>
+            </Space>
           </div>
           <div className={styles.secure_mode_text}>
             {mode === 'secure' && (
