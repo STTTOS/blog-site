@@ -5,7 +5,6 @@ import Markdown from 'react-markdown'
 import { memo, type FC } from 'react'
 import rehypeVideo from 'rehype-video'
 import remarkBreaks from 'remark-breaks'
-import { useLocation } from 'react-router'
 import { CopyOutlined } from '@ant-design/icons'
 import { themes, Highlight, RenderProps } from 'prism-react-renderer'
 
@@ -41,11 +40,11 @@ const SyntaxHighlighter = memo(({ children, language }: any) => {
 const Parser: FC<{
   children: string
   secure?: boolean
+  canEdit: boolean
   isPrivate?: boolean
   // eslint-disable-next-line no-unused-vars
   onChange?: (value: string) => void
-}> = ({ children, isPrivate, secure = false, onChange }) => {
-  const { pathname } = useLocation()
+}> = ({ children, isPrivate, secure = false, onChange, canEdit }) => {
   // 从children中找到目标url
   // 用正则匹配 ![.*](url) 并删除
   const handleDelete = (url: string) => {
@@ -73,12 +72,7 @@ const Parser: FC<{
             <CardImage
               {...props}
               secure={secure}
-              onDelete={
-                // TODO: 以后改成参数控制
-                pathname.includes('markdown') || pathname.includes('timeline')
-                  ? handleDelete
-                  : undefined
-              }
+              onDelete={canEdit ? handleDelete : undefined}
             />
           )
         },

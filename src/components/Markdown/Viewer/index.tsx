@@ -24,7 +24,11 @@ const Index: React.FC<IProps> = ({ value, style, className, secure }) => {
           html: true
         }
       }}
-      renderHTML={(text) => <Parser secure={secure}>{text}</Parser>}
+      renderHTML={(text) => (
+        <Parser secure={secure} canEdit={false}>
+          {text}
+        </Parser>
+      )}
     />
   )
 }

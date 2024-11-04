@@ -40,6 +40,7 @@ const Index: React.FC<IProps> = ({ onChange = () => void 0, value, style }) => {
       onChange={({ text }) => onChange(text)}
       renderHTML={(text) => (
         <Parser
+          canEdit
           isPrivate={isPrivate}
           secure={mode === 'secure'}
           onChange={onChange}
