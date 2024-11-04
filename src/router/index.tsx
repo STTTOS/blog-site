@@ -115,6 +115,11 @@ const routers: MyRoute[] = [
     ]
   },
   {
+    path: 'moment/share/:id',
+    title: '时刻分享',
+    element: lazy(() => import('@/page/client/timeline/share'))
+  },
+  {
     path: '/',
     element: LayoutClient,
     children: [

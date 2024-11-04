@@ -17,7 +17,9 @@ import {
   Popconfirm
 } from 'antd'
 
+import copy from '@/utils/copy'
 import Gallery from '../Gallery'
+import { domain } from '@/config'
 import { useUserInfo } from '@/model'
 import styles from './index.module.less'
 import AsyncButton from '../AsyncButton'
@@ -181,13 +183,27 @@ const Moment: FC<MomentProps> = ({
     const operationsOfOthers = [
       {
         label: (
+          <Button
+            onClick={() =>
+              copy(`${domain}/moment/share/${id}`, '链接复制成功,去分享吧')
+            }
+            type="text"
+            // icon={<LinkOutlined />}
+          >
+            分享
+          </Button>
+        ),
+        key: '3'
+      },
+      {
+        label: (
           <AsyncButton
             style={{ padding: 0, width: 60 }}
             icon={icon}
             request={action}
           ></AsyncButton>
         ),
-        key: '3'
+        key: '4'
       }
     ]
 

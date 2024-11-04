@@ -82,6 +82,10 @@ const getMoments = async (params: Pick<Timeline, 'id'> & Params[0]) => {
     list
   }
 }
+const getSharedMoment = async (params: Pick<Moment, 'id'>) => {
+  const { data } = await request<any>(`api/timeline/moment/share/${params.id}`)
+  return data
+}
 
 export {
   createTimeline,
@@ -94,5 +98,6 @@ export {
   deleteTimeline,
   deleteMoment,
   updateTimeline,
-  likeMoment
+  likeMoment,
+  getSharedMoment
 }

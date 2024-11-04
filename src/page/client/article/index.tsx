@@ -16,6 +16,7 @@ import useTimeout from '@/hooks/useTimeout'
 import { getUserCard } from '@/service/user'
 import Comments from '@/components/Comments'
 import ThreeColLayout from './ThreeColLayout'
+import LoadingBar from '@/components/LoadingBar'
 import randomTagColor from '@/utils/randomTagColor'
 import ScrollBarNav from '@/components/ScrollBarNav'
 import { useHideContent } from '@/hooks/useHideContent'
@@ -88,10 +89,7 @@ const Index: React.FC = () => {
   }, [])
   return (
     <div className={styles.wrapper}>
-      <div
-        className={styles.bar}
-        style={{ width: detail ? '100%' : undefined }}
-      />
+      <LoadingBar detail={!!detail} />
 
       <ThreeColLayout
         main={
