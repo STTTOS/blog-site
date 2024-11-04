@@ -74,7 +74,10 @@ const Parser: FC<{
               {...props}
               secure={secure}
               onDelete={
-                pathname.includes('markdown') ? handleDelete : undefined
+                // TODO: 以后改成参数控制
+                pathname.includes('markdown') || pathname.includes('timeline')
+                  ? handleDelete
+                  : undefined
               }
             />
           )
