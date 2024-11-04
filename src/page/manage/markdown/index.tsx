@@ -91,7 +91,7 @@ const Index = () => {
               onChange={hancleChange}
             />
             <Space size="large">
-              <Button onClick={() => nav(-1)}>取消</Button>
+              <Button onClick={() => nav('/manage/article/list')}>取消</Button>
               <Button
                 disabled={!title || !content}
                 onClick={pushhArticle}
