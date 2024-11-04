@@ -100,9 +100,12 @@ const BetterImage: FC<ImageProps> = ({
       return access ? originSrc : imgSrc
     })()
 
+    const res = await fetch(url!)
+    const blob = await res.blob()
+
     const a = document.createElement('a')
-    a.download = getFilename(src!)
-    a.href = url!
+    a.download = getFilename(url!)
+    a.href = URL.createObjectURL(blob)
     a.click()
   }
 
