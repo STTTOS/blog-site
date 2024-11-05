@@ -5,6 +5,7 @@ import { ConfigProvider } from 'antd'
 import { useRoutes } from 'react-router-dom'
 // import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import 'react-photo-view/dist/react-photo-view.css'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
 import './main.less'

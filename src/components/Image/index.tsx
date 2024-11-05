@@ -1,7 +1,6 @@
-import Modal from '@mui/material/Modal'
 import { basename } from 'path-browserify'
-import { CloseCircleOutlined } from '@ant-design/icons'
 import { CloudDownloadOutlined } from '@ant-design/icons'
+import { PhotoView, PhotoProvider } from 'react-photo-view'
 import { type FC, useMemo, useState, useEffect } from 'react'
 import 'react-lazy-load-image-component/src/effects/blur.css'
 import {
@@ -146,38 +145,35 @@ const BetterImage: FC<ImageProps> = ({
       />
 
       {!loadError && (
-        <div className={styles.op} onClick={() => setOpen(true)}>
-          <CloudDownloadOutlined
-            onClick={(e) => {
-              e.stopPropagation()
-              handleDownload()
-            }}
-            className={styles.download}
-          />
-        </div>
-      )}
-
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-        className={styles.modal}
-      >
-        <div
-          style={{
-            overflow: 'auto',
-            maxHeight: '100%',
-            textAlign: 'center',
-            outlineColor: '#5CB963',
-            position: 'relative'
+        <PhotoProvider
+          toolbarRender={({ onScale, scale }) => {
+            return (
+              <>
+                <svg
+                  className="PhotoView-Slider__toolbarIcon"
+                  onClick={() => onScale(scale + 1)}
+                />
+                <svg
+                  className="PhotoView-Slider__toolbarIcon"
+                  onClick={() => onScale(scale - 1)}
+                />
+              </>
+            )
           }}
         >
-          <img src={previewSrc} style={{ maxWidth: 'calc(100vw - 30px)' }} />
-          <CloseCircleOutlined
-            onClick={() => setOpen(false)}
-            className={styles.icon}
-          />
-        </div>
-      </Modal>
+          <PhotoView src={previewSrc}>
+            <div className={styles.op} onClick={() => setOpen(true)}>
+              <CloudDownloadOutlined
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleDownload()
+                }}
+                className={styles.download}
+              />
+            </div>
+          </PhotoView>
+        </PhotoProvider>
+      )}
     </div>
   )
 }
