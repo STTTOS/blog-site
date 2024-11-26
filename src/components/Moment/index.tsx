@@ -249,6 +249,21 @@ const Moment: FC<MomentProps> = ({
     <div className={styles.wrapper} id={id ? String(id) : undefined}>
       <div style={{ minWidth: 96, flexShrink: 0 }}>{dateElement}</div>
       <main className={classNames(styles.main, hideDate && styles.divider)}>
+        <div className={styles.extra}>
+          <span className={styles.time}>
+            {createdAt && dayjs(createdAt).format('HH:mm')}
+          </span>
+
+          {!isAdd && (
+            <Dropdown
+              menu={{
+                items
+              }}
+            >
+              <MoreOutlined className={styles.more} />
+            </Dropdown>
+          )}
+        </div>
         {mode === 'edit' && (
           <Space className={styles.op}>
             <Button
@@ -293,21 +308,7 @@ const Moment: FC<MomentProps> = ({
           }}
           images={[...imgSet].sort((a, b) => a.sort - b.sort)}
         />
-        <div className={styles.extra}>
-          <span className={styles.time}>
-            {createdAt && dayjs(createdAt).format('HH:mm')}
-          </span>
 
-          {!isAdd && (
-            <Dropdown
-              menu={{
-                items
-              }}
-            >
-              <MoreOutlined className={styles.more} />
-            </Dropdown>
-          )}
-        </div>
         {likeUsers}
       </main>
     </div>
