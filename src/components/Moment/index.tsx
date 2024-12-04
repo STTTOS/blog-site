@@ -26,7 +26,9 @@ import AsyncButton from '../AsyncButton'
 import UserProfile from '../UserProfile'
 import { User } from '@/service/user/types'
 import { Editor, Viewer } from '../Markdown'
+import useFormModal from '@/hooks/useFormModal'
 import DateDisplay from '@/components/DateDisplay'
+import { history } from '@/components/BrowserRouter'
 import { MomentImage, Moment as MomentType } from '@/service/timeline/types'
 import {
   addMoment,
@@ -34,6 +36,8 @@ import {
   deleteMoment,
   updateMoment
 } from '@/service/timeline'
+
+let unblock: () => void = () => void 0
 
 export type EditMode = 'edit' | 'view'
 type MomentProps = {
@@ -62,6 +66,7 @@ const Moment: FC<MomentProps> = ({
 }) => {
   const isAdd = !id
   const { user } = useUserInfo()
+  const { Modal, openModal } = useFormModal({ destroyOnClose: false })
   const nav = useNavigate()
   const [likes, setLikes] = useState(_likes)
   const [timePicked, setTimePicked] = useState(dayjs().toISOString())
@@ -100,6 +105,7 @@ const Moment: FC<MomentProps> = ({
         timelineId
       })
     }
+    unblock()
     onSave()
     setMode('view')
   }
@@ -125,6 +131,22 @@ const Moment: FC<MomentProps> = ({
       behavior: 'smooth'
     })
   }
+  useEffect(() => {
+    if (mode === 'view') return
+
+    unblock = history.block((tx) => {
+      openModal({
+        title: '确认离开吗',
+        content: <span>你编辑的信息未被保存, 离开页面后将会丢失</span>,
+        onOk() {
+          unblock()
+          tx.retry()
+        }
+      })
+    })
+    return unblock
+  }, [mode])
+
   useEffect(() => {
     if (content) setDraft(content)
   }, [content])
@@ -311,6 +333,7 @@ const Moment: FC<MomentProps> = ({
 
         {likeUsers}
       </main>
+      {Modal}
     </div>
   )
 }
