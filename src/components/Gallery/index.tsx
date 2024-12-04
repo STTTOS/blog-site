@@ -57,6 +57,7 @@ const Gallery: FC<GalleryProps> = ({
     if (mode == 'edit')
       return (
         <Upload
+          accept=".jpg,.png,.jpeg"
           multiple
           listType="text"
           showFileList={false}
