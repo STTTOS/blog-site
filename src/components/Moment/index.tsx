@@ -207,7 +207,10 @@ const Moment: FC<MomentProps> = ({
         label: (
           <Button
             onClick={() =>
-              copy(`${domain}/moment/share/${id}`, '链接复制成功,去分享吧')
+              copy(
+                `https://${domain}/moment/share/${id}`,
+                '链接复制成功,去分享吧'
+              )
             }
             type="text"
             // icon={<LinkOutlined />}
