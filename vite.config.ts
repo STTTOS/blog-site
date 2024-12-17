@@ -7,8 +7,9 @@ const fs = require('fs')
 
 // const base = process.env.NODE_ENV === 'development' ? '/' : 'https://xuan-1313104191.cos.ap-chengdu.myqcloud.com/base/blog';
 // https://vitejs.dev/config/
-const target = 'https://www.wishufree.com'
-// 'http://localhost:7500'
+const target =
+  // 'https://www.wishufree.com'
+  'http://localhost:7500'
 export default defineConfig({
   // base,
   plugins: [react()],

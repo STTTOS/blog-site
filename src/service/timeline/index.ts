@@ -89,6 +89,17 @@ const getSharedMoment = async (params: Pick<Moment, 'id'>) => {
   return data
 }
 
+const getCurrentUserAllTimelineOptions = async () => {
+  const { data } = await request<Pick<Timeline, 'id' | 'title'>[]>(
+    'api/timeline/currentUser/all'
+  )
+  return data
+}
+const migrateMoment = async ({ timelineId, ...params }: Partial<Moment>) => {
+  await request<null>(`api/timeline/moment/migrate/${timelineId}`, params)
+  message.success('迁移成功')
+}
+
 export {
   createTimeline,
   addMoment,
@@ -101,5 +112,7 @@ export {
   deleteMoment,
   updateTimeline,
   likeMoment,
-  getSharedMoment
+  getSharedMoment,
+  getCurrentUserAllTimelineOptions,
+  migrateMoment
 }

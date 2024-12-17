@@ -3,13 +3,14 @@ import { prop } from 'ramda'
 import { useRequest } from 'ahooks'
 import classNames from 'classnames'
 import { useNavigate } from 'react-router'
-import { MoreOutlined } from '@ant-design/icons'
 import { FC, useMemo, useState, useEffect } from 'react'
 import { LikeFilled, LikeOutlined } from '@ant-design/icons'
+import { MoreOutlined, ShareAltOutlined } from '@ant-design/icons'
 import {
   Space,
   Button,
   Avatar,
+  Select,
   Divider,
   message,
   Dropdown,
@@ -34,7 +35,9 @@ import {
   addMoment,
   likeMoment,
   deleteMoment,
-  updateMoment
+  updateMoment,
+  migrateMoment,
+  getCurrentUserAllTimelineOptions
 } from '@/service/timeline'
 
 let unblock: () => void = () => void 0
@@ -79,6 +82,9 @@ const Moment: FC<MomentProps> = ({
   })
   const { runAsync: remove, loading: deleting } = useRequest(deleteMoment, {
     manual: true
+  })
+  const { data: options = [] } = useRequest(getCurrentUserAllTimelineOptions, {
+    manual: !user
   })
 
   const canEdit = useMemo(() => {
@@ -221,6 +227,62 @@ const Moment: FC<MomentProps> = ({
         key: '3'
       },
       {
+        key: '4',
+        label: (
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  type: 'item',
+                  label: (
+                    <Select
+                      placeholder="选择要迁移到的时间轴"
+                      style={{ width: 200 }}
+                      options={options?.map((item) => ({
+                        label: item.title,
+                        value: item.id
+                      }))}
+                      optionRender={(item) => {
+                        return (
+                          <AsyncButton
+                            icon={<ShareAltOutlined />}
+                            onClick={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                            }}
+                            request={async () => {
+                              return migrateMoment({
+                                content,
+                                createdAt,
+                                images,
+                                timelineId
+                              })
+                            }}
+                          >
+                            {item.label}
+                          </AsyncButton>
+                        )
+                      }}
+                    />
+                  ),
+                  key: 'select'
+                }
+              ]
+            }}
+          >
+            <Button
+              type="text"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+              }}
+            >
+              迁移
+            </Button>
+          </Dropdown>
+        )
+      },
+      {
         label: (
           <AsyncButton
             style={{ padding: 0, width: 60 }}
@@ -228,13 +290,13 @@ const Moment: FC<MomentProps> = ({
             request={action}
           ></AsyncButton>
         ),
-        key: '4'
+        key: '5'
       }
     ]
 
     if (canEdit) return operationsOfOwner.concat(operationsOfOthers)
     return operationsOfOthers
-  }, [canEdit, deleting, handleDelete, id, timelineId, likes, user])
+  }, [canEdit, deleting, handleDelete, id, timelineId, likes, user, options])
   const dateElement = useMemo(() => {
     if (isAdd)
       return (
