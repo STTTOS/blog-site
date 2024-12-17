@@ -3,9 +3,9 @@ import { prop } from 'ramda'
 import { useRequest } from 'ahooks'
 import classNames from 'classnames'
 import { useNavigate } from 'react-router'
+import { MoreOutlined } from '@ant-design/icons'
 import { FC, useMemo, useState, useEffect } from 'react'
 import { LikeFilled, LikeOutlined } from '@ant-design/icons'
-import { MoreOutlined, ShareAltOutlined } from '@ant-design/icons'
 import {
   Space,
   Button,
@@ -49,6 +49,7 @@ type MomentProps = {
   mode?: EditMode
   onCancel: () => void
   onSave: () => void
+  onMigrate?: () => void
   hideDate?: boolean
   userId?: number
   likes?: Partial<User>[]
@@ -65,7 +66,8 @@ const Moment: FC<MomentProps> = ({
   onSave,
   hideDate,
   userId,
-  likes: _likes
+  likes: _likes,
+  onMigrate
 }) => {
   const isAdd = !id
   const { user } = useUserInfo()
@@ -230,38 +232,42 @@ const Moment: FC<MomentProps> = ({
         key: '4',
         label: (
           <Dropdown
+            trigger={['click']}
             menu={{
               items: [
                 {
-                  type: 'item',
+                  type: 'group',
                   label: (
                     <Select
+                      showSearch
+                      filterOption={(key, option) => {
+                        return !!option?.label?.includes(key)
+                      }}
                       placeholder="选择要迁移到的时间轴"
                       style={{ width: 200 }}
-                      options={options?.map((item) => ({
-                        label: item.title,
-                        value: item.id
-                      }))}
-                      optionRender={(item) => {
-                        return (
-                          <AsyncButton
-                            icon={<ShareAltOutlined />}
-                            onClick={(e) => {
-                              e.preventDefault()
-                              e.stopPropagation()
-                            }}
-                            request={async () => {
-                              return migrateMoment({
-                                content,
-                                createdAt,
-                                images,
-                                timelineId
-                              })
-                            }}
-                          >
-                            {item.label}
-                          </AsyncButton>
-                        )
+                      options={options
+                        ?.filter((item) => item.id !== timelineId)
+                        ?.map((item) => ({
+                          label: item.title,
+                          value: item.id
+                        }))}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                      }}
+                      onSelect={async (timelineId) => {
+                        if (mode === 'edit') {
+                          message.info('请先退出编辑状态')
+                          return
+                        }
+                        await migrateMoment({
+                          content,
+                          createdAt,
+                          images,
+                          timelineId,
+                          momentId: id!
+                        })
+                        onMigrate?.()
                       }}
                     />
                   ),
@@ -296,7 +302,21 @@ const Moment: FC<MomentProps> = ({
 
     if (canEdit) return operationsOfOwner.concat(operationsOfOthers)
     return operationsOfOthers
-  }, [canEdit, deleting, handleDelete, id, timelineId, likes, user, options])
+  }, [
+    canEdit,
+    deleting,
+    handleDelete,
+    id,
+    timelineId,
+    likes,
+    user,
+    options,
+    content,
+    createdAt,
+    images,
+    mode
+  ])
+
   const dateElement = useMemo(() => {
     if (isAdd)
       return (
@@ -343,6 +363,7 @@ const Moment: FC<MomentProps> = ({
 
           {!isAdd && (
             <Dropdown
+              trigger={['click']}
               menu={{
                 items
               }}

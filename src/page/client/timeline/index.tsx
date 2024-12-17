@@ -84,6 +84,7 @@ const TimelineDetail = () => {
     setShowAddMoment(false)
     await fetchMoments()
   }
+
   const moments = useMemo(() => {
     if (list.length === 0 && !showAddMoment)
       return (
@@ -107,6 +108,7 @@ const TimelineDetail = () => {
           {...props}
           key={props.id}
           onSave={handleSave}
+          onMigrate={fetchMoments}
           timelineId={timelineId}
           userId={timelineDetail?.userId}
           onDelete={(id) => setList(list.filter((item) => item.id !== id))}

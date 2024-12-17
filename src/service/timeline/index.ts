@@ -95,7 +95,10 @@ const getCurrentUserAllTimelineOptions = async () => {
   )
   return data
 }
-const migrateMoment = async ({ timelineId, ...params }: Partial<Moment>) => {
+const migrateMoment = async ({
+  timelineId,
+  ...params
+}: Partial<Omit<Moment, 'id'>> & { momentId: number }) => {
   await request<null>(`api/timeline/moment/migrate/${timelineId}`, params)
   message.success('迁移成功')
 }
