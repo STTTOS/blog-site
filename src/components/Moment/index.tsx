@@ -85,9 +85,12 @@ const Moment: FC<MomentProps> = ({
   const { runAsync: remove, loading: deleting } = useRequest(deleteMoment, {
     manual: true
   })
-  const { data: options = [] } = useRequest(getCurrentUserAllTimelineOptions, {
-    manual: !user
-  })
+  const { data: options = [], run: refreshOptions } = useRequest(
+    getCurrentUserAllTimelineOptions,
+    {
+      manual: true
+    }
+  )
 
   const canEdit = useMemo(() => {
     return user?.id && user.id === userId
@@ -251,10 +254,6 @@ const Moment: FC<MomentProps> = ({
                           label: item.title,
                           value: item.id
                         }))}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        e.preventDefault()
-                      }}
                       onSelect={async (timelineId) => {
                         if (mode === 'edit') {
                           message.info('请先退出编辑状态')
@@ -279,8 +278,8 @@ const Moment: FC<MomentProps> = ({
             <Button
               type="text"
               onClick={(e) => {
-                e.preventDefault()
                 e.stopPropagation()
+                refreshOptions()
               }}
             >
               迁移
