@@ -85,9 +85,12 @@ const Moment: FC<MomentProps> = ({
   const { runAsync: remove, loading: deleting } = useRequest(deleteMoment, {
     manual: true
   })
-  const { data: options = [] } = useRequest(getCurrentUserAllTimelineOptions, {
-    manual: !user
-  })
+  const { data: options = [], run: refreshOptions } = useRequest(
+    getCurrentUserAllTimelineOptions,
+    {
+      manual: true
+    }
+  )
 
   const canEdit = useMemo(() => {
     return user?.id && user.id === userId
@@ -244,6 +247,7 @@ const Moment: FC<MomentProps> = ({
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
+                refreshOptions()
               }}
             >
               迁移
