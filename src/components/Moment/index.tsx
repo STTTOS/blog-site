@@ -1,11 +1,12 @@
 import dayjs from 'dayjs'
 import { prop } from 'ramda'
+import { debounce } from 'lodash'
 import classNames from 'classnames'
 import { useNavigate } from 'react-router'
 import { MoreOutlined } from '@ant-design/icons'
 import { useRequest, useEventListener } from 'ahooks'
-import { FC, useMemo, useState, useEffect } from 'react'
 import { LikeFilled, LikeOutlined } from '@ant-design/icons'
+import { FC, useMemo, useState, useEffect, useCallback } from 'react'
 import {
   Space,
   Button,
@@ -49,7 +50,7 @@ type MomentProps = {
   mode?: EditMode
   onCancel: () => void
   // eslint-disable-next-line no-unused-vars
-  onSave: (data: Partial<MomentType>) => void
+  onSave: (data: Partial<MomentType>, type: 'add' | 'edit') => void
   // eslint-disable-next-line no-unused-vars
   onMigrate?: (id: number) => void
   hideDate?: boolean
@@ -126,10 +127,13 @@ const Moment: FC<MomentProps> = ({
     })()
     const data = await request(body)
     unblock()
-    onSave({
-      ...body,
-      id: data.id
-    })
+    onSave(
+      {
+        ...body,
+        id: data.id
+      },
+      isAdd ? 'add' : 'edit'
+    )
     setMode('view')
   }
 
@@ -368,13 +372,20 @@ const Moment: FC<MomentProps> = ({
     )
   }, [likes])
 
-  useEventListener('keydown', (e) => {
-    // 同时只能有一个moment为编辑状态
-    // 所以根据mode === 'edit'` 即可 定位到正在编辑的单元
-    if (e.code === 'Enter' && mode === 'edit') {
-      handleSave()
-    }
-  })
+  const handleKeyDown = useCallback(
+    debounce(
+      (e) => {
+        if (e.code === 'Enter' && mode === 'edit') {
+          handleSave()
+        }
+      },
+      200,
+      { leading: true }
+    ),
+    [handleSave]
+  )
+
+  useEventListener('keydown', handleKeyDown)
   return (
     <div className={styles.wrapper} id={id ? String(id) : undefined}>
       <div style={{ minWidth: 96, flexShrink: 0 }}>{dateElement}</div>

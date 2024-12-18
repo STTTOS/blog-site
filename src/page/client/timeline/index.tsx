@@ -93,8 +93,15 @@ const TimelineDetail = () => {
     return user?.id === timelineDetail?.userId
   }, [timelineDetail, user])
 
-  const handleSave = async (data: Partial<MomentType>) => {
+  const handleSave = async (
+    data: Partial<MomentType>,
+    type: 'add' | 'edit'
+  ) => {
     setShowAddMoment(false)
+    if (type === 'add') {
+      setList([data as Required<typeof data>, ...list])
+      return
+    }
     setList(
       list.map((item) => {
         if (item.id === data.id)
