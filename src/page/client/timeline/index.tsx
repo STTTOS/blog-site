@@ -20,6 +20,7 @@ import CreateTimeline from './CreateTimeline'
 import { defaultTimelineCover } from '@/config'
 import { history } from '@/components/BrowserRouter'
 import CreateMoment from '@/components/CreateMoment'
+import ScrollWrapper from '@/components/ScrollWrapper'
 import { Moment as MomentType } from '@/service/timeline/types'
 import { getMoments, getTimeline, createTimeline } from '@/service/timeline'
 
@@ -54,11 +55,15 @@ const TimelineDetail = () => {
   }
 
   const [list, setList] = useState<MomentType[]>([])
+  const [total, setTotal] = useState(0)
   const scroll = useScroll(null, ({ top }) => top < criticalPoint + step)
-  const [pageParams] = useState<Params[0]>({
+  const [pageParams, setPageParams] = useState<Params[0]>({
     current: 1,
-    pageSize: 100
+    pageSize: 10
   })
+  const allDataHasBeenFetched = useMemo(() => {
+    return list.length >= total
+  }, [list, total])
   const { data: timelineDetail, loading: fetchingTimeline } = useRequest(
     () => getTimeline({ id: timelineId }),
     {
@@ -67,11 +72,19 @@ const TimelineDetail = () => {
     }
   )
   const { loading, runAsync: fetchMoments } = useRequest(
-    () => getMoments({ id: timelineId, ...pageParams }),
+    (current = 1) =>
+      getMoments({
+        id: timelineId,
+        current,
+        pageSize: pageParams.pageSize
+      }),
     {
       manual: isAdd,
       onSuccess(res) {
-        setList(res.list)
+        setTotal(res.total)
+
+        if (pageParams.current === 1) setList(res.list)
+        else setList((pre) => pre.concat(res.list))
       }
     }
   )
@@ -80,9 +93,25 @@ const TimelineDetail = () => {
     return user?.id === timelineDetail?.userId
   }, [timelineDetail, user])
 
-  const handleSave = async () => {
+  const handleSave = async (data: Partial<MomentType>) => {
     setShowAddMoment(false)
-    await fetchMoments()
+    setList(
+      list.map((item) => {
+        if (item.id === data.id)
+          return {
+            ...item,
+            ...data
+          }
+        return item
+      })
+    )
+  }
+
+  const handleMigrated = (id: number) => {
+    console.log('s', id, list, typeof id)
+    const newTotal = total - 1
+    setTotal(newTotal)
+    setList(list.filter((item) => item.id !== id))
   }
 
   const moments = useMemo(() => {
@@ -108,10 +137,13 @@ const TimelineDetail = () => {
           {...props}
           key={props.id}
           onSave={handleSave}
-          onMigrate={fetchMoments}
+          onMigrate={handleMigrated}
           timelineId={timelineId}
           userId={timelineDetail?.userId}
-          onDelete={(id) => setList(list.filter((item) => item.id !== id))}
+          onDelete={(id) => {
+            setList(list.filter((item) => item.id !== id))
+            setTotal(total - 1)
+          }}
           hideDate={isSameDay(props.createdAt, list[i - 1]?.createdAt)}
           onCancel={() => setShowAddMoment(false)}
         />
@@ -149,7 +181,21 @@ const TimelineDetail = () => {
   }, [])
   return (
     <Spin spinning={fetchingTimeline}>
-      <div className={styles.wrapper}>
+      <ScrollWrapper
+        debounceTime={200}
+        className={styles.wrapper}
+        onScrollToBottom={async () => {
+          if (loading) return
+          if (allDataHasBeenFetched) return
+
+          const current = pageParams.current + 1
+          setPageParams({
+            ...pageParams,
+            current
+          })
+          await fetchMoments(current)
+        }}
+      >
         <div className={styles.top} style={{ opacity }}>
           <span>{title}</span>
           {showOp && (
@@ -193,10 +239,17 @@ const TimelineDetail = () => {
             )}
 
             {moments}
+            <div style={{ textAlign: 'center', color: '#d5d5d5' }}>
+              {allDataHasBeenFetched ? (
+                <em>没有更多数据了...</em>
+              ) : (
+                <em>下拉加载更多数据...</em>
+              )}
+            </div>
           </Spin>
         </main>
         {isAdd && <CreateTimeline onCreate={handleCreate} />}
-      </div>
+      </ScrollWrapper>
     </Spin>
   )
 }

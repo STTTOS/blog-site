@@ -1,9 +1,9 @@
 import dayjs from 'dayjs'
 import { prop } from 'ramda'
-import { useRequest } from 'ahooks'
 import classNames from 'classnames'
 import { useNavigate } from 'react-router'
 import { MoreOutlined } from '@ant-design/icons'
+import { useRequest, useEventListener } from 'ahooks'
 import { FC, useMemo, useState, useEffect } from 'react'
 import { LikeFilled, LikeOutlined } from '@ant-design/icons'
 import {
@@ -48,8 +48,10 @@ type MomentProps = {
   onDelete?: (id: number) => void
   mode?: EditMode
   onCancel: () => void
-  onSave: () => void
-  onMigrate?: () => void
+  // eslint-disable-next-line no-unused-vars
+  onSave: (data: Partial<MomentType>) => void
+  // eslint-disable-next-line no-unused-vars
+  onMigrate?: (id: number) => void
   hideDate?: boolean
   userId?: number
   likes?: Partial<User>[]
@@ -101,23 +103,33 @@ const Moment: FC<MomentProps> = ({
       message.error('内容不可为空')
       return
     }
-    if (isAdd) {
-      await add({
-        content: draft,
-        images: imgSet,
-        timelineId,
-        createdAt: timePicked
-      })
-    } else {
-      await save({
-        id,
-        content: draft,
-        images: imgSet,
-        timelineId
-      })
-    }
+    const [body, request] = (() => {
+      if (isAdd)
+        return [
+          {
+            content: draft,
+            images: imgSet,
+            timelineId,
+            createdAt: timePicked
+          },
+          add
+        ]
+      return [
+        {
+          id,
+          content: draft,
+          images: imgSet,
+          timelineId
+        },
+        save
+      ]
+    })()
+    const data = await request(body)
     unblock()
-    onSave()
+    onSave({
+      ...body,
+      id: data.id
+    })
     setMode('view')
   }
 
@@ -233,7 +245,7 @@ const Moment: FC<MomentProps> = ({
                           timelineId,
                           momentId: id!
                         })
-                        onMigrate?.()
+                        onMigrate?.(id!)
                       }}
                     />
                   ),
@@ -285,12 +297,11 @@ const Moment: FC<MomentProps> = ({
               )
             }
             type="text"
-            // icon={<LinkOutlined />}
           >
             分享
           </Button>
         ),
-        key: '3'
+        key: '4'
       },
       {
         label: (
@@ -356,6 +367,14 @@ const Moment: FC<MomentProps> = ({
       </>
     )
   }, [likes])
+
+  useEventListener('keydown', (e) => {
+    // 同时只能有一个moment为编辑状态
+    // 所以根据mode === 'edit'` 即可 定位到正在编辑的单元
+    if (e.code === 'Enter' && mode === 'edit') {
+      handleSave()
+    }
+  })
   return (
     <div className={styles.wrapper} id={id ? String(id) : undefined}>
       <div style={{ minWidth: 96, flexShrink: 0 }}>{dateElement}</div>
