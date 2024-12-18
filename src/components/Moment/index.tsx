@@ -1,12 +1,11 @@
 import dayjs from 'dayjs'
 import { prop } from 'ramda'
-import { debounce } from 'lodash'
 import classNames from 'classnames'
+import { useRequest } from 'ahooks'
 import { useNavigate } from 'react-router'
 import { MoreOutlined } from '@ant-design/icons'
-import { useRequest, useEventListener } from 'ahooks'
+import { FC, useMemo, useState, useEffect } from 'react'
 import { LikeFilled, LikeOutlined } from '@ant-design/icons'
-import { FC, useMemo, useState, useEffect, useCallback } from 'react'
 import {
   Space,
   Button,
@@ -372,20 +371,20 @@ const Moment: FC<MomentProps> = ({
     )
   }, [likes])
 
-  const handleKeyDown = useCallback(
-    debounce(
-      (e) => {
-        if (e.code === 'Enter' && mode === 'edit') {
-          handleSave()
-        }
-      },
-      200,
-      { leading: true }
-    ),
-    [handleSave]
-  )
+  // const handleKeyDown = useCallback(
+  //   debounce(
+  //     (e) => {
+  //       if (e.code === 'Enter' && mode === 'edit') {
+  //         handleSave()
+  //       }
+  //     },
+  //     200,
+  //     { leading: true }
+  //   ),
+  //   [handleSave]
+  // )
 
-  useEventListener('keydown', handleKeyDown)
+  // useEventListener('keydown', handleKeyDown)
   return (
     <div className={styles.wrapper} id={id ? String(id) : undefined}>
       <div style={{ minWidth: 96, flexShrink: 0 }}>{dateElement}</div>
