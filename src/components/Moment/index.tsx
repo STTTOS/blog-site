@@ -190,46 +190,9 @@ const Moment: FC<MomentProps> = ({
           </Popconfirm>
         ),
         key: '2'
-      }
-    ]
-    const [icon, action] = (function getIconAndAction() {
-      if (user?.id && likes?.map((item) => item.id).includes(user.id)) {
-        return [<LikeFilled />, async () => void 0]
-      }
-      return [
-        <LikeOutlined />,
-        async () => {
-          // 登录用户
-          if (user?.id) {
-            await likeMoment({ id, timelineId })
-            setLikes((pre) => [
-              { id: user?.id, avatar: user?.avatar },
-              ...(pre || [])
-            ])
-          } else nav(`/login?from=${encodeURIComponent(location.pathname)}`)
-        }
-      ]
-    })()
-    const operationsOfOthers = [
-      {
-        label: (
-          <Button
-            onClick={() =>
-              copy(
-                `https://${domain}/moment/share/${id}`,
-                '链接复制成功,去分享吧'
-              )
-            }
-            type="text"
-            // icon={<LinkOutlined />}
-          >
-            分享
-          </Button>
-        ),
-        key: '3'
       },
       {
-        key: '4',
+        key: '3',
         label: (
           <Dropdown
             trigger={['click']}
@@ -287,6 +250,43 @@ const Moment: FC<MomentProps> = ({
             </Button>
           </Dropdown>
         )
+      }
+    ]
+    const [icon, action] = (function getIconAndAction() {
+      if (user?.id && likes?.map((item) => item.id).includes(user.id)) {
+        return [<LikeFilled />, async () => void 0]
+      }
+      return [
+        <LikeOutlined />,
+        async () => {
+          // 登录用户
+          if (user?.id) {
+            await likeMoment({ id, timelineId })
+            setLikes((pre) => [
+              { id: user?.id, avatar: user?.avatar },
+              ...(pre || [])
+            ])
+          } else nav(`/login?from=${encodeURIComponent(location.pathname)}`)
+        }
+      ]
+    })()
+    const operationsOfOthers = [
+      {
+        label: (
+          <Button
+            onClick={() =>
+              copy(
+                `https://${domain}/moment/share/${id}`,
+                '链接复制成功,去分享吧'
+              )
+            }
+            type="text"
+            // icon={<LinkOutlined />}
+          >
+            分享
+          </Button>
+        ),
+        key: '3'
       },
       {
         label: (
@@ -294,7 +294,7 @@ const Moment: FC<MomentProps> = ({
             style={{ padding: 0, width: 60 }}
             icon={icon}
             request={action}
-          ></AsyncButton>
+          />
         ),
         key: '5'
       }
