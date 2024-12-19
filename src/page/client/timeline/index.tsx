@@ -243,7 +243,7 @@ const TimelineDetail = () => {
                         setPageParams({ ...pageParams, current: 1 })
                       }}
                     />
-                    )
+                    <span>,共{total}条结果</span>)
                   </span>
                 ) : null}
                 <SearchOutlined className={styles.search_icon} />
