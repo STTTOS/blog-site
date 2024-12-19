@@ -10,6 +10,7 @@ import classNames from 'classnames'
 import { useParams } from 'react-router'
 import { useScroll, useRequest } from 'ahooks'
 import { Params } from 'ahooks/lib/useAntdTable/types'
+import { SearchOutlined, CloseCircleOutlined } from '@ant-design/icons'
 import { useMemo, useState, ReactNode, useEffect, useCallback } from 'react'
 
 import { useUserInfo } from '@/model'
@@ -21,6 +22,7 @@ import { defaultTimelineCover } from '@/config'
 import { history } from '@/components/BrowserRouter'
 import CreateMoment from '@/components/CreateMoment'
 import ScrollWrapper from '@/components/ScrollWrapper'
+import FullscreenSearch from '@/components/FullscreenSearch'
 import { Moment as MomentType } from '@/service/timeline/types'
 import { getMoments, getTimeline, createTimeline } from '@/service/timeline'
 
@@ -48,6 +50,8 @@ const TimelineDetail = () => {
   const { runAsync: create } = useRequest(createTimeline, {
     manual: true
   })
+  const [keyword, setKeyword] = useState('')
+  const [showSearch, setShowSearch] = useState(false)
 
   const handleCreate = async (values: CreateTimelineFormProps) => {
     const id = await create(values)
@@ -72,11 +76,12 @@ const TimelineDetail = () => {
     }
   )
   const { loading, runAsync: fetchMoments } = useRequest(
-    (current = 1) =>
+    (current = 1, keyword?: string) =>
       getMoments({
         id: timelineId,
         current,
-        pageSize: pageParams.pageSize
+        pageSize: pageParams.pageSize,
+        keyword
       }),
     {
       manual: isAdd,
@@ -199,7 +204,7 @@ const TimelineDetail = () => {
             ...pageParams,
             current
           })
-          await fetchMoments(current)
+          await fetchMoments(current, keyword)
         }}
       >
         <div
@@ -221,6 +226,29 @@ const TimelineDetail = () => {
           <img src={cover} className={styles.cover} />
 
           <div className={styles.info}>
+            <div className={styles.search}>
+              <span
+                className={styles.search_button}
+                onClick={() => setShowSearch(true)}
+              >
+                点击搜索
+                {keyword ? (
+                  <span>
+                    (关键字: {keyword}{' '}
+                    <CloseCircleOutlined
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setKeyword('')
+                        fetchMoments(1, '')
+                        setPageParams({ ...pageParams, current: 1 })
+                      }}
+                    />
+                    )
+                  </span>
+                ) : null}
+                <SearchOutlined className={styles.search_icon} />
+              </span>
+            </div>
             <div>
               <div className={styles.title}>{title}</div>
               <em className={styles.desc}>{desc}</em>
@@ -258,6 +286,15 @@ const TimelineDetail = () => {
           </Spin>
         </main>
         {isAdd && <CreateTimeline onCreate={handleCreate} />}
+        <FullscreenSearch
+          onSearch={(keyword) => {
+            setKeyword(keyword)
+            fetchMoments(1, keyword)
+            setPageParams({ ...pageParams, current: 1 })
+          }}
+          open={showSearch}
+          onClose={() => setShowSearch(false)}
+        />
       </ScrollWrapper>
     </Spin>
   )

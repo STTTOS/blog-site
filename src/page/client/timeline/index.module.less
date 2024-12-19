@@ -14,7 +14,8 @@
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  margin: 12px 0;
+  margin: 6px 0 12px;
+  position: relative;
 }
 
 .title {
@@ -33,6 +34,7 @@
   height: 360px;
   width: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .main {
@@ -82,5 +84,22 @@
     position: absolute;
     right: 10px;
     top: 10px;
+  }
+}
+
+.search {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  color: #666;
+
+  &_icon {
+    margin-left: 4px;
+    position: relative;
+    top: 2px;
+  }
+
+  &_button {
+    cursor: pointer;
   }
 }

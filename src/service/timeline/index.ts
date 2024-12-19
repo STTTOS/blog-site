@@ -75,7 +75,9 @@ const likeMoment = async ({
 }: Partial<Pick<Moment, 'id'> & { timelineId: Timeline['id'] }>) => {
   await request(`api/timeline/moment/like/${id}`, { timelineId })
 }
-const getMoments = async (params: Pick<Timeline, 'id'> & Params[0]) => {
+const getMoments = async (
+  params: Pick<Timeline, 'id'> & Params[0] & { keyword?: string }
+) => {
   const {
     data: { list, total }
   } = await request<{ list: Moment[]; total: number }>(
