@@ -115,7 +115,6 @@ const TimelineDetail = () => {
   }
 
   const handleMigrated = (id: number) => {
-    console.log('s', id, list, typeof id)
     const newTotal = total - 1
     setTotal(newTotal)
     setList(list.filter((item) => item.id !== id))
@@ -203,7 +202,10 @@ const TimelineDetail = () => {
           await fetchMoments(current)
         }}
       >
-        <div className={styles.top} style={{ opacity }}>
+        <div
+          className={styles.top}
+          style={{ opacity, display: opacity === 0 ? 'none' : undefined }}
+        >
           <span>{title}</span>
           {showOp && (
             <CreateMoment
