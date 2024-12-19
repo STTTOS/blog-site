@@ -225,30 +225,30 @@ const TimelineDetail = () => {
         <header className={styles.header}>
           <img src={cover} className={styles.cover} />
 
+          <div className={styles.search}>
+            <span
+              className={styles.search_button}
+              onClick={() => setShowSearch(true)}
+            >
+              点击搜索
+              {keyword ? (
+                <span>
+                  (关键字: {keyword}{' '}
+                  <CloseCircleOutlined
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setKeyword('')
+                      fetchMoments(1, '')
+                      setPageParams({ ...pageParams, current: 1 })
+                    }}
+                  />
+                  <span>,共{total}条结果</span>)
+                </span>
+              ) : null}
+              <SearchOutlined className={styles.search_icon} />
+            </span>
+          </div>
           <div className={styles.info}>
-            <div className={styles.search}>
-              <span
-                className={styles.search_button}
-                onClick={() => setShowSearch(true)}
-              >
-                点击搜索
-                {keyword ? (
-                  <span>
-                    (关键字: {keyword}{' '}
-                    <CloseCircleOutlined
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setKeyword('')
-                        fetchMoments(1, '')
-                        setPageParams({ ...pageParams, current: 1 })
-                      }}
-                    />
-                    <span>,共{total}条结果</span>)
-                  </span>
-                ) : null}
-                <SearchOutlined className={styles.search_icon} />
-              </span>
-            </div>
             <div>
               <div className={styles.title}>{title}</div>
               <em className={styles.desc}>{desc}</em>
