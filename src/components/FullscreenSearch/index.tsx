@@ -1,6 +1,6 @@
-import { FC } from 'react'
-import { Input } from 'antd'
+import { Input, InputRef } from 'antd'
 import { useEventListener } from 'ahooks'
+import { FC, useRef, useEffect } from 'react'
 import { EnterOutlined } from '@ant-design/icons'
 
 import styles from './index.module.less'
@@ -17,13 +17,19 @@ const FullscreenSearch: FC<FullscreenSearchProps> = ({
   onClose,
   onSearch
 }) => {
-  if (!open) return null
-
   useEventListener('keydown', (e) => {
     if (e.code === 'Escape') {
       onClose()
     }
   })
+  const ref = useRef<InputRef>(null)
+  useEffect(() => {
+    if (open) {
+      ref.current?.focus()
+    }
+  }, [open])
+  if (!open) return null
+
   return (
     <div className={styles.wrapper} onClick={onClose}>
       <div
@@ -34,6 +40,7 @@ const FullscreenSearch: FC<FullscreenSearchProps> = ({
       >
         <main className={styles.main}>
           <Input.Search
+            ref={ref}
             height={42}
             className={styles.input}
             placeholder="检索关键字"
