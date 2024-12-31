@@ -51,17 +51,17 @@ const updateTimeline = async (params: Pick<Timeline, 'id'>) => {
   await request(`api/timeline/update/${params.id}`, params)
   message.success('修改成功')
 }
-const addMoment = async ({
-  timelineId,
-  ...params
-}: Partial<Moment>): Promise<Pick<Moment, 'id'>> => {
-  const data = await request(`api/timeline/moment/add/${timelineId}`, params)
+const addMoment = async ({ timelineId, ...params }: Partial<Moment>) => {
+  const { data } = await request(
+    `api/timeline/moment/add/${timelineId}`,
+    params
+  )
   message.success('发布成功')
   return data as unknown as Promise<Pick<Moment, 'id'>>
 }
 
 const updateMoment = async ({ id, ...params }: Partial<Moment>) => {
-  const data = await request(`api/timeline/moment/update/${id}`, params)
+  const { data } = await request(`api/timeline/moment/update/${id}`, params)
   message.success('修改成功')
   return data as unknown as Promise<Pick<Moment, 'id'>>
 }
