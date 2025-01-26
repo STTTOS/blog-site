@@ -10,7 +10,8 @@ import { history } from '@/components/BrowserRouter'
 
 // 响应code异常处理程序
 const request = extend({
-  timeout: 120 * 1000,
+  // 超时时间为6min
+  timeout: 5 * 60 * 1000,
   timeoutMessage: '网络超时'
 })
 
