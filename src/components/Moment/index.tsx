@@ -4,10 +4,12 @@ import classNames from 'classnames'
 import { useRequest } from 'ahooks'
 import { useNavigate } from 'react-router'
 import { MoreOutlined } from '@ant-design/icons'
-import { FC, useMemo, useState, useEffect } from 'react'
 import { LikeFilled, LikeOutlined } from '@ant-design/icons'
+import { FC, useMemo, useState, useEffect, useCallback } from 'react'
 import {
   Space,
+  Input,
+  Modal,
   Button,
   Avatar,
   Select,
@@ -32,6 +34,11 @@ import DateDisplay from '@/components/DateDisplay'
 import { history } from '@/components/BrowserRouter'
 import { MomentImage, Moment as MomentType } from '@/service/timeline/types'
 import {
+  addGeneralComment,
+  getAllGeneralComments,
+  AddGeneralCommentRequestBody
+} from '@/service/generalComments'
+import {
   addMoment,
   likeMoment,
   deleteMoment,
@@ -42,6 +49,10 @@ import {
 
 let unblock: () => void = () => void 0
 
+interface CommentProps {
+  value: string
+  replyToUser?: null | Pick<User, 'id' | 'name'>
+}
 export type EditMode = 'edit' | 'view'
 type MomentProps = {
   // eslint-disable-next-line no-unused-vars
@@ -56,6 +67,7 @@ type MomentProps = {
   userId?: number
   likes?: Partial<User>[]
 } & Partial<MomentType>
+
 const Moment: FC<MomentProps> = ({
   id,
   content,
@@ -73,14 +85,24 @@ const Moment: FC<MomentProps> = ({
 }) => {
   const isAdd = !id
   const { user } = useUserInfo()
-  const { Modal, openModal } = useFormModal({ destroyOnClose: false })
+  const { Modal: ModalContent, openModal } = useFormModal({
+    destroyOnClose: false
+  })
   const nav = useNavigate()
   const [likes, setLikes] = useState(_likes)
   const [timePicked, setTimePicked] = useState(dayjs().toISOString())
   const [draft, setDraft] = useState<string>('')
   const [mode, setMode] = useState<EditMode>(defaultMode)
   const [imgSet, setImageSet] = useState<MomentImage[]>([])
+  const [showComment, setShowComment] = useState(false)
+  const [comment, setComment] = useState<CommentProps>({
+    value: '',
+    replyToUser: null
+  })
   const { runAsync: save, loading } = useRequest(updateMoment, { manual: true })
+  const { data: comments, refresh: refreshComments } = useRequest(() =>
+    getAllGeneralComments({ moduleId: id!, type: 'moment' })
+  )
   const { runAsync: add, loading: adding } = useRequest(addMoment, {
     manual: true
   })
@@ -93,6 +115,21 @@ const Moment: FC<MomentProps> = ({
       manual: true
     }
   )
+  const executeIf = (condition: boolean) => {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    // eslint-disable-next-line no-unused-vars
+    return <T extends (...args: any[]) => any>(
+      callback: T
+      // eslint-disable-next-line no-unused-vars
+    ): ((...args: Parameters<T>) => void | ReturnType<T>) => {
+      if (!condition) {
+        return () => {
+          nav(`/login?from=${encodeURIComponent(location.pathname)}`)
+        }
+      }
+      return (...params) => callback(...params)
+    }
+  }
 
   const canEdit = useMemo(() => {
     return user?.id && user.id === userId
@@ -180,6 +217,27 @@ const Moment: FC<MomentProps> = ({
   useEffect(() => {
     setImageSet(images || [])
   }, [images])
+
+  const handleAddComment = useCallback(
+    async ({
+      content,
+      replyToUserId
+    }: Pick<AddGeneralCommentRequestBody, 'content' | 'replyToUserId'>) => {
+      await addGeneralComment({
+        type: 'moment',
+        content,
+        moduleId: id!,
+        userId: user!.id,
+        replyToUserId
+      })
+      setShowComment(false)
+      setComment({
+        value: ''
+      })
+      refreshComments()
+    },
+    [id, user]
+  )
 
   const items = useMemo(() => {
     const operationsOfOwner = [
@@ -277,16 +335,13 @@ const Moment: FC<MomentProps> = ({
       }
       return [
         <LikeOutlined />,
-        async () => {
-          // 登录用户
-          if (user?.id) {
-            await likeMoment({ id, timelineId })
-            setLikes((pre) => [
-              { id: user?.id, avatar: user?.avatar },
-              ...(pre || [])
-            ])
-          } else nav(`/login?from=${encodeURIComponent(location.pathname)}`)
-        }
+        executeIf(!!user)(async () => {
+          await likeMoment({ id, timelineId })
+          setLikes((pre) => [
+            { id: user?.id, avatar: user?.avatar },
+            ...(pre || [])
+          ])
+        })
       ]
     })()
     const operationsOfOthers = [
@@ -305,6 +360,20 @@ const Moment: FC<MomentProps> = ({
           </Button>
         ),
         key: '4'
+      },
+      {
+        key: 'reply',
+        label: (
+          <Button
+            type="text"
+            style={{ padding: 0, width: 60 }}
+            onClick={executeIf(!!user)(() => {
+              setShowComment(true)
+            })}
+          >
+            评论
+          </Button>
+        )
       },
       {
         label: (
@@ -385,6 +454,7 @@ const Moment: FC<MomentProps> = ({
   // )
 
   // useEventListener('keydown', handleKeyDown)
+
   return (
     <div className={styles.wrapper} id={id ? String(id) : undefined}>
       <div style={{ minWidth: 96, flexShrink: 0 }}>{dateElement}</div>
@@ -432,6 +502,37 @@ const Moment: FC<MomentProps> = ({
 
         {mode === 'edit' && <Divider />}
 
+        <div className={styles.comments}>
+          {comments?.map((item) => {
+            return (
+              <div
+                key={item.id}
+                className={styles.comments_item}
+                onClick={() => {
+                  setShowComment(true)
+                  setComment({
+                    value: '',
+                    replyToUser: item.user
+                  })
+                }}
+              >
+                <UserProfile userId={item.user.id}>
+                  <a>{item.user?.name}</a>
+                </UserProfile>
+                {item.replyToUser ? (
+                  <span>
+                    <span style={{ margin: '0 4px' }}>回复@</span>
+                    <UserProfile userId={item.replyToUser.id}>
+                      <a>{item.replyToUser.name}</a>
+                    </UserProfile>
+                  </span>
+                ) : null}
+                <span>：</span>
+                {item.content}
+              </div>
+            )
+          })}
+        </div>
         <Gallery
           mode={mode}
           onDelete={(url) =>
@@ -452,7 +553,60 @@ const Moment: FC<MomentProps> = ({
 
         {likeUsers}
       </main>
-      {Modal}
+      {ModalContent}
+      <Modal
+        footer={null}
+        open={showComment}
+        onCancel={() => {
+          setShowComment(false)
+          setComment({
+            value: '',
+            replyToUser: null
+          })
+        }}
+      >
+        <div
+          id={`reply-${id}`}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            marginTop: 28
+          }}
+        >
+          <Input.TextArea
+            allowClear
+            value={comment.value}
+            onChange={(e) =>
+              setComment((pre) => ({
+                ...pre,
+                value: e.target.value
+              }))
+            }
+            placeholder={
+              comment.replyToUser
+                ? `@${comment.replyToUser.name}：`
+                : '说点什么：'
+            }
+            autoSize={{ minRows: 2, maxRows: 2 }}
+          />
+          <Button
+            type="primary"
+            onClick={() => {
+              if (!comment) {
+                message.warning('莫得东西')
+                return
+              }
+              handleAddComment({
+                content: comment.value,
+                replyToUserId: comment.replyToUser?.id
+              })
+            }}
+          >
+            发送
+          </Button>
+        </div>
+      </Modal>
     </div>
   )
 }

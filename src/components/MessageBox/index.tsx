@@ -11,7 +11,13 @@ import request from '@/utils/http'
 import styles from './index.module.less'
 import { User } from '@/service/user/types'
 
-type MessageType = 'reply' | 'like' | 'comment' | 'system'
+type MessageType =
+  | 'reply'
+  | 'like'
+  | 'comment'
+  | 'system'
+  | 'moment'
+  | 'momentReply'
 interface Message {
   createdAt: string
   content: string
@@ -83,14 +89,17 @@ const MessageBox: FC<MessageBoxProps> = () => {
   }
 
   const renderType = (type: MessageType) => {
-    if (type === 'reply') return '回复了我的评论'
+    if (type === 'reply' || type === 'momentReply') return '回复了我的评论'
     else if (type === 'comment') return '评论了我的文章'
+    else if (type === 'moment') return '评论你的时刻'
   }
 
   const getTagProps = (type: MessageType): [CSSProperties['color'], string] => {
     if (type === 'reply') return ['blue', '回复']
     if (type === 'comment') return ['cyan', '评论']
     if (type === 'like') return ['pink', '点赞']
+    if (type === 'moment') return ['violet', '时间轴']
+
     return ['red', '系统通知']
   }
 
@@ -135,10 +144,15 @@ const MessageBox: FC<MessageBoxProps> = () => {
                 window.open(link)
                 return
               }
-              if (type === 'like') {
+              if (
+                type === 'like' ||
+                type === 'moment' ||
+                type === 'momentReply'
+              ) {
                 window.open(`/timeline/${timelineId}#${momentId}`)
                 return
               }
+
               const query = qs.stringify({
                 targetId: commentId
               })
