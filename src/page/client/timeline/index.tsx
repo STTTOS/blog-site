@@ -25,6 +25,7 @@ import ScrollWrapper from '@/components/ScrollWrapper'
 import FullscreenSearch from '@/components/FullscreenSearch'
 import { Moment as MomentType } from '@/service/timeline/types'
 import { getMoments, getTimeline, createTimeline } from '@/service/timeline'
+import { recordTimeStampOfViewingContent } from '@/page/manage/timeline/staticModel'
 
 function isSameDay(date1?: string, date2?: string) {
   if (!date1 || !date2) return false
@@ -190,6 +191,11 @@ const TimelineDetail = () => {
       })
     }, 300)
   }, [])
+
+  useEffect(() => {
+    recordTimeStampOfViewingContent('timeline', timelineId)
+  }, [timelineId])
+
   return (
     <Spin spinning={fetchingTimeline}>
       <ScrollWrapper

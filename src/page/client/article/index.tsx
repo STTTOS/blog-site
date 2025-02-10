@@ -23,6 +23,7 @@ import { useHideContent } from '@/hooks/useHideContent'
 import { Viewer, Catalogue } from '@/components/Markdown'
 import { countArticle, getSimilarArticles } from '@/service/article'
 import useArticleDetailWithValidating from '@/hooks/useArticleDetailWithValidating'
+import { recordTimeStampOfViewingContent } from '@/page/manage/timeline/staticModel'
 
 const Index: React.FC = () => {
   const navigate = useNavigate()
@@ -87,6 +88,10 @@ const Index: React.FC = () => {
   useEffect(() => {
     fetch('client')
   }, [])
+
+  useEffect(() => {
+    recordTimeStampOfViewingContent('article', id)
+  }, [id])
   return (
     <div className={styles.wrapper}>
       <LoadingBar detail={!!detail} />

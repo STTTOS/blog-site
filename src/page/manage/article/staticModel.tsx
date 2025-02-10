@@ -9,6 +9,7 @@ import { LockFilled, CopyOutlined, UnlockOutlined } from '@ant-design/icons'
 
 import copy from '@/utils/copy'
 import styles from './index.module.less'
+import { ReadTag } from '../timeline/staticModel'
 import randomTagColor from '@/utils/randomTagColor'
 
 interface TitleProps {
@@ -16,8 +17,9 @@ interface TitleProps {
   id: number
   jumpAble?: boolean
   secure?: boolean
+  updatedAt?: string
 }
-const Title: FC<TitleProps> = ({ title, id, jumpAble, secure }) => {
+const Title: FC<TitleProps> = ({ title, id, jumpAble, secure, updatedAt }) => {
   const [focused, setFocused] = useState(false)
   return (
     <div
@@ -31,6 +33,7 @@ const Title: FC<TitleProps> = ({ title, id, jumpAble, secure }) => {
       {jumpAble ? (
         <a href={`/article/${id}`} target="_blank" className={styles.title}>
           {title}
+          <ReadTag type="article" id={id} updatedAt={updatedAt} />
         </a>
       ) : (
         <span>{title}</span>
@@ -53,8 +56,8 @@ const getColumns = (
       title: '标题',
       dataIndex: 'title',
       fixed: 'left',
-      render: (_, { id, title, secure }) => (
-        <Title {...{ id, title, secure }} jumpAble={jumpAble} />
+      render: (_, { id, title, secure, updatedAt }) => (
+        <Title {...{ id, title, secure, updatedAt }} jumpAble={jumpAble} />
       )
     },
     {

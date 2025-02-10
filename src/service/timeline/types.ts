@@ -8,6 +8,7 @@ export interface Timeline {
   user: Pick<User, 'username' | 'id' | 'name' | 'avatar'>
   userId: number
   createdAt?: string
+  updatedAt?: string
 }
 export interface Moment {
   id: number
