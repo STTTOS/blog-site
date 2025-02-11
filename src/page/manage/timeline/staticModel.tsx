@@ -1,10 +1,7 @@
-import type { TableColumnProps } from 'antd'
-import type { Timeline } from '@/service/timeline/types'
 import type { IComponentsConfig } from '@/utils/createForm/types'
 
 import dayjs from 'dayjs'
 import { FC, Key } from 'react'
-import { Link } from 'react-router-dom'
 import { Tag, Input, DatePicker } from 'antd'
 
 import Upload from '@/components/Upload'
@@ -51,46 +48,6 @@ export const isContentHasBeenUpdated = (
 
   return updatedAt > Number(unixTimestamp)
 }
-const columns: TableColumnProps<Timeline>[] = [
-  {
-    title: '标题',
-    dataIndex: 'title',
-    render: (_, { id, title, updatedAt }) => {
-      return (
-        <Link to={`/timeline/${id}`} target="_blank">
-          {title}
-          <ReadTag type="timeline" id={id} updatedAt={updatedAt} />
-        </Link>
-      )
-    }
-  },
-  {
-    title: '简介',
-    dataIndex: 'desc',
-    onCell() {
-      return {
-        style: {
-          whiteSpace: 'pre'
-        }
-      }
-    }
-  },
-  {
-    title: '用户',
-    render(_, { user: { username, name } }) {
-      return name || username
-    }
-  },
-  {
-    key: 'createdAt',
-    title: '创建时间',
-    dataIndex: 'createdAt'
-  },
-  {
-    title: '最近一次更新时间',
-    dataIndex: 'updatedAt'
-  }
-]
 
 const searchBarFields = [
   { label: '标题', name: 'title' },
@@ -120,4 +77,4 @@ const drawerFormComponents: IComponentsConfig = [
     element: <Upload request={(file) => upload({ file })} />
   }
 ]
-export { columns, searchBarFields, drawerFormComponents }
+export { searchBarFields, drawerFormComponents }

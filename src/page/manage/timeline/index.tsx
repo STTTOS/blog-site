@@ -1,6 +1,7 @@
 import type { TableColumnProps } from 'antd'
 
 import { useAntdTable } from 'ahooks'
+import { Link } from 'react-router-dom'
 import { Form, Space, Button, Popconfirm } from 'antd'
 
 import { useUserInfo } from '@/model'
@@ -11,7 +12,11 @@ import useFormDrawer from '@/hooks/useFormDrawer'
 import { Timeline } from '@/service/timeline/types'
 import TimelineDrawerContent from './DrawerContent'
 import { deleteTimeline, getTimelineList } from '@/service/timeline'
-import { searchBarFields, columns as tableColumns } from './staticModel'
+import {
+  ReadTag,
+  searchBarFields,
+  recordTimeStampOfViewingContent
+} from './staticModel'
 
 const Index = () => {
   const [form] = Form.useForm()
@@ -40,7 +45,51 @@ const Index = () => {
     })
   }
   const columns: TableColumnProps<Timeline>[] = [
-    ...tableColumns,
+    {
+      title: '标题',
+      dataIndex: 'title',
+      render: (_, { id, title, updatedAt }) => {
+        return (
+          <Link
+            to={`/timeline/${id}`}
+            target="_blank"
+            onClick={() => {
+              recordTimeStampOfViewingContent('timeline', id)
+              refresh()
+            }}
+          >
+            {title}
+            <ReadTag type="timeline" id={id} updatedAt={updatedAt} />
+          </Link>
+        )
+      }
+    },
+    {
+      title: '简介',
+      dataIndex: 'desc',
+      onCell() {
+        return {
+          style: {
+            whiteSpace: 'pre'
+          }
+        }
+      }
+    },
+    {
+      title: '用户',
+      render(_, { user: { username, name } }) {
+        return name || username
+      }
+    },
+    {
+      key: 'createdAt',
+      title: '创建时间',
+      dataIndex: 'createdAt'
+    },
+    {
+      title: '最近一次更新时间',
+      dataIndex: 'updatedAt'
+    },
     {
       title: '操作',
       width: 140,
