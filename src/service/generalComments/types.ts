@@ -9,4 +9,5 @@ export interface GeneralComment {
   moduleId: number
   user: User
   replyToUser: User
+  createdAt: string
 }

@@ -100,8 +100,9 @@ const Moment: FC<MomentProps> = ({
     replyToUser: null
   })
   const { runAsync: save, loading } = useRequest(updateMoment, { manual: true })
-  const { data: comments, refresh: refreshComments } = useRequest(() =>
-    getAllGeneralComments({ moduleId: id!, type: 'moment' })
+  const { data: comments, refresh: refreshComments } = useRequest(
+    () => getAllGeneralComments({ moduleId: id!, type: 'moment' }),
+    { ready: !!id, refreshDeps: [id] }
   )
   const { runAsync: add, loading: adding } = useRequest(addMoment, {
     manual: true
@@ -502,37 +503,6 @@ const Moment: FC<MomentProps> = ({
 
         {mode === 'edit' && <Divider />}
 
-        <div className={styles.comments}>
-          {comments?.map((item) => {
-            return (
-              <div
-                key={item.id}
-                className={styles.comments_item}
-                onClick={() => {
-                  setShowComment(true)
-                  setComment({
-                    value: '',
-                    replyToUser: item.user
-                  })
-                }}
-              >
-                <UserProfile userId={item.user.id}>
-                  <a>{item.user?.name}</a>
-                </UserProfile>
-                {item.replyToUser ? (
-                  <span>
-                    <span style={{ margin: '0 4px' }}>回复@</span>
-                    <UserProfile userId={item.replyToUser.id}>
-                      <a>{item.replyToUser.name}</a>
-                    </UserProfile>
-                  </span>
-                ) : null}
-                <span>：</span>
-                {item.content}
-              </div>
-            )
-          })}
-        </div>
         <Gallery
           mode={mode}
           onDelete={(url) =>
@@ -552,6 +522,58 @@ const Moment: FC<MomentProps> = ({
         />
 
         {likeUsers}
+
+        {comments && comments.length > 0 && (
+          <div className={styles.comments}>
+            {comments.map((item, i, arr) => {
+              return (
+                <>
+                  <div
+                    key={item.id}
+                    className={styles.comments_item}
+                    onClick={() => {
+                      setShowComment(true)
+                      setComment({
+                        value: '',
+                        replyToUser: item.user
+                      })
+                    }}
+                  >
+                    <div className={styles.comments_item_content}>
+                      <UserProfile userId={item.user.id}>
+                        <span style={{ display: 'inline-block' }}>
+                          <Avatar
+                            src={item.user.avatar}
+                            style={{ marginRight: 3 }}
+                          />
+                          <a>{item.user?.name}</a>
+                        </span>
+                      </UserProfile>
+
+                      {item.replyToUser ? (
+                        <span>
+                          <span style={{ margin: '0 4px' }}>回复@</span>
+                          <UserProfile userId={item.replyToUser.id}>
+                            <a>{item.replyToUser.name}</a>
+                          </UserProfile>
+                        </span>
+                      ) : null}
+                      <span>：</span>
+                      {item.content}
+                    </div>
+
+                    <div className={styles.comments_item_date}>
+                      {item.createdAt}
+                    </div>
+                  </div>
+                  {i < arr.length - 1 && (
+                    <Divider style={{ margin: '4px 0' }} />
+                  )}
+                </>
+              )
+            })}
+          </div>
+        )}
       </main>
       {ModalContent}
       <Modal

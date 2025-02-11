@@ -70,13 +70,27 @@
 }
 
 .comments {
-  padding: 4px 6px;
+  padding: 8px 10px;
   border-radius: 4px;
   overflow: hidden;
   background-color: rgba(204, 193, 193, 0.1);
 
-  &_item:hover {
-    background-color: rgba(204, 193, 193, 0.2) !important;
-    cursor: pointer;
+  &_item {
+    display: flex;
+    gap: 10px;
+    overflow: hidden;
+
+    &_content {
+      flex-grow: 1;
+    }
+    &_date {
+      flex-shrink: 0;
+      color: #7d7d7d;
+      font-size: 14px;
+    }
+    &:hover {
+      background-color: rgba(204, 193, 193, 0.2) !important;
+      cursor: pointer;
+    }
   }
 }
