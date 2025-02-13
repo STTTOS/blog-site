@@ -25,16 +25,17 @@ import Gallery from '../Gallery'
 import { domain } from '@/config'
 import { useUserInfo } from '@/model'
 import styles from './index.module.less'
-import AsyncButton from '../AsyncButton'
 import UserProfile from '../UserProfile'
 import { User } from '@/service/user/types'
 import { Editor, Viewer } from '../Markdown'
 import useFormModal from '@/hooks/useFormModal'
 import DateDisplay from '@/components/DateDisplay'
+import AsyncButton from '@/components/AsyncButton'
 import { history } from '@/components/BrowserRouter'
 import { MomentImage, Moment as MomentType } from '@/service/timeline/types'
 import {
   addGeneralComment,
+  deleteGeneralComment,
   getAllGeneralComments,
   AddGeneralCommentRequestBody
 } from '@/service/generalComments'
@@ -528,43 +529,79 @@ const Moment: FC<MomentProps> = ({
             {comments.map((item, i, arr) => {
               return (
                 <>
-                  <div
-                    key={item.id}
-                    className={styles.comments_item}
-                    onClick={() => {
-                      setShowComment(true)
-                      setComment({
-                        value: '',
-                        replyToUser: item.user
-                      })
-                    }}
-                  >
-                    <div className={styles.comments_item_content}>
-                      <UserProfile userId={item.user.id}>
-                        <span style={{ display: 'inline-block' }}>
-                          <Avatar
-                            src={item.user.avatar}
-                            style={{ marginRight: 3 }}
-                          />
-                          <a>{item.user?.name}</a>
-                        </span>
-                      </UserProfile>
+                  <div style={{ display: 'flex' }}>
+                    <div
+                      style={{ flexGrow: 1 }}
+                      key={item.id}
+                      className={styles.comments_item}
+                      onClick={() => {
+                        setShowComment(true)
+                        setComment({
+                          value: '',
+                          replyToUser: item.user
+                        })
+                      }}
+                    >
+                      <div className={styles.comments_item_content}>
+                        <UserProfile userId={item.user.id}>
+                          <span style={{ display: 'inline-block' }}>
+                            <Avatar
+                              src={item.user.avatar}
+                              style={{ marginRight: 3 }}
+                            />
+                            <a>{item.user?.name}</a>
+                          </span>
+                        </UserProfile>
 
-                      {item.replyToUser ? (
-                        <span>
-                          <span style={{ margin: '0 4px' }}>回复@</span>
-                          <UserProfile userId={item.replyToUser.id}>
-                            <a>{item.replyToUser.name}</a>
-                          </UserProfile>
-                        </span>
-                      ) : null}
-                      <span>：</span>
-                      {item.content}
-                    </div>
+                        {item.replyToUser ? (
+                          <span>
+                            <span style={{ margin: '0 4px' }}>回复@</span>
+                            <UserProfile userId={item.replyToUser.id}>
+                              <a>{item.replyToUser.name}</a>
+                            </UserProfile>
+                          </span>
+                        ) : null}
+                        <span>：</span>
+                        {item.content}
+                      </div>
 
-                    <div className={styles.comments_item_date}>
-                      {item.createdAt}
+                      <div className={styles.comments_item_date}>
+                        {item.createdAt}
+                      </div>
                     </div>
+                    {user?.id === item.user.id && (
+                      <div
+                        style={{ flexShrink: 0, margin: '0 4px' }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Dropdown
+                          trigger={['click']}
+                          menu={{
+                            items: [
+                              {
+                                label: (
+                                  <AsyncButton
+                                    request={() =>
+                                      deleteGeneralComment({
+                                        id: item.id
+                                      }).then(() => {
+                                        message.success('删除成功')
+                                        refreshComments()
+                                      })
+                                    }
+                                  >
+                                    删除
+                                  </AsyncButton>
+                                ),
+                                key: 'delete'
+                              }
+                            ]
+                          }}
+                        >
+                          <MoreOutlined className={styles.more} />
+                        </Dropdown>
+                      </div>
+                    )}
                   </div>
                   {i < arr.length - 1 && (
                     <Divider style={{ margin: '4px 0' }} />
@@ -577,6 +614,7 @@ const Moment: FC<MomentProps> = ({
       </main>
       {ModalContent}
       <Modal
+        title="评论"
         footer={null}
         open={showComment}
         onCancel={() => {
