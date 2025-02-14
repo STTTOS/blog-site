@@ -18,29 +18,35 @@ const CardImage: FC<CardImageProps> = ({ src, onDelete, secure, ...props }) => {
   const [hidden, setHidden] = useState(false)
 
   return (
-    <Card
-      style={{ margin: '10px 0', position: 'relative' }}
-      className={classNames('animate__animated', hidden && 'animate__rollOut')}
-    >
-      <Image {...props} src={src} key={src} secure={secure} />
-      {onDelete && (
-        <CloseCircleOutlined
-          onClick={() => {
-            if (src) {
-              if (onDelete(src)) {
-                setHidden(true)
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <Card
+        style={{ position: 'relative' }}
+        className={classNames(
+          'animate__animated',
+          hidden && 'animate__rollOut'
+        )}
+      >
+        <Image {...props} src={src} key={src} secure={secure} />
+
+        {onDelete && (
+          <CloseCircleOutlined
+            onClick={() => {
+              if (src) {
+                if (onDelete(src)) {
+                  setHidden(true)
+                }
               }
-            }
-          }}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            transform: 'translate(-50%,-50%)'
-          }}
-        />
-      )}
-    </Card>
+            }}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              transform: 'translate(-50%,-50%)'
+            }}
+          />
+        )}
+      </Card>
+    </div>
   )
 }
 
