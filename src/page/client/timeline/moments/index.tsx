@@ -34,7 +34,6 @@ const Page = () => {
   const allDataHasBeenFetched = useMemo(() => {
     return list.length >= total
   }, [list, total])
-
   return (
     <div className={styles.wrapper}>
       <LoadingBar detail={!!list.length} />
@@ -65,6 +64,13 @@ const Page = () => {
             ></Moment>
           )
         })}
+        <div style={{ textAlign: 'center', color: '#d5d5d5' }}>
+          {allDataHasBeenFetched ? (
+            <em>没有更多数据了...</em>
+          ) : (
+            <em>下拉加载更多数据...</em>
+          )}
+        </div>
       </ScrollWrapper>
     </div>
   )

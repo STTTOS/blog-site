@@ -103,6 +103,13 @@ const getMomentsOfPlatform = async (params: Params[0]) => {
   )
   return data
 }
+const getUnReadMomentsCount = async (params: { startDate: string }) => {
+  const { data } = await request<number>(
+    `api/timeline/moments/unReadCount`,
+    params
+  )
+  return data
+}
 
 const getCurrentUserAllTimelineOptions = async () => {
   const { data } = await request<Pick<Timeline, 'id' | 'title'>[]>(
@@ -133,5 +140,6 @@ export {
   getSharedMoment,
   getCurrentUserAllTimelineOptions,
   migrateMoment,
-  getMomentsOfPlatform
+  getMomentsOfPlatform,
+  getUnReadMomentsCount
 }

@@ -1,22 +1,24 @@
 import type { MenuInfo } from 'rc-menu/lib/interface'
 
-import { Menu, Layout } from 'antd'
 import { useRequest } from 'ahooks'
+import { Menu, Badge, Layout } from 'antd'
 import { useMemo, useState, useEffect } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 
 import menuItems from './menuItems'
-import { useUserInfo } from '@/model'
 import styles from './index.module.less'
 import { logoImg } from '@/globalConfig'
 import { getUser } from '@/service/user'
 import Loading from '@/components/Loading'
 import PopoverHandle from '@/layout/popoverHandle'
+import { useUserInfo, useUnreadMomentsCount } from '@/model'
+import { setUnreadMomentCount } from '@/model/useUnreadMomentsCount'
 
 const { Content, Header, Footer, Sider } = Layout
 
 const ManageLayout = () => {
   const { set } = useUserInfo()
+  const { fetch, count } = useUnreadMomentsCount()
   const { loading, data } = useRequest(() => getUser('manage'))
 
   const navigate = useNavigate()
@@ -26,8 +28,12 @@ const ManageLayout = () => {
   const activeKey = [pathname.split('/').slice(2).join('/')]
   const openKey = activeKey.map((item) => item.split('/')[0])
   const onMenuItemClick = ({ key }: MenuInfo) => {
-    if (key === 'moments') window.open('/moments')
-    else navigate(`/manage/${key}`)
+    if (key === 'moments') {
+      window.open('/moments')
+      // 以下两函数调用是有耦合的,通过localStorage共享变量
+      setUnreadMomentCount()
+      fetch()
+    } else navigate(`/manage/${key}`)
   }
 
   const children = useMemo(() => {
@@ -56,7 +62,19 @@ const ManageLayout = () => {
             defaultOpenKeys={openKey}
             onClick={onMenuItemClick}
             theme="light"
-            items={menuItems}
+            items={menuItems.map((item) => {
+              if (item?.key === 'moments') {
+                return {
+                  ...item,
+                  label: (
+                    <Badge count={count} size="small">
+                      <span style={{ paddingRight: 6 }}>动态</span>
+                    </Badge>
+                  )
+                }
+              }
+              return item
+            })}
             mode="inline"
           />
         </Sider>
@@ -78,6 +96,10 @@ const ManageLayout = () => {
   useEffect(() => {
     if (data) set(data)
   }, [data])
+
+  useEffect(() => {
+    fetch()
+  }, [])
   return children
 }
 
