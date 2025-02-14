@@ -1,5 +1,5 @@
 import { useRequest } from 'ahooks'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { Params } from 'ahooks/lib/useAntdTable/types'
 
 import { isSameDay } from '..'
@@ -9,6 +9,7 @@ import LoadingBar from '@/components/LoadingBar'
 import ScrollWrapper from '@/components/ScrollWrapper'
 import { getMomentsOfPlatform } from '@/service/timeline'
 import { Moment as MomentType } from '@/service/timeline/types'
+import { setUnreadMomentCount } from '@/model/useUnreadMomentsCount'
 
 // 平台所有的时间轴合集
 const Page = () => {
@@ -34,6 +35,10 @@ const Page = () => {
   const allDataHasBeenFetched = useMemo(() => {
     return list.length >= total
   }, [list, total])
+
+  useEffect(() => {
+    setUnreadMomentCount()
+  }, [])
   return (
     <div className={styles.wrapper}>
       <LoadingBar detail={!!list.length} />
