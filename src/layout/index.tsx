@@ -26,7 +26,8 @@ const ManageLayout = () => {
   const activeKey = [pathname.split('/').slice(2).join('/')]
   const openKey = activeKey.map((item) => item.split('/')[0])
   const onMenuItemClick = ({ key }: MenuInfo) => {
-    navigate(`/manage/${key}`)
+    if (key === 'moments') window.open('/moments')
+    else navigate(`/manage/${key}`)
   }
 
   const children = useMemo(() => {

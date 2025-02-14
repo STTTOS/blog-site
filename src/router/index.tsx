@@ -128,6 +128,10 @@ const routers: MyRoute[] = [
         element: Home
       },
       {
+        path: 'moments',
+        element: lazy(() => import('@/page/client/timeline/moments'))
+      },
+      {
         path: 'article/:id',
         element: lazy(() => import('@/page/client/article'))
       },

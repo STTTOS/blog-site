@@ -96,6 +96,14 @@ const getSharedMoment = async (params: Pick<Moment, 'id'>) => {
   return data
 }
 
+const getMomentsOfPlatform = async (params: Params[0]) => {
+  const { data } = await request<{ list: Moment[]; total: number }>(
+    `api/timeline/moments`,
+    params
+  )
+  return data
+}
+
 const getCurrentUserAllTimelineOptions = async () => {
   const { data } = await request<Pick<Timeline, 'id' | 'title'>[]>(
     'api/timeline/currentUser/all'
@@ -124,5 +132,6 @@ export {
   likeMoment,
   getSharedMoment,
   getCurrentUserAllTimelineOptions,
-  migrateMoment
+  migrateMoment,
+  getMomentsOfPlatform
 }

@@ -27,7 +27,7 @@ import { Moment as MomentType } from '@/service/timeline/types'
 import { getMoments, getTimeline, createTimeline } from '@/service/timeline'
 import { recordTimeStampOfViewingContent } from '@/page/manage/timeline/staticModel'
 
-function isSameDay(date1?: string, date2?: string) {
+export function isSameDay(date1?: string, date2?: string) {
   if (!date1 || !date2) return false
 
   const d1 = dayjs(date1)

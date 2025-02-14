@@ -17,6 +17,9 @@ export interface Moment {
   content?: string
   images: MomentImage[]
   timelineId: number
+  timeline?: {
+    user?: User
+  }
 }
 export interface MomentImage {
   sort: number

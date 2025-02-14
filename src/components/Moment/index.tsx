@@ -59,14 +59,16 @@ type MomentProps = {
   // eslint-disable-next-line no-unused-vars
   onDelete?: (id: number) => void
   mode?: EditMode
-  onCancel: () => void
+  onCancel?: () => void
   // eslint-disable-next-line no-unused-vars
-  onSave: (data: Partial<MomentType>, type: 'add' | 'edit') => void
+  onSave?: (data: Partial<MomentType>, type: 'add' | 'edit') => void
   // eslint-disable-next-line no-unused-vars
   onMigrate?: (id: number) => void
   hideDate?: boolean
   userId?: number
   likes?: Partial<User>[]
+  profile?: User
+  viewMode?: boolean
 } & Partial<MomentType>
 
 const Moment: FC<MomentProps> = ({
@@ -77,12 +79,14 @@ const Moment: FC<MomentProps> = ({
   images,
   mode: defaultMode = 'view',
   timelineId,
-  onCancel,
-  onSave,
+  onCancel = () => void 0,
+  onSave = () => void 0,
   hideDate,
   userId,
   likes: _likes,
-  onMigrate
+  onMigrate,
+  profile,
+  viewMode = false
 }) => {
   const isAdd = !id
   const { user } = useUserInfo()
@@ -134,8 +138,8 @@ const Moment: FC<MomentProps> = ({
   }
 
   const canEdit = useMemo(() => {
-    return user?.id && user.id === userId
-  }, [user, userId])
+    return user?.id && user.id === userId && !viewMode
+  }, [user, userId, viewMode])
 
   const handleSave = async () => {
     if (imgSet.length === 0 && !draft) {
@@ -458,8 +462,31 @@ const Moment: FC<MomentProps> = ({
   // useEventListener('keydown', handleKeyDown)
 
   return (
-    <div className={styles.wrapper} id={id ? String(id) : undefined}>
-      <div style={{ minWidth: 96, flexShrink: 0 }}>{dateElement}</div>
+    <div
+      className={classNames(styles.wrapper)}
+      id={id ? String(id) : undefined}
+    >
+      <div style={{ minWidth: 96, flexShrink: 0 }}>
+        {dateElement}
+
+        {profile && (
+          <UserProfile userId={profile.id}>
+            <img
+              src={profile?.avatar}
+              style={{
+                width: 60,
+                height: 60,
+                marginTop: 4,
+                objectFit: 'cover',
+                borderRadius: 5,
+                overflow: 'hidden',
+                objectPosition: 'center'
+              }}
+            />
+          </UserProfile>
+        )}
+      </div>
+
       <main className={classNames(styles.main, hideDate && styles.divider)}>
         <div className={styles.extra}>
           <span className={styles.time}>

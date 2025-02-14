@@ -8,6 +8,7 @@ import {
   SettingOutlined,
   FileWordOutlined,
   FileTextOutlined,
+  ShareAltOutlined,
   InstagramOutlined
 } from '@ant-design/icons'
 
@@ -32,6 +33,11 @@ const menuItems: MenuItem[] = [
       { key: 'article/list', label: '列表' },
       { key: 'article/recycle', label: '回收站' }
     ]
+  },
+  {
+    key: 'moments',
+    label: '动态',
+    icon: <ShareAltOutlined />
   },
   {
     key: 'timeline',
