@@ -103,13 +103,7 @@ const Gallery: FC<GalleryProps> = ({
               onClick={() => handleClick({ index })}
               style={{ display: 'block', cursor: 'zoom-in' }}
               effect="blur"
-              // placeholderSrc={placeholderImageSrc}
-              placeholder={
-                <img
-                  style={{ width: 200, height: 200 }}
-                  src={placeholderImageSrc}
-                ></img>
-              }
+              placeholderSrc={placeholderImageSrc}
             />
             {mode === 'edit' && (
               <CloseCircleOutlined

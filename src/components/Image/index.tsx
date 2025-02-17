@@ -144,14 +144,7 @@ const BetterImage: FC<ImageProps> = ({
         src={imgSrc}
         onError={() => setLoadError(true)}
         scrollPosition={scrollPosition}
-        placeholder={
-          secure ? null : (
-            <img
-              style={{ width: 200, height: 200 }}
-              src={placeholderImageSrc}
-            ></img>
-          )
-        }
+        placeholderSrc={secure ? undefined : placeholderImageSrc}
         onLoad={() => {
           setLoadingImage(true)
         }}
