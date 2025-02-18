@@ -10,7 +10,10 @@ import { defaultTimelineCover } from '@/config'
 import AsyncButton from '@/components/AsyncButton'
 import { Timeline } from '@/service/timeline/types'
 
-export type CreateTimelineFormProps = Pick<Timeline, 'cover' | 'desc' | 'title'>
+export type CreateTimelineFormProps = Pick<
+  Timeline,
+  'cover' | 'desc' | 'title' | 'order'
+>
 type CreateTimelineProps = {
   // eslint-disable-next-line no-unused-vars
   onCreate: (values: CreateTimelineFormProps) => Promise<void>

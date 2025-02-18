@@ -48,10 +48,10 @@ const Index = () => {
     {
       title: '标题',
       dataIndex: 'title',
-      render: (_, { id, title, updatedAt }) => {
+      render: (_, { id, title, updatedAt, order }) => {
         return (
           <Link
-            to={`/timeline/${id}`}
+            to={`/timeline/${id}?order=${order}`}
             target="_blank"
             onClick={() => {
               recordTimeStampOfViewingContent('timeline', id)

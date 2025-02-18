@@ -1,5 +1,6 @@
 import { User } from '../user/types'
 
+export type OrderBy = 'desc' | 'asc'
 export interface Timeline {
   title: string
   desc?: string
@@ -9,6 +10,7 @@ export interface Timeline {
   userId: number
   createdAt?: string
   updatedAt?: string
+  order: OrderBy
 }
 export interface Moment {
   id: number

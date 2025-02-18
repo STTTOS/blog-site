@@ -76,7 +76,7 @@ const likeMoment = async ({
   await request(`api/timeline/moment/like/${id}`, { timelineId })
 }
 const getMoments = async (
-  params: Pick<Timeline, 'id'> & Params[0] & { keyword?: string }
+  params: Pick<Timeline, 'id' | 'order'> & Params[0] & { keyword?: string }
 ) => {
   const {
     data: { list, total }
