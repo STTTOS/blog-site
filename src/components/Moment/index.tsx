@@ -596,11 +596,12 @@ const Moment: FC<MomentProps> = ({
                         {item.createdAt}
                       </div>
                     </div>
-                    {user?.id === item.user.id && (
-                      <div
-                        style={{ flexShrink: 0, margin: '0 4px' }}
-                        onClick={(e) => e.stopPropagation()}
-                      >
+
+                    <div
+                      style={{ flexShrink: 0, margin: '0 4px', width: 16 }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {user?.id === item.user.id && (
                         <Dropdown
                           trigger={['click']}
                           menu={{
@@ -627,8 +628,8 @@ const Moment: FC<MomentProps> = ({
                         >
                           <MoreOutlined className={styles.more} />
                         </Dropdown>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                   {i < arr.length - 1 && (
                     <Divider style={{ margin: '4px 0' }} />

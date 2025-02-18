@@ -2,7 +2,7 @@ import type { IComponentsConfig } from '@/utils/createForm/types'
 
 import dayjs from 'dayjs'
 import { FC, Key } from 'react'
-import { Tag, Input, DatePicker } from 'antd'
+import { Tag, Input, Radio, Tooltip, DatePicker } from 'antd'
 
 import Upload from '@/components/Upload'
 import { upload } from '@/service/common'
@@ -64,6 +64,18 @@ const drawerFormComponents: IComponentsConfig = [
     label: '标题',
     name: 'title',
     require: true
+  },
+  {
+    label: <Tooltip title="默认降序,展示最新创建的">展示时间顺序</Tooltip>,
+    name: 'order',
+    element: (
+      <Radio.Group
+        options={[
+          { label: '升序', value: 'asc' },
+          { label: '降序', value: 'desc' }
+        ]}
+      />
+    )
   },
   {
     label: '简介',

@@ -16,6 +16,9 @@ const TimelineDrawerContent: React.FC<IProps> = ({
 }) => {
   const config: ICreateFormConfig = {
     formConfig: {
+      initialValues: {
+        order: 'desc'
+      },
       layout: 'vertical',
       itemsRequire: false,
       data
