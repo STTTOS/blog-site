@@ -419,6 +419,9 @@ const Moment: FC<MomentProps> = ({
           placeholder="日期"
           defaultValue={dayjs()}
           onChange={(date) => setTimePicked(date.toISOString())}
+          disabledDate={(date) => {
+            return date.isAfter(dayjs())
+          }}
         />
       )
 
