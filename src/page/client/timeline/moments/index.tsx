@@ -1,6 +1,7 @@
+import dayjs from 'dayjs'
 import { useRequest } from 'ahooks'
-import { useMemo, useState, useEffect } from 'react'
 import { Params } from 'ahooks/lib/useAntdTable/types'
+import { useMemo, useState, useEffect, ReactNode } from 'react'
 
 import { isSameDay } from '..'
 import styles from './index.module.less'
@@ -36,6 +37,39 @@ const Page = () => {
     return list.length >= total
   }, [list, total])
 
+  const items = useMemo(() => {
+    if (list.length === 0)
+      return (
+        <div style={{ textAlign: 'center', color: '#d5d5d5' }}>
+          {allDataHasBeenFetched ? (
+            <em>没有更多数据了...</em>
+          ) : (
+            <em>下拉加载更多数据...</em>
+          )}
+        </div>
+      )
+    const results: ReactNode[] = []
+    const map: Map<number, boolean> = new Map()
+
+    list.forEach((item, i) => {
+      const year = dayjs(item.createdAt).year()
+
+      if (!map.get(year)) {
+        map.set(year, true)
+        results.push(<h2 key={year}>{year}年</h2>)
+      }
+      results.push(
+        <Moment
+          {...item}
+          key={item.id}
+          viewMode
+          profile={item.timeline?.user}
+          hideDate={isSameDay(item.createdAt, list[i - 1]?.createdAt)}
+        ></Moment>
+      )
+    })
+    return results
+  }, [list])
   useEffect(() => {
     setUnreadMomentCount()
   }, [])
@@ -58,26 +92,7 @@ const Page = () => {
           await runAsync(current)
         }}
       >
-        {list?.map((item, i) => {
-          return (
-            <Moment
-              {...item}
-              key={item.id}
-              viewMode
-              profile={item.timeline?.user}
-              hideDate={isSameDay(item.createdAt, list[i - 1]?.createdAt)}
-            ></Moment>
-          )
-        })}
-        {!!list.length && (
-          <div style={{ textAlign: 'center', color: '#d5d5d5' }}>
-            {allDataHasBeenFetched ? (
-              <em>没有更多数据了...</em>
-            ) : (
-              <em>下拉加载更多数据...</em>
-            )}
-          </div>
-        )}
+        {items}
       </ScrollWrapper>
     </div>
   )
