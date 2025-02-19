@@ -54,7 +54,8 @@ const Page = () => {
     list.forEach((item, i) => {
       const year = dayjs(item.createdAt).year()
 
-      if (!map.get(year)) {
+      // 当年不需要展示
+      if (!map.get(year) && year !== dayjs().year()) {
         map.set(year, true)
         results.push(<h2 key={year}>{year}年</h2>)
       }
