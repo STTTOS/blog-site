@@ -100,7 +100,12 @@ const TimelineDetail = () => {
   )
   useTitle(timelineDetail?.title)
   const showOp = useMemo(() => {
-    return user?.id === timelineDetail?.userId
+    if (!user) return false
+
+    return (
+      user.id === timelineDetail?.userId ||
+      timelineDetail?.coUserIds?.includes(user.id)
+    )
   }, [timelineDetail, user])
 
   const handleSave = async (

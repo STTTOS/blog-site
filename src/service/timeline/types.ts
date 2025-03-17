@@ -11,6 +11,7 @@ export interface Timeline {
   createdAt?: string
   updatedAt?: string
   order: OrderBy
+  coUserIds?: number[]
 }
 export interface Moment {
   id: number

@@ -9,6 +9,7 @@ import styles from './index.module.less'
 import SearchBar from '@/components/SearchBar'
 import SafeTable from '@/components/SafeTable'
 import useFormDrawer from '@/hooks/useFormDrawer'
+import useGlobalData from '@/hooks/useGlobalData'
 import { Timeline } from '@/service/timeline/types'
 import TimelineDrawerContent from './DrawerContent'
 import { deleteTimeline, getTimelineList } from '@/service/timeline'
@@ -28,6 +29,7 @@ const Index = () => {
     loading,
     refresh
   } = useAntdTable(getTimelineList, { form, cacheKey: '/manage/timeline' })
+  const { userOptions } = useGlobalData()
 
   const deleteData = async (id: number) => {
     await deleteTimeline({ id })
@@ -80,6 +82,16 @@ const Index = () => {
       render(_, { user: { username, name } }) {
         return name || username
       }
+    },
+    {
+      title: '协同编辑用户',
+      dataIndex: 'coAuthorIds',
+      render: (_, { coUserIds }) =>
+        coUserIds
+          ?.map(
+            (id) => userOptions?.find(({ value }) => value == Number(id))?.label
+          )
+          .join(',')
     },
     {
       key: 'createdAt',

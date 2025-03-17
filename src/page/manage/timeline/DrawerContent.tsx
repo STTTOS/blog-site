@@ -4,6 +4,7 @@ import type { ICreateFormConfig } from '@/utils/createForm/types'
 import { useEffect, useCallback } from 'react'
 
 import createForm from '@/utils/createForm'
+import useGlobalData from '@/hooks/useGlobalData'
 import { updateTimeline } from '@/service/timeline'
 import { Timeline } from '@/service/timeline/types'
 import { drawerFormComponents } from './staticModel'
@@ -14,6 +15,8 @@ const TimelineDrawerContent: React.FC<IProps> = ({
   register = () => void 0,
   data
 }) => {
+  const { userOptions } = useGlobalData()
+
   const config: ICreateFormConfig = {
     formConfig: {
       initialValues: {
@@ -23,8 +26,9 @@ const TimelineDrawerContent: React.FC<IProps> = ({
       itemsRequire: false,
       data
     },
-    components: drawerFormComponents
+    components: drawerFormComponents(userOptions)
   }
+
   const { formStructure, form } = createForm(config)
 
   const handleFinish = useCallback(async () => {
