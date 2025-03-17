@@ -527,14 +527,12 @@ const Moment: FC<MomentProps> = ({
             <Button type="text" onClick={handleCancel}>
               取消
             </Button>
-            {isAdd && (
-              <Switch
-                checkedChildren="仅自己可见"
-                unCheckedChildren="公开"
-                checked={isPrivate}
-                onChange={(value) => setIsPrivate(value)}
-              />
-            )}
+            <Switch
+              checkedChildren="仅自己可见"
+              unCheckedChildren="公开"
+              checked={isPrivate}
+              onChange={(value) => setIsPrivate(value)}
+            />
           </Space>
         )}
 
