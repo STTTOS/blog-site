@@ -121,9 +121,7 @@ const Index = () => {
                 <a>delete</a>
               </Popconfirm>
             )}
-            {user?.id === record.userId && (
-              <a onClick={() => handleUpdate(record)}>update</a>
-            )}
+            {canEdit && <a onClick={() => handleUpdate(record)}>update</a>}
           </Space>
         )
       }
