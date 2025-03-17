@@ -70,6 +70,7 @@ type MomentProps = {
   likes?: Partial<User>[]
   profile?: User
   viewMode?: boolean
+  isPrivate?: boolean
 } & Partial<MomentType>
 
 const Moment: FC<MomentProps> = ({
@@ -87,7 +88,8 @@ const Moment: FC<MomentProps> = ({
   likes: _likes,
   onMigrate,
   profile,
-  viewMode = false
+  viewMode = false,
+  isPrivate: isPrivateOfMoment
 }) => {
   const isAdd = !id
   const { user } = useUserInfo()
@@ -498,6 +500,7 @@ const Moment: FC<MomentProps> = ({
       <main className={classNames(styles.main, hideDate && styles.divider)}>
         <div className={styles.extra}>
           <span className={styles.time}>
+            {isPrivateOfMoment ? '(仅自己可见) ' : null}
             {createdAt && dayjs(createdAt).format('HH:mm')}
           </span>
 
