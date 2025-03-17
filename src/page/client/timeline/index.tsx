@@ -9,7 +9,6 @@ import { Avatar } from '@mui/joy'
 import classNames from 'classnames'
 import { useParams } from 'react-router'
 import { useScroll, useRequest } from 'ahooks'
-import { useSearchParams } from 'react-router-dom'
 import { Params } from 'ahooks/lib/useAntdTable/types'
 import { SearchOutlined, CloseCircleOutlined } from '@ant-design/icons'
 import { useMemo, useState, ReactNode, useEffect, useCallback } from 'react'
@@ -24,7 +23,7 @@ import { history } from '@/components/BrowserRouter'
 import CreateMoment from '@/components/CreateMoment'
 import ScrollWrapper from '@/components/ScrollWrapper'
 import FullscreenSearch from '@/components/FullscreenSearch'
-import { OrderBy, Moment as MomentType } from '@/service/timeline/types'
+import { Moment as MomentType } from '@/service/timeline/types'
 import { getMoments, getTimeline, createTimeline } from '@/service/timeline'
 import { recordTimeStampOfViewingContent } from '@/page/manage/timeline/staticModel'
 
@@ -45,10 +44,9 @@ const criticalPoint = 380
 const step = 60
 const TimelineDetail = () => {
   const query = useParams()
-  const [search] = useSearchParams()
   const [showAddMoment, setShowAddMoment] = useState(false)
   const timelineId = Number(query.id)
-  const order = (search.get('order') as OrderBy) || 'desc'
+  // const order = (search.get('order') as OrderBy) || 'desc'
   const { user } = useUserInfo()
   const isAdd = timelineId < 1
   const { runAsync: create } = useRequest(createTimeline, {
@@ -85,8 +83,7 @@ const TimelineDetail = () => {
         id: timelineId,
         current,
         pageSize: pageParams.pageSize,
-        keyword,
-        order
+        keyword
       }),
     {
       manual: isAdd,
