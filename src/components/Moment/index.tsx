@@ -89,7 +89,7 @@ const Moment: FC<MomentProps> = ({
   onMigrate,
   profile,
   viewMode = false,
-  isPrivate: isPrivateOfMoment
+  isPrivate: isPrivateOfMoment = false
 }) => {
   const isAdd = !id
   const { user } = useUserInfo()
@@ -416,7 +416,7 @@ const Moment: FC<MomentProps> = ({
     mode
   ])
 
-  const [isPrivate, setIsPrivate] = useState(false)
+  const [isPrivate, setIsPrivate] = useState(isPrivateOfMoment)
   const dateElement = useMemo(() => {
     if (isAdd)
       return (
@@ -528,6 +528,7 @@ const Moment: FC<MomentProps> = ({
               取消
             </Button>
             <Switch
+              disabled={mode === 'edit'}
               checkedChildren="仅自己可见"
               unCheckedChildren="公开"
               checked={isPrivate}
