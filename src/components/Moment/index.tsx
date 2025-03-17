@@ -13,6 +13,7 @@ import {
   Button,
   Avatar,
   Select,
+  Switch,
   Divider,
   message,
   Dropdown,
@@ -167,7 +168,10 @@ const Moment: FC<MomentProps> = ({
         save
       ]
     })()
-    const data = await request(body)
+    const data = await request({
+      ...body,
+      isPrivate
+    })
     unblock()
     onSave(
       {
@@ -410,6 +414,7 @@ const Moment: FC<MomentProps> = ({
     mode
   ])
 
+  const [isPrivate, setIsPrivate] = useState(false)
   const dateElement = useMemo(() => {
     if (isAdd)
       return (
@@ -519,6 +524,12 @@ const Moment: FC<MomentProps> = ({
             <Button type="text" onClick={handleCancel}>
               取消
             </Button>
+            <Switch
+              checkedChildren="仅自己可见"
+              unCheckedChildren="公开"
+              checked={isPrivate}
+              onChange={(value) => setIsPrivate(value)}
+            />
           </Space>
         )}
 

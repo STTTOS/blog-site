@@ -22,6 +22,7 @@ export interface Moment {
   timeline?: {
     user?: User
   }
+  isPrivate: boolean
 }
 export interface MomentImage {
   sort: number
