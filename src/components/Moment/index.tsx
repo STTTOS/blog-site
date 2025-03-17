@@ -146,7 +146,8 @@ const Moment: FC<MomentProps> = ({
     if (!user) return false
 
     return (
-      user.id && user.id === userId && !viewMode && coUserIds?.includes(user.id)
+      ((user.id && user.id === userId) || coUserIds?.includes(user.id)) &&
+      !viewMode
     )
   }, [user, userId, viewMode, coUserIds])
 
