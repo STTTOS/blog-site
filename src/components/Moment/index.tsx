@@ -142,14 +142,17 @@ const Moment: FC<MomentProps> = ({
     }
   }
 
+  const isSelf = useMemo(() => {
+    if (!user) return false
+
+    return user.id === userId
+  }, [user, userId])
+
   const canEdit = useMemo(() => {
     if (!user) return false
 
-    return (
-      ((user.id && user.id === userId) || coUserIds?.includes(user.id)) &&
-      !viewMode
-    )
-  }, [user, userId, viewMode, coUserIds])
+    return (isSelf || coUserIds?.includes(user.id)) && !viewMode
+  }, [user, viewMode, coUserIds])
 
   const handleSave = async () => {
     if (imgSet.length === 0 && !draft) {
@@ -533,12 +536,14 @@ const Moment: FC<MomentProps> = ({
             <Button type="text" onClick={handleCancel}>
               取消
             </Button>
-            <Switch
-              checkedChildren="仅自己可见"
-              unCheckedChildren="公开"
-              checked={isPrivate}
-              onChange={(value) => setIsPrivate(value)}
-            />
+            {isSelf && (
+              <Switch
+                checkedChildren="仅自己可见"
+                unCheckedChildren="公开"
+                checked={isPrivate}
+                onChange={(value) => setIsPrivate(value)}
+              />
+            )}
           </Space>
         )}
 

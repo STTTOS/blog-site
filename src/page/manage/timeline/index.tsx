@@ -105,23 +105,28 @@ const Index = () => {
     {
       title: '操作',
       width: 140,
-      render: (_, record) => (
-        <Space size="middle">
-          {record.userId === user?.id && (
-            <Popconfirm
-              title="确定删除此时间轴吗?会一并删除所有关联数据"
-              onConfirm={() => deleteData(record.id)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <a>delete</a>
-            </Popconfirm>
-          )}
-          {user?.id === record.userId && (
-            <a onClick={() => handleUpdate(record)}>update</a>
-          )}
-        </Space>
-      )
+      render: (_, record) => {
+        const canEdit =
+          user &&
+          (record.coUserIds || []).concat(record.userId).includes(user.id)
+        return (
+          <Space size="middle">
+            {canEdit && (
+              <Popconfirm
+                title="确定删除此时间轴吗?会一并删除所有关联数据"
+                onConfirm={() => deleteData(record.id)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <a>delete</a>
+              </Popconfirm>
+            )}
+            {user?.id === record.userId && (
+              <a onClick={() => handleUpdate(record)}>update</a>
+            )}
+          </Space>
+        )
+      }
     }
   ]
 
