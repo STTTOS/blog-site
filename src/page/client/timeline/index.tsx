@@ -157,6 +157,7 @@ const TimelineDetail = () => {
         <Moment
           {...props}
           key={props.id}
+          coUserIds={timelineDetail?.coUserIds}
           onSave={handleSave}
           onMigrate={handleMigrated}
           timelineId={timelineId}

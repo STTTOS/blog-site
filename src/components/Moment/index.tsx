@@ -71,6 +71,7 @@ type MomentProps = {
   profile?: User
   viewMode?: boolean
   isPrivate?: boolean
+  coUserIds?: number[]
 } & Partial<MomentType>
 
 const Moment: FC<MomentProps> = ({
@@ -89,7 +90,8 @@ const Moment: FC<MomentProps> = ({
   onMigrate,
   profile,
   viewMode = false,
-  isPrivate: isPrivateOfMoment = false
+  isPrivate: isPrivateOfMoment = false,
+  coUserIds
 }) => {
   const isAdd = !id
   const { user } = useUserInfo()
@@ -141,8 +143,12 @@ const Moment: FC<MomentProps> = ({
   }
 
   const canEdit = useMemo(() => {
-    return user?.id && user.id === userId && !viewMode
-  }, [user, userId, viewMode])
+    if (!user) return false
+
+    return (
+      user.id && user.id === userId && !viewMode && coUserIds?.includes(user.id)
+    )
+  }, [user, userId, viewMode, coUserIds])
 
   const handleSave = async () => {
     if (imgSet.length === 0 && !draft) {
