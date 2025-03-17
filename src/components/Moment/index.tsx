@@ -499,7 +499,7 @@ const Moment: FC<MomentProps> = ({
       <main className={classNames(styles.main, hideDate && styles.divider)}>
         <div className={styles.extra}>
           <span className={styles.time}>
-            {isPrivateOfMoment ? '(仅自己可见) ' : null}
+            {isPrivate ? '(仅自己可见) ' : null}
             {createdAt && dayjs(createdAt).format('HH:mm')}
           </span>
 
