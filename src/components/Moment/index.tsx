@@ -156,7 +156,8 @@ const Moment: FC<MomentProps> = ({
             content: draft,
             images: imgSet,
             timelineId,
-            createdAt: timePicked
+            createdAt: timePicked,
+            isPrivate
           },
           add
         ]
@@ -165,15 +166,13 @@ const Moment: FC<MomentProps> = ({
           id,
           content: draft,
           images: imgSet,
-          timelineId
+          timelineId,
+          isPrivate
         },
         save
       ]
     })()
-    const data = await request({
-      ...body,
-      isPrivate
-    })
+    const data = await request(body)
     unblock()
     onSave(
       {
