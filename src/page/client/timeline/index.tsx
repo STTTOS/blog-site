@@ -4,8 +4,7 @@
 import type { CreateTimelineFormProps } from './CreateTimeline'
 
 import dayjs from 'dayjs'
-import { Spin } from 'antd'
-import { Avatar } from '@mui/joy'
+import { Spin, Avatar } from 'antd'
 import classNames from 'classnames'
 import { useParams } from 'react-router'
 import { useScroll, useRequest } from 'ahooks'
@@ -19,6 +18,7 @@ import styles from './index.module.less'
 import Moment from '@/components/Moment'
 import CreateTimeline from './CreateTimeline'
 import { defaultTimelineCover } from '@/config'
+import useGlobalData from '@/hooks/useGlobalData'
 import { history } from '@/components/BrowserRouter'
 import CreateMoment from '@/components/CreateMoment'
 import ScrollWrapper from '@/components/ScrollWrapper'
@@ -60,6 +60,7 @@ const TimelineDetail = () => {
     history.replace(`/timeline/${id}`)
   }
 
+  const { userOptions } = useGlobalData()
   const [list, setList] = useState<MomentType[]>([])
   const [total, setTotal] = useState(0)
   const scroll = useScroll(null, ({ top }) => top < criticalPoint + step)
@@ -203,6 +204,12 @@ const TimelineDetail = () => {
     recordTimeStampOfViewingContent('timeline', timelineId)
   }, [timelineId])
 
+  const avatars = useMemo(() => {
+    const coAvatars = (timelineDetail?.coUserIds || []).map(
+      (id) => userOptions.find((item) => item.value === id)?.avatar
+    )
+    return [...coAvatars, avatar].filter(Boolean)
+  }, [timelineDetail, avatar])
   return (
     <Spin spinning={fetchingTimeline}>
       <ScrollWrapper
@@ -267,7 +274,11 @@ const TimelineDetail = () => {
               <em className={styles.desc}>{desc}</em>
             </div>
 
-            <Avatar src={avatar} />
+            <Avatar.Group>
+              {avatars.map((src) => (
+                <Avatar src={src} key={src} />
+              ))}
+            </Avatar.Group>
           </div>
         </header>
 

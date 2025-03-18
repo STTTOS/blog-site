@@ -65,7 +65,9 @@ async function updateUser(params: Omit<User, 'createdAt'>) {
 async function getAllUser() {
   const {
     data: { list }
-  } = await request<{ list: Pick<User, 'id' | 'name'>[] }>('api/user/all')
+  } = await request<{ list: Pick<User, 'id' | 'name' | 'avatar'>[] }>(
+    'api/user/all'
+  )
 
   return list
 }
