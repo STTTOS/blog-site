@@ -32,7 +32,7 @@ const Title: FC<TitleProps> = ({ title, id, jumpAble, secure, updatedAt }) => {
       </Space>
       {jumpAble ? (
         <a href={`/article/${id}`} target="_blank" className={styles.title}>
-          {title}
+          <span style={{ fontWeight: 500 }}>{title}</span>
           <ReadTag type="article" id={id} updatedAt={updatedAt} />
         </a>
       ) : (
