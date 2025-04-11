@@ -296,6 +296,7 @@ const TimelineDetail = () => {
                 onCancel={() => setShowAddMoment(false)}
                 onSave={handleSave}
                 timelineId={timelineId}
+                userId={timelineDetail?.userId}
               />
             )}
 

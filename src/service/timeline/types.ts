@@ -23,6 +23,7 @@ export interface Moment {
   timeline?: {
     user?: User
   }
+  owner: User
   isPrivate: boolean
 }
 export interface MomentImage {

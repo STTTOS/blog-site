@@ -64,7 +64,7 @@ const Page = () => {
           {...item}
           key={item.id}
           viewMode
-          profile={item.timeline?.user}
+          profile={item.owner}
           hideDate={isSameDay(item.createdAt, list[i - 1]?.createdAt)}
         ></Moment>
       )
