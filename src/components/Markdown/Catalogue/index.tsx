@@ -8,7 +8,9 @@ interface IProps {
 }
 
 const Index: React.FC<IProps> = ({ value = '' }) => {
-  return <MarkDownNav source={'\n' + value} ordered updateHashAuto={false} />
+  return (
+    <MarkDownNav source={'\n' + value} ordered={false} updateHashAuto={false} />
+  )
 }
 
 export default Index
