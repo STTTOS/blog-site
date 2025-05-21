@@ -1,17 +1,32 @@
 import qs from 'qs'
 import dayjs from 'dayjs'
 import { useRequest } from 'ahooks'
-import { useInterval } from 'ahooks'
-import { MessageOutlined } from '@ant-design/icons'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Tag, List, Badge, Empty, Avatar, Button, Popover } from 'antd'
+import { UndoOutlined, MessageOutlined } from '@ant-design/icons'
 import { useMemo, type FC, useState, useEffect, CSSProperties } from 'react'
+import {
+  Tag,
+  List,
+  Spin,
+  Badge,
+  Empty,
+  Space,
+  Avatar,
+  Button,
+  Popover
+} from 'antd'
 
 import request from '@/utils/http'
 import styles from './index.module.less'
 import { User } from '@/service/user/types'
 
-type MessageType = 'reply' | 'like' | 'comment' | 'system'
+type MessageType =
+  | 'reply'
+  | 'like'
+  | 'comment'
+  | 'system'
+  | 'moment'
+  | 'momentReply'
 interface Message {
   createdAt: string
   content: string
@@ -83,14 +98,17 @@ const MessageBox: FC<MessageBoxProps> = () => {
   }
 
   const renderType = (type: MessageType) => {
-    if (type === 'reply') return '回复了我的评论'
+    if (type === 'reply' || type === 'momentReply') return '回复了我的评论'
     else if (type === 'comment') return '评论了我的文章'
+    else if (type === 'moment') return '评论你的时刻'
   }
 
   const getTagProps = (type: MessageType): [CSSProperties['color'], string] => {
     if (type === 'reply') return ['blue', '回复']
     if (type === 'comment') return ['cyan', '评论']
     if (type === 'like') return ['pink', '点赞']
+    if (type === 'moment') return ['violet', '时间轴']
+
     return ['red', '系统通知']
   }
 
@@ -135,10 +153,15 @@ const MessageBox: FC<MessageBoxProps> = () => {
                 window.open(link)
                 return
               }
-              if (type === 'like') {
+              if (
+                type === 'like' ||
+                type === 'moment' ||
+                type === 'momentReply'
+              ) {
                 window.open(`/timeline/${timelineId}#${momentId}`)
                 return
               }
+
               const query = qs.stringify({
                 targetId: commentId
               })
@@ -183,35 +206,42 @@ const MessageBox: FC<MessageBoxProps> = () => {
   }, [list])
 
   useEffect(() => {
-    loadData()
+    loadData(1)
   }, [])
 
-  // 每2min重新拉取一次消息
-  useInterval(
-    () => {
-      loadData(1)
-      refreshCount()
-    },
-    2 * 60 * 1000,
-    { immediate: false }
-  )
   return (
     <Popover
       content={
         <List
           header={
-            <div className={styles.header}>
-              <span>消息中心</span>
-              {showReadAll && (
-                <Button type="link" onClick={handleReadAll} loading={reading}>
-                  全部标记已读
-                </Button>
-              )}
-            </div>
+            <Spin spinning={loading}>
+              <div className={styles.header}>
+                <span>消息中心</span>
+                <Space>
+                  {showReadAll && (
+                    <Button
+                      type="link"
+                      onClick={handleReadAll}
+                      loading={reading}
+                    >
+                      全部标记已读
+                    </Button>
+                  )}
+                  <UndoOutlined
+                    onClick={() => {
+                      setCurrent(0)
+                      setTotal(0)
+                      setList([])
+                      loadData(1)
+                    }}
+                  />
+                </Space>
+              </div>
+            </Spin>
           }
           style={{ width: 600 }}
         >
-          {list.length === 0 ? (
+          {list.length === 0 && !loading ? (
             <Empty />
           ) : (
             <InfiniteScroll

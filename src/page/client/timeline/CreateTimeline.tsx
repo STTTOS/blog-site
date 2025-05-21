@@ -1,8 +1,8 @@
 import Box from '@mui/joy/Box'
 import Input from '@mui/joy/Input'
-import { Form, Drawer } from 'antd'
 import Textarea from '@mui/joy/Textarea'
 import { FC, ComponentType } from 'react'
+import { Form, Space, Drawer, Switch } from 'antd'
 
 import Upload from '@/components/Upload'
 import { upload } from '@/service/common'
@@ -10,7 +10,10 @@ import { defaultTimelineCover } from '@/config'
 import AsyncButton from '@/components/AsyncButton'
 import { Timeline } from '@/service/timeline/types'
 
-export type CreateTimelineFormProps = Pick<Timeline, 'cover' | 'desc' | 'title'>
+export type CreateTimelineFormProps = Pick<
+  Timeline,
+  'cover' | 'desc' | 'title' | 'order'
+>
 type CreateTimelineProps = {
   // eslint-disable-next-line no-unused-vars
   onCreate: (values: CreateTimelineFormProps) => Promise<void>
@@ -37,7 +40,11 @@ const AntdFormTextarea = withAdaptAntdFormItem(Textarea)
 const CreateTimeline: FC<CreateTimelineProps> = ({ onCreate }) => {
   const [form] = Form.useForm()
   const handleCreate = async () => {
-    await onCreate(await form.validateFields())
+    const { order, ...rest } = await form.validateFields()
+    await onCreate({
+      ...rest,
+      order: order ? 'desc' : 'asc'
+    })
   }
   return (
     <Drawer
@@ -60,7 +67,8 @@ const CreateTimeline: FC<CreateTimelineProps> = ({ onCreate }) => {
     >
       <Form
         initialValues={{
-          cover: defaultTimelineCover
+          cover: defaultTimelineCover,
+          order: true
         }}
         form={form}
         style={{ display: 'flex', justifyContent: 'center' }}
@@ -75,16 +83,24 @@ const CreateTimeline: FC<CreateTimelineProps> = ({ onCreate }) => {
             alignItems: 'center'
           }}
         >
-          <Form.Item
-            name="title"
-            rules={[{ required: true, message: '标题不能为空' }]}
-          >
-            <AntdFormInput
-              placeholder="输入标题"
-              variant="outlined"
-              size="lg"
-            />
-          </Form.Item>
+          <Space align="center" style={{ justifyContent: 'space-between' }}>
+            <Form.Item
+              name="title"
+              rules={[{ required: true, message: '标题不能为空' }]}
+            >
+              <AntdFormInput
+                placeholder="输入标题"
+                variant="outlined"
+                size="lg"
+              />
+            </Form.Item>
+            <Form.Item name="order">
+              <Switch
+                checkedChildren="优先展示最新内容"
+                unCheckedChildren="优先展示最早内容"
+              ></Switch>
+            </Form.Item>
+          </Space>
 
           <Form.Item name="desc">
             <AntdFormTextarea

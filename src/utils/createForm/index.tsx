@@ -1,5 +1,6 @@
 import type { IComponent, IFormItemProps, ICreateFormConfig } from './types'
 
+import { isNil } from 'ramda'
 import { Row, Col, Form, Input } from 'antd'
 import { useEffect, cloneElement, isValidElement } from 'react'
 
@@ -96,7 +97,7 @@ const useForm = ({
       keys.forEach((key) => {
         const value = data[key]
         // 排除data中为空的值
-        if (value) form.setFieldValue(key, value)
+        if (!isNil(value)) form.setFieldValue(key, value)
       })
     }
   }, [data, form])

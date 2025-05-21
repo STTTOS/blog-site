@@ -12,7 +12,11 @@ const useGlobalData = () => {
   } = useRequest(getAllTag)
 
   return {
-    userOptions: users.map(({ id, name }) => ({ label: name, value: id })),
+    userOptions: users.map(({ id, name, avatar }) => ({
+      label: name,
+      value: id,
+      avatar
+    })),
     tagOptions: tags.map(({ id, name }) => ({ label: name, value: id })),
     refreshTags,
     fetchingUser,

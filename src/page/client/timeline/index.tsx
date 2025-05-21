@@ -4,12 +4,12 @@
 import type { CreateTimelineFormProps } from './CreateTimeline'
 
 import dayjs from 'dayjs'
-import { Spin } from 'antd'
-import { Avatar } from '@mui/joy'
+import { Spin, Avatar } from 'antd'
 import classNames from 'classnames'
 import { useParams } from 'react-router'
 import { useScroll, useRequest } from 'ahooks'
 import { Params } from 'ahooks/lib/useAntdTable/types'
+import { SearchOutlined, CloseCircleOutlined } from '@ant-design/icons'
 import { useMemo, useState, ReactNode, useEffect, useCallback } from 'react'
 
 import { useUserInfo } from '@/model'
@@ -18,12 +18,16 @@ import styles from './index.module.less'
 import Moment from '@/components/Moment'
 import CreateTimeline from './CreateTimeline'
 import { defaultTimelineCover } from '@/config'
+import useGlobalData from '@/hooks/useGlobalData'
 import { history } from '@/components/BrowserRouter'
 import CreateMoment from '@/components/CreateMoment'
+import ScrollWrapper from '@/components/ScrollWrapper'
+import FullscreenSearch from '@/components/FullscreenSearch'
 import { Moment as MomentType } from '@/service/timeline/types'
 import { getMoments, getTimeline, createTimeline } from '@/service/timeline'
+import { recordTimeStampOfViewingContent } from '@/page/manage/timeline/staticModel'
 
-function isSameDay(date1?: string, date2?: string) {
+export function isSameDay(date1?: string, date2?: string) {
   if (!date1 || !date2) return false
 
   const d1 = dayjs(date1)
@@ -42,23 +46,31 @@ const TimelineDetail = () => {
   const query = useParams()
   const [showAddMoment, setShowAddMoment] = useState(false)
   const timelineId = Number(query.id)
+  // const order = (search.get('order') as OrderBy) || 'desc'
   const { user } = useUserInfo()
   const isAdd = timelineId < 1
   const { runAsync: create } = useRequest(createTimeline, {
     manual: true
   })
+  const [keyword, setKeyword] = useState('')
+  const [showSearch, setShowSearch] = useState(false)
 
   const handleCreate = async (values: CreateTimelineFormProps) => {
     const id = await create(values)
     history.replace(`/timeline/${id}`)
   }
 
+  const { userOptions } = useGlobalData()
   const [list, setList] = useState<MomentType[]>([])
+  const [total, setTotal] = useState(0)
   const scroll = useScroll(null, ({ top }) => top < criticalPoint + step)
-  const [pageParams] = useState<Params[0]>({
+  const [pageParams, setPageParams] = useState<Params[0]>({
     current: 1,
-    pageSize: 100
+    pageSize: 10
   })
+  const allDataHasBeenFetched = useMemo(() => {
+    return list.length >= total
+  }, [list, total])
   const { data: timelineDetail, loading: fetchingTimeline } = useRequest(
     () => getTimeline({ id: timelineId }),
     {
@@ -67,22 +79,58 @@ const TimelineDetail = () => {
     }
   )
   const { loading, runAsync: fetchMoments } = useRequest(
-    () => getMoments({ id: timelineId, ...pageParams }),
+    (current = 1, keyword?: string) =>
+      getMoments({
+        id: timelineId,
+        current,
+        pageSize: pageParams.pageSize,
+        keyword
+      }),
     {
       manual: isAdd,
       onSuccess(res) {
-        setList(res.list)
+        setTotal(res.total)
+
+        if (pageParams.current === 1) setList(res.list)
+        else setList((pre) => pre.concat(res.list))
       }
     }
   )
   useTitle(timelineDetail?.title)
   const showOp = useMemo(() => {
-    return user?.id === timelineDetail?.userId
+    if (!user) return false
+
+    return (
+      user.id === timelineDetail?.userId ||
+      timelineDetail?.coUserIds?.includes(user.id)
+    )
   }, [timelineDetail, user])
 
-  const handleSave = async () => {
+  const handleSave = async (
+    data: Partial<MomentType>,
+    type: 'add' | 'edit'
+  ) => {
     setShowAddMoment(false)
-    await fetchMoments()
+    if (type === 'add') {
+      setList([data as Required<typeof data>, ...list])
+      return
+    }
+    setList(
+      list.map((item) => {
+        if (item.id === data.id)
+          return {
+            ...item,
+            ...data
+          }
+        return item
+      })
+    )
+  }
+
+  const handleMigrated = (id: number) => {
+    const newTotal = total - 1
+    setTotal(newTotal)
+    setList(list.filter((item) => item.id !== id))
   }
 
   const moments = useMemo(() => {
@@ -107,11 +155,15 @@ const TimelineDetail = () => {
         <Moment
           {...props}
           key={props.id}
+          coUserIds={timelineDetail?.coUserIds}
           onSave={handleSave}
-          onMigrate={fetchMoments}
+          onMigrate={handleMigrated}
           timelineId={timelineId}
           userId={timelineDetail?.userId}
-          onDelete={(id) => setList(list.filter((item) => item.id !== id))}
+          onDelete={(id) => {
+            setList(list.filter((item) => item.id !== id))
+            setTotal(total - 1)
+          }}
           hideDate={isSameDay(props.createdAt, list[i - 1]?.createdAt)}
           onCancel={() => setShowAddMoment(false)}
         />
@@ -147,10 +199,38 @@ const TimelineDetail = () => {
       })
     }, 300)
   }, [])
+
+  useEffect(() => {
+    recordTimeStampOfViewingContent('timeline', timelineId)
+  }, [timelineId])
+
+  const avatars = useMemo(() => {
+    const coAvatars = (timelineDetail?.coUserIds || []).map(
+      (id) => userOptions.find((item) => item.value === id)?.avatar
+    )
+    return [...coAvatars, avatar].filter(Boolean)
+  }, [timelineDetail, avatar])
   return (
     <Spin spinning={fetchingTimeline}>
-      <div className={styles.wrapper}>
-        <div className={styles.top} style={{ opacity }}>
+      <ScrollWrapper
+        debounceTime={200}
+        className={styles.wrapper}
+        onScrollToBottom={async () => {
+          if (loading) return
+          if (allDataHasBeenFetched) return
+
+          const current = pageParams.current + 1
+          setPageParams({
+            ...pageParams,
+            current
+          })
+          await fetchMoments(current, keyword)
+        }}
+      >
+        <div
+          className={styles.top}
+          style={{ opacity, display: opacity === 0 ? 'none' : undefined }}
+        >
           <span>{title}</span>
           {showOp && (
             <CreateMoment
@@ -165,13 +245,40 @@ const TimelineDetail = () => {
         <header className={styles.header}>
           <img src={cover} className={styles.cover} />
 
+          <div className={styles.search}>
+            <span
+              className={styles.search_button}
+              onClick={() => setShowSearch(true)}
+            >
+              点击搜索
+              {keyword ? (
+                <span>
+                  (关键字: {keyword}{' '}
+                  <CloseCircleOutlined
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setKeyword('')
+                      fetchMoments(1, '')
+                      setPageParams({ ...pageParams, current: 1 })
+                    }}
+                  />
+                  <span>,共{total}条结果</span>)
+                </span>
+              ) : null}
+              <SearchOutlined className={styles.search_icon} />
+            </span>
+          </div>
           <div className={styles.info}>
             <div>
               <div className={styles.title}>{title}</div>
               <em className={styles.desc}>{desc}</em>
             </div>
 
-            <Avatar src={avatar} />
+            <Avatar.Group>
+              {avatars.map((src) => (
+                <Avatar src={src} key={src} />
+              ))}
+            </Avatar.Group>
           </div>
         </header>
 
@@ -189,14 +296,31 @@ const TimelineDetail = () => {
                 onCancel={() => setShowAddMoment(false)}
                 onSave={handleSave}
                 timelineId={timelineId}
+                userId={timelineDetail?.userId}
               />
             )}
 
             {moments}
+            <div style={{ textAlign: 'center', color: '#d5d5d5' }}>
+              {allDataHasBeenFetched ? (
+                <em>没有更多数据了...</em>
+              ) : (
+                <em>下拉加载更多数据...</em>
+              )}
+            </div>
           </Spin>
         </main>
         {isAdd && <CreateTimeline onCreate={handleCreate} />}
-      </div>
+        <FullscreenSearch
+          onSearch={(keyword) => {
+            setKeyword(keyword)
+            fetchMoments(1, keyword)
+            setPageParams({ ...pageParams, current: 1 })
+          }}
+          open={showSearch}
+          onClose={() => setShowSearch(false)}
+        />
+      </ScrollWrapper>
     </Spin>
   )
 }

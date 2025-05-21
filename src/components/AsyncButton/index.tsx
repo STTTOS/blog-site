@@ -4,7 +4,7 @@ import { useRequest } from 'ahooks'
 import { Button, ButtonProps } from 'antd'
 
 export interface AsyncButtonProps extends ButtonProps {
-  request: () => Promise<unknown>
+  request: () => any
 }
 const AsyncButton: FC<AsyncButtonProps> = ({
   request,

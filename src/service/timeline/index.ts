@@ -52,13 +52,18 @@ const updateTimeline = async (params: Pick<Timeline, 'id'>) => {
   message.success('修改成功')
 }
 const addMoment = async ({ timelineId, ...params }: Partial<Moment>) => {
-  await request(`api/timeline/moment/add/${timelineId}`, params)
+  const { data } = await request(
+    `api/timeline/moment/add/${timelineId}`,
+    params
+  )
   message.success('发布成功')
+  return data as unknown as Promise<Pick<Moment, 'id'>>
 }
 
 const updateMoment = async ({ id, ...params }: Partial<Moment>) => {
-  await request(`api/timeline/moment/update/${id}`, params)
+  const { data } = await request(`api/timeline/moment/update/${id}`, params)
   message.success('修改成功')
+  return data as unknown as Promise<Pick<Moment, 'id'>>
 }
 const deleteMoment = async (params: Pick<Moment, 'id'>) => {
   await request(`api/timeline/moment/delete/${params.id}`)
@@ -70,7 +75,9 @@ const likeMoment = async ({
 }: Partial<Pick<Moment, 'id'> & { timelineId: Timeline['id'] }>) => {
   await request(`api/timeline/moment/like/${id}`, { timelineId })
 }
-const getMoments = async (params: Pick<Timeline, 'id'> & Params[0]) => {
+const getMoments = async (
+  params: Pick<Timeline, 'id'> & Params[0] & { keyword?: string }
+) => {
   const {
     data: { list, total }
   } = await request<{ list: Moment[]; total: number }>(
@@ -85,6 +92,21 @@ const getMoments = async (params: Pick<Timeline, 'id'> & Params[0]) => {
 const getSharedMoment = async (params: Pick<Moment, 'id'>) => {
   const { data } = await request<Moment>(
     `api/timeline/moment/share/${params.id}`
+  )
+  return data
+}
+
+const getMomentsOfPlatform = async (params: Params[0]) => {
+  const { data } = await request<{ list: Moment[]; total: number }>(
+    `api/timeline/moments`,
+    params
+  )
+  return data
+}
+const getUnReadMomentsCount = async (params: { startDate: string }) => {
+  const { data } = await request<number>(
+    `api/timeline/moments/unReadCount`,
+    params
   )
   return data
 }
@@ -117,5 +139,7 @@ export {
   likeMoment,
   getSharedMoment,
   getCurrentUserAllTimelineOptions,
-  migrateMoment
+  migrateMoment,
+  getMomentsOfPlatform,
+  getUnReadMomentsCount
 }

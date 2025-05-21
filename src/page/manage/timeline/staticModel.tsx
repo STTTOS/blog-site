@@ -1,52 +1,61 @@
-import type { TableColumnProps } from 'antd'
-import type { Timeline } from '@/service/timeline/types'
-import type { IComponentsConfig } from '@/utils/createForm/types'
+import type { IFormItemProps } from '@/utils/createForm/types'
 
-import { Link } from 'react-router-dom'
-import { Input, DatePicker } from 'antd'
+import dayjs from 'dayjs'
+import { FC, Key } from 'react'
+import {
+  Tag,
+  Input,
+  Radio,
+  Select,
+  Tooltip,
+  DatePicker,
+  SelectProps
+} from 'antd'
 
 import Upload from '@/components/Upload'
 import { upload } from '@/service/common'
 
-const columns: TableColumnProps<Timeline>[] = [
-  {
-    title: '标题',
-    dataIndex: 'title',
-    render: (_, { id, title }) => {
-      return (
-        <Link to={`/timeline/${id}`} target="_blank">
-          {title}
-        </Link>
-      )
-    }
-  },
-  {
-    title: '简介',
-    dataIndex: 'desc',
-    onCell() {
-      return {
-        style: {
-          whiteSpace: 'pre'
-        }
-      }
-    }
-  },
-  {
-    title: '用户',
-    render(_, { user: { username, name } }) {
-      return name || username
-    }
-  },
-  {
-    key: 'createdAt',
-    title: '创建时间',
-    dataIndex: 'createdAt'
-  },
-  {
-    title: '最近一次更新时间',
-    dataIndex: 'updatedAt'
-  }
-]
+type StorageKey = 'timeline' | 'article'
+
+interface ReadTagProps {
+  type: StorageKey
+  id: Key
+  updatedAt?: number | string
+}
+export const ReadTag: FC<ReadTagProps> = ({ type, id, updatedAt }) => {
+  const shouldDisplay = isContentHasBeenUpdated(
+    type,
+    id,
+    dayjs(updatedAt).valueOf()
+  )
+
+  return shouldDisplay && !!updatedAt ? (
+    <Tag style={{ marginLeft: 4 }} color="geekblue">
+      有更新
+    </Tag>
+  ) : null
+}
+export const recordTimeStampOfViewingContent = (key: StorageKey, id: Key) => {
+  localStorage.setItem(`${key}-${id}`, dayjs().valueOf().toString())
+}
+/**
+ *
+ * @description 判断对应类别下的内容是否有更新
+ * @param storageKey
+ * @param id
+ */
+export const isContentHasBeenUpdated = (
+  storageKey: StorageKey,
+  id: Key,
+  updatedAt: number
+) => {
+  const unixTimestamp = localStorage.getItem(`${storageKey}-${id}`)
+
+  // 在新设备上不展示此标识
+  if (!unixTimestamp) return false
+
+  return updatedAt > Number(unixTimestamp)
+}
 
 const searchBarFields = [
   { label: '标题', name: 'title' },
@@ -58,16 +67,46 @@ const searchBarFields = [
   }
 ]
 
-const drawerFormComponents: IComponentsConfig = [
+const drawerFormComponents = (
+  userOptions: SelectProps['options']
+): IFormItemProps[] => [
   {
     label: '标题',
     name: 'title',
     require: true
   },
   {
+    label: <Tooltip title="默认降序,展示最新创建的">展示时间顺序</Tooltip>,
+    name: 'order',
+    element: (
+      <Radio.Group
+        options={[
+          { label: '升序', value: 'asc' },
+          { label: '降序', value: 'desc' }
+        ]}
+      />
+    )
+  },
+  {
     label: '简介',
     name: 'desc',
     element: <Input.TextArea rows={3} />
+  },
+  {
+    label: '可编辑用户',
+    name: 'coUserIds',
+    element: (
+      <Select
+        mode="multiple"
+        allowClear
+        style={{ width: '100%' }}
+        placeholder="Please select authors"
+        options={userOptions}
+        filterOption={(input, option) => {
+          return new RegExp(input, 'i').test((option?.label as string) || '')
+        }}
+      />
+    )
   },
   {
     label: '背景图',
@@ -76,4 +115,4 @@ const drawerFormComponents: IComponentsConfig = [
     element: <Upload request={(file) => upload({ file })} />
   }
 ]
-export { columns, searchBarFields, drawerFormComponents }
+export { searchBarFields, drawerFormComponents }

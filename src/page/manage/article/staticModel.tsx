@@ -2,13 +2,14 @@ import type { TableColumnProps } from 'antd'
 import type { Article } from '@/service/article/types'
 import type { IFormItemProps } from '@/utils/createForm/types'
 
-import { FC, useState } from 'react'
 import { Tag, Space, Select } from 'antd'
+import { FC, useMemo, useState } from 'react'
 import { SelectProps } from 'rc-select/lib/Select'
 import { LockFilled, CopyOutlined, UnlockOutlined } from '@ant-design/icons'
 
 import copy from '@/utils/copy'
 import styles from './index.module.less'
+import { ReadTag } from '../timeline/staticModel'
 import randomTagColor from '@/utils/randomTagColor'
 
 interface TitleProps {
@@ -16,9 +17,22 @@ interface TitleProps {
   id: number
   jumpAble?: boolean
   secure?: boolean
+  updatedAt?: string
+  isOrigin?: boolean
 }
-const Title: FC<TitleProps> = ({ title, id, jumpAble, secure }) => {
+const Title: FC<TitleProps> = ({
+  title,
+  id,
+  jumpAble,
+  secure,
+  updatedAt,
+  isOrigin
+}) => {
   const [focused, setFocused] = useState(false)
+  const [text, color] = useMemo(() => {
+    if (isOrigin) return ['原创', 'orange-inverse']
+    return ['转载', 'blue-inverse']
+  }, [isOrigin])
   return (
     <div
       onMouseEnter={() => setFocused(true)}
@@ -28,9 +42,11 @@ const Title: FC<TitleProps> = ({ title, id, jumpAble, secure }) => {
         {/* {isPrivate ? <EyeInvisibleOutlined /> : <EyeOutlined />} */}
         {secure ? <LockFilled /> : <UnlockOutlined />}
       </Space>
+      {<Tag color={color}>{text}</Tag>}
       {jumpAble ? (
         <a href={`/article/${id}`} target="_blank" className={styles.title}>
-          {title}
+          <span style={{ fontWeight: 500 }}>{title}</span>
+          <ReadTag type="article" id={id} updatedAt={updatedAt} />
         </a>
       ) : (
         <span>{title}</span>
@@ -53,9 +69,18 @@ const getColumns = (
       title: '标题',
       dataIndex: 'title',
       fixed: 'left',
-      render: (_, { id, title, secure }) => (
-        <Title {...{ id, title, secure }} jumpAble={jumpAble} />
+      render: (_, { id, title, secure, updatedAt, isOrigin }) => (
+        <Title
+          {...{ id, title, secure, updatedAt, isOrigin }}
+          jumpAble={jumpAble}
+        />
       )
+    },
+    {
+      title: '浏览次数',
+      dataIndex: 'viewCount',
+      width: 110,
+      render: (_, { viewCount }) => viewCount.toLocaleString()
     },
     {
       title: '摘要',
@@ -73,12 +98,6 @@ const getColumns = (
             </Tag>
           )
         })
-    },
-    {
-      title: '浏览次数',
-      dataIndex: 'viewCount',
-      width: 110,
-      render: (_, { viewCount }) => viewCount.toLocaleString()
     },
     {
       title: '作者昵称',

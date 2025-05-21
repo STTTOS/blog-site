@@ -52,8 +52,9 @@
     height: 1px;
     background-color: #eee;
     left: 50%;
-    top: -35px;
+    top: -20px;
     transform: translateX(-50%);
+    box-shadow: 2px 3px 7px rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -66,5 +67,34 @@
     flex-shrink: 0;
     color: #5cb963;
     font-size: 18px;
+  }
+}
+
+.comments {
+  padding: 8px 10px;
+  padding-right: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: rgba(204, 193, 193, 0.1);
+
+  &_item {
+    display: flex;
+    gap: 10px;
+    overflow: hidden;
+
+    &_content {
+      flex-grow: 1;
+    }
+
+    &_date {
+      flex-shrink: 0;
+      color: #7d7d7d;
+      font-size: 14px;
+    }
+
+    &:hover {
+      background-color: rgba(204, 193, 193, 0.2) !important;
+      cursor: pointer;
+    }
   }
 }

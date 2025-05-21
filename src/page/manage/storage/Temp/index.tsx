@@ -45,7 +45,7 @@ const Temp = () => {
                 <Typography.Text mark style={{ marginRight: 6 }}>
                   {index + 1}
                 </Typography.Text>
-                {basename(item)}
+                <span>{basename(item)}</span>
               </List.Item>
             )}
           />

@@ -1,16 +1,19 @@
 import dayjs from 'dayjs'
 import { prop } from 'ramda'
-import { useRequest } from 'ahooks'
 import classNames from 'classnames'
+import { useRequest } from 'ahooks'
 import { useNavigate } from 'react-router'
 import { MoreOutlined } from '@ant-design/icons'
-import { FC, useMemo, useState, useEffect } from 'react'
 import { LikeFilled, LikeOutlined } from '@ant-design/icons'
+import { FC, useMemo, useState, useEffect, useCallback } from 'react'
 import {
   Space,
+  Input,
+  Modal,
   Button,
   Avatar,
   Select,
+  Switch,
   Divider,
   message,
   Dropdown,
@@ -23,14 +26,20 @@ import Gallery from '../Gallery'
 import { domain } from '@/config'
 import { useUserInfo } from '@/model'
 import styles from './index.module.less'
-import AsyncButton from '../AsyncButton'
 import UserProfile from '../UserProfile'
 import { User } from '@/service/user/types'
 import { Editor, Viewer } from '../Markdown'
 import useFormModal from '@/hooks/useFormModal'
 import DateDisplay from '@/components/DateDisplay'
+import AsyncButton from '@/components/AsyncButton'
 import { history } from '@/components/BrowserRouter'
 import { MomentImage, Moment as MomentType } from '@/service/timeline/types'
+import {
+  addGeneralComment,
+  deleteGeneralComment,
+  getAllGeneralComments,
+  AddGeneralCommentRequestBody
+} from '@/service/generalComments'
 import {
   addMoment,
   likeMoment,
@@ -42,18 +51,29 @@ import {
 
 let unblock: () => void = () => void 0
 
+interface CommentProps {
+  value: string
+  replyToUser?: null | Pick<User, 'id' | 'name'>
+}
 export type EditMode = 'edit' | 'view'
 type MomentProps = {
   // eslint-disable-next-line no-unused-vars
   onDelete?: (id: number) => void
   mode?: EditMode
-  onCancel: () => void
-  onSave: () => void
-  onMigrate?: () => void
+  onCancel?: () => void
+  // eslint-disable-next-line no-unused-vars
+  onSave?: (data: Partial<MomentType>, type: 'add' | 'edit') => void
+  // eslint-disable-next-line no-unused-vars
+  onMigrate?: (id: number) => void
   hideDate?: boolean
   userId?: number
   likes?: Partial<User>[]
+  profile?: User
+  viewMode?: boolean
+  isPrivate?: boolean
+  coUserIds?: number[]
 } & Partial<MomentType>
+
 const Moment: FC<MomentProps> = ({
   id,
   content,
@@ -62,23 +82,38 @@ const Moment: FC<MomentProps> = ({
   images,
   mode: defaultMode = 'view',
   timelineId,
-  onCancel,
-  onSave,
+  onCancel = () => void 0,
+  onSave = () => void 0,
   hideDate,
   userId,
   likes: _likes,
-  onMigrate
+  onMigrate,
+  profile,
+  viewMode = false,
+  isPrivate: isPrivateOfMoment = false,
+  coUserIds
 }) => {
   const isAdd = !id
   const { user } = useUserInfo()
-  const { Modal, openModal } = useFormModal({ destroyOnClose: false })
+  const { Modal: ModalContent, openModal } = useFormModal({
+    destroyOnClose: false
+  })
   const nav = useNavigate()
   const [likes, setLikes] = useState(_likes)
   const [timePicked, setTimePicked] = useState(dayjs().toISOString())
   const [draft, setDraft] = useState<string>('')
   const [mode, setMode] = useState<EditMode>(defaultMode)
   const [imgSet, setImageSet] = useState<MomentImage[]>([])
+  const [showComment, setShowComment] = useState(false)
+  const [comment, setComment] = useState<CommentProps>({
+    value: '',
+    replyToUser: null
+  })
   const { runAsync: save, loading } = useRequest(updateMoment, { manual: true })
+  const { data: comments, refresh: refreshComments } = useRequest(
+    () => getAllGeneralComments({ moduleId: id!, type: 'moment' }),
+    { ready: !!id, refreshDeps: [id] }
+  )
   const { runAsync: add, loading: adding } = useRequest(addMoment, {
     manual: true
   })
@@ -91,33 +126,71 @@ const Moment: FC<MomentProps> = ({
       manual: true
     }
   )
+  const executeIf = (condition: boolean) => {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    // eslint-disable-next-line no-unused-vars
+    return <T extends (...args: any[]) => any>(
+      callback: T
+      // eslint-disable-next-line no-unused-vars
+    ): ((...args: Parameters<T>) => void | ReturnType<T>) => {
+      if (!condition) {
+        return () => {
+          nav(`/login?from=${encodeURIComponent(location.pathname)}`)
+        }
+      }
+      return (...params) => callback(...params)
+    }
+  }
+
+  const isSelf = useMemo(() => {
+    if (!user) return false
+
+    return user.id === userId
+  }, [user, userId])
 
   const canEdit = useMemo(() => {
-    return user?.id && user.id === userId
-  }, [user, userId])
+    if (!user) return false
+
+    return (isSelf || coUserIds?.includes(user.id)) && !viewMode
+  }, [user, viewMode, coUserIds])
 
   const handleSave = async () => {
     if (imgSet.length === 0 && !draft) {
       message.error('内容不可为空')
       return
     }
-    if (isAdd) {
-      await add({
-        content: draft,
-        images: imgSet,
-        timelineId,
-        createdAt: timePicked
-      })
-    } else {
-      await save({
-        id,
-        content: draft,
-        images: imgSet,
-        timelineId
-      })
-    }
+    const [body, request] = (() => {
+      if (isAdd)
+        return [
+          {
+            content: draft,
+            images: imgSet,
+            timelineId,
+            createdAt: timePicked,
+            isPrivate
+          },
+          add
+        ]
+      return [
+        {
+          id,
+          content: draft,
+          images: imgSet,
+          timelineId,
+          isPrivate
+        },
+        save
+      ]
+    })()
+    const data = await request(body)
     unblock()
-    onSave()
+    onSave(
+      {
+        ...body,
+        id: data.id
+      },
+      isAdd ? 'add' : 'edit'
+    )
     setMode('view')
   }
 
@@ -166,6 +239,27 @@ const Moment: FC<MomentProps> = ({
     setImageSet(images || [])
   }, [images])
 
+  const handleAddComment = useCallback(
+    async ({
+      content,
+      replyToUserId
+    }: Pick<AddGeneralCommentRequestBody, 'content' | 'replyToUserId'>) => {
+      await addGeneralComment({
+        type: 'moment',
+        content,
+        moduleId: id!,
+        userId: user!.id,
+        replyToUserId
+      })
+      setShowComment(false)
+      setComment({
+        value: ''
+      })
+      refreshComments()
+    },
+    [id, user]
+  )
+
   const items = useMemo(() => {
     const operationsOfOwner = [
       {
@@ -193,46 +287,9 @@ const Moment: FC<MomentProps> = ({
           </Popconfirm>
         ),
         key: '2'
-      }
-    ]
-    const [icon, action] = (function getIconAndAction() {
-      if (user?.id && likes?.map((item) => item.id).includes(user.id)) {
-        return [<LikeFilled />, async () => void 0]
-      }
-      return [
-        <LikeOutlined />,
-        async () => {
-          // 登录用户
-          if (user?.id) {
-            await likeMoment({ id, timelineId })
-            setLikes((pre) => [
-              { id: user?.id, avatar: user?.avatar },
-              ...(pre || [])
-            ])
-          } else nav(`/login?from=${encodeURIComponent(location.pathname)}`)
-        }
-      ]
-    })()
-    const operationsOfOthers = [
-      {
-        label: (
-          <Button
-            onClick={() =>
-              copy(
-                `https://${domain}/moment/share/${id}`,
-                '链接复制成功,去分享吧'
-              )
-            }
-            type="text"
-            // icon={<LinkOutlined />}
-          >
-            分享
-          </Button>
-        ),
-        key: '3'
       },
       {
-        key: '4',
+        key: '3',
         label: (
           <Dropdown
             trigger={['click']}
@@ -266,7 +323,7 @@ const Moment: FC<MomentProps> = ({
                           timelineId,
                           momentId: id!
                         })
-                        onMigrate?.()
+                        onMigrate?.(id!)
                       }}
                     />
                   ),
@@ -286,6 +343,53 @@ const Moment: FC<MomentProps> = ({
             </Button>
           </Dropdown>
         )
+      }
+    ]
+    const [icon, action] = (function getIconAndAction() {
+      if (user?.id && likes?.map((item) => item.id).includes(user.id)) {
+        return [<LikeFilled />, async () => void 0]
+      }
+      return [
+        <LikeOutlined />,
+        executeIf(!!user)(async () => {
+          await likeMoment({ id, timelineId })
+          setLikes((pre) => [
+            { id: user?.id, avatar: user?.avatar },
+            ...(pre || [])
+          ])
+        })
+      ]
+    })()
+    const operationsOfOthers = [
+      {
+        label: (
+          <Button
+            onClick={() =>
+              copy(
+                `https://${domain}/moment/share/${id}`,
+                '链接复制成功,去分享吧'
+              )
+            }
+            type="text"
+          >
+            分享
+          </Button>
+        ),
+        key: '4'
+      },
+      {
+        key: 'reply',
+        label: (
+          <Button
+            type="text"
+            style={{ padding: 0, width: 60 }}
+            onClick={executeIf(!!user)(() => {
+              setShowComment(true)
+            })}
+          >
+            评论
+          </Button>
+        )
       },
       {
         label: (
@@ -293,7 +397,7 @@ const Moment: FC<MomentProps> = ({
             style={{ padding: 0, width: 60 }}
             icon={icon}
             request={action}
-          ></AsyncButton>
+          />
         ),
         key: '5'
       }
@@ -316,6 +420,7 @@ const Moment: FC<MomentProps> = ({
     mode
   ])
 
+  const [isPrivate, setIsPrivate] = useState(isPrivateOfMoment)
   const dateElement = useMemo(() => {
     if (isAdd)
       return (
@@ -325,6 +430,9 @@ const Moment: FC<MomentProps> = ({
           placeholder="日期"
           defaultValue={dayjs()}
           onChange={(date) => setTimePicked(date.toISOString())}
+          disabledDate={(date) => {
+            return date.isAfter(dayjs())
+          }}
         />
       )
 
@@ -351,12 +459,52 @@ const Moment: FC<MomentProps> = ({
       </>
     )
   }, [likes])
+
+  // const handleKeyDown = useCallback(
+  //   debounce(
+  //     (e) => {
+  //       if (e.code === 'Enter' && mode === 'edit') {
+  //         handleSave()
+  //       }
+  //     },
+  //     200,
+  //     { leading: true }
+  //   ),
+  //   [handleSave]
+  // )
+
+  // useEventListener('keydown', handleKeyDown)
+
   return (
-    <div className={styles.wrapper} id={id ? String(id) : undefined}>
-      <div style={{ minWidth: 96, flexShrink: 0 }}>{dateElement}</div>
+    <div
+      className={classNames(styles.wrapper)}
+      id={id ? String(id) : undefined}
+    >
+      <div style={{ minWidth: 96, flexShrink: 0 }}>
+        {dateElement}
+
+        {profile && (
+          <UserProfile userId={profile.id}>
+            <img
+              src={profile?.avatar}
+              style={{
+                width: 60,
+                height: 60,
+                marginTop: 4,
+                objectFit: 'cover',
+                borderRadius: 5,
+                overflow: 'hidden',
+                objectPosition: 'center'
+              }}
+            />
+          </UserProfile>
+        )}
+      </div>
+
       <main className={classNames(styles.main, hideDate && styles.divider)}>
         <div className={styles.extra}>
           <span className={styles.time}>
+            {isPrivate ? '(仅自己可见) ' : null}
             {createdAt && dayjs(createdAt).format('HH:mm')}
           </span>
 
@@ -383,6 +531,14 @@ const Moment: FC<MomentProps> = ({
             <Button type="text" onClick={handleCancel}>
               取消
             </Button>
+            {isSelf && (
+              <Switch
+                checkedChildren="仅自己可见"
+                unCheckedChildren="公开"
+                checked={isPrivate}
+                onChange={(value) => setIsPrivate(value)}
+              />
+            )}
           </Space>
         )}
 
@@ -417,8 +573,151 @@ const Moment: FC<MomentProps> = ({
         />
 
         {likeUsers}
+
+        {comments && comments.length > 0 && (
+          <div className={styles.comments}>
+            {comments.map((item, i, arr) => {
+              return (
+                <>
+                  <div style={{ display: 'flex' }}>
+                    <div
+                      style={{ flexGrow: 1 }}
+                      key={item.id}
+                      className={styles.comments_item}
+                      onClick={() => {
+                        setShowComment(true)
+                        setComment({
+                          value: '',
+                          replyToUser: item.user
+                        })
+                      }}
+                    >
+                      <div className={styles.comments_item_content}>
+                        <UserProfile userId={item.user.id}>
+                          <span style={{ display: 'inline-block' }}>
+                            <Avatar
+                              src={item.user.avatar}
+                              style={{ marginRight: 3 }}
+                            />
+                            <a>{item.user?.name}</a>
+                          </span>
+                        </UserProfile>
+
+                        {item.replyToUser ? (
+                          <span>
+                            <span style={{ margin: '0 4px' }}>回复@</span>
+                            <UserProfile userId={item.replyToUser.id}>
+                              <a>{item.replyToUser.name}</a>
+                            </UserProfile>
+                          </span>
+                        ) : null}
+                        <span>：</span>
+                        {item.content}
+                      </div>
+
+                      <div className={styles.comments_item_date}>
+                        {item.createdAt}
+                      </div>
+                    </div>
+
+                    <div
+                      style={{ flexShrink: 0, margin: '0 4px', width: 16 }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {user?.id === item.user.id && (
+                        <Dropdown
+                          trigger={['click']}
+                          menu={{
+                            items: [
+                              {
+                                label: (
+                                  <AsyncButton
+                                    request={() =>
+                                      deleteGeneralComment({
+                                        id: item.id
+                                      }).then(() => {
+                                        message.success('删除成功')
+                                        refreshComments()
+                                      })
+                                    }
+                                  >
+                                    删除
+                                  </AsyncButton>
+                                ),
+                                key: 'delete'
+                              }
+                            ]
+                          }}
+                        >
+                          <MoreOutlined className={styles.more} />
+                        </Dropdown>
+                      )}
+                    </div>
+                  </div>
+                  {i < arr.length - 1 && (
+                    <Divider style={{ margin: '4px 0' }} />
+                  )}
+                </>
+              )
+            })}
+          </div>
+        )}
       </main>
-      {Modal}
+      {ModalContent}
+      <Modal
+        title="评论"
+        footer={null}
+        open={showComment}
+        onCancel={() => {
+          setShowComment(false)
+          setComment({
+            value: '',
+            replyToUser: null
+          })
+        }}
+      >
+        <div
+          id={`reply-${id}`}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            marginTop: 28
+          }}
+        >
+          <Input.TextArea
+            allowClear
+            value={comment.value}
+            onChange={(e) =>
+              setComment((pre) => ({
+                ...pre,
+                value: e.target.value
+              }))
+            }
+            placeholder={
+              comment.replyToUser
+                ? `@${comment.replyToUser.name}：`
+                : '说点什么：'
+            }
+            autoSize={{ minRows: 2, maxRows: 2 }}
+          />
+          <Button
+            type="primary"
+            onClick={() => {
+              if (!comment) {
+                message.warning('莫得东西')
+                return
+              }
+              handleAddComment({
+                content: comment.value,
+                replyToUserId: comment.replyToUser?.id
+              })
+            }}
+          >
+            发送
+          </Button>
+        </div>
+      </Modal>
     </div>
   )
 }

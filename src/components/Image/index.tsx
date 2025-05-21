@@ -135,10 +135,16 @@ const BetterImage: FC<ImageProps> = ({
       <LazyLoadImage
         alt={alt}
         effect="blur"
-        style={{ display: 'block', cursor: 'zoom-in', margin: '0 auto' }}
+        style={{
+          display: 'block',
+          cursor: 'zoom-in',
+          margin: '0 auto',
+          minWidth: 40
+        }}
         src={imgSrc}
         onError={() => setLoadError(true)}
         scrollPosition={scrollPosition}
+        placeholderSrc={secure ? undefined : placeholderImageSrc}
         onLoad={() => {
           setLoadingImage(true)
         }}

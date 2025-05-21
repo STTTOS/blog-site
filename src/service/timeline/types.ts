@@ -1,5 +1,6 @@
 import { User } from '../user/types'
 
+export type OrderBy = 'desc' | 'asc'
 export interface Timeline {
   title: string
   desc?: string
@@ -8,6 +9,9 @@ export interface Timeline {
   user: Pick<User, 'username' | 'id' | 'name' | 'avatar'>
   userId: number
   createdAt?: string
+  updatedAt?: string
+  order: OrderBy
+  coUserIds?: number[]
 }
 export interface Moment {
   id: number
@@ -16,6 +20,11 @@ export interface Moment {
   content?: string
   images: MomentImage[]
   timelineId: number
+  timeline?: {
+    user?: User
+  }
+  owner: User
+  isPrivate: boolean
 }
 export interface MomentImage {
   sort: number

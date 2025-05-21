@@ -3,8 +3,15 @@
 
 .wrapper {
   max-width: 2400px;
-  font-family: 'Ma Shan Zheng', cursive;
+
   overflow-x: hidden;
+  height: 100vh;
+
+  font-family: 'Ma Shan Zheng', cursive;
+
+  table * {
+    font-family: sans-serif;
+  }
 }
 
 .info {
@@ -13,7 +20,7 @@
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  margin: 12px 0;
+  margin-bottom: 12px;
 }
 
 .title {
@@ -32,6 +39,7 @@
   height: 360px;
   width: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .main {
@@ -81,5 +89,21 @@
     position: absolute;
     right: 10px;
     top: 10px;
+  }
+}
+
+.search {
+  margin-top: 4px;
+  text-align: center;
+  color: #666;
+
+  &_icon {
+    margin-left: 4px;
+    position: relative;
+    top: 2px;
+  }
+
+  &_button {
+    cursor: pointer;
   }
 }
