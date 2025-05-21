@@ -584,13 +584,13 @@ const Moment: FC<MomentProps> = ({
                       style={{ flexGrow: 1 }}
                       key={item.id}
                       className={styles.comments_item}
-                      onClick={() => {
+                      onClick={executeIf(!!user)(() => {
                         setShowComment(true)
                         setComment({
                           value: '',
                           replyToUser: item.user
                         })
-                      }}
+                      })}
                     >
                       <div className={styles.comments_item_content}>
                         <UserProfile userId={item.user.id}>
