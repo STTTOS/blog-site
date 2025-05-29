@@ -13,9 +13,13 @@ import { modelComponents } from './staticModel'
 import useGlobalData from '@/hooks/useGlobalData'
 import { addArticle, updateArticle } from '@/service/article'
 
-type IProps = IFormWithDrawer & { data: Article }
+type IProps = IFormWithDrawer & { data: Article; originalContent: string }
 
-const ModalContent: React.FC<IProps> = ({ register = () => void 0, data }) => {
+const ModalContent: React.FC<IProps> = ({
+  register = () => void 0,
+  data,
+  originalContent
+}) => {
   const navigate = useNavigate()
   const [query] = useSearchParams()
   const { user } = useUserInfo()
@@ -53,6 +57,7 @@ const ModalContent: React.FC<IProps> = ({ register = () => void 0, data }) => {
     const params = {
       ...data,
       ...res,
+      hash: MD5(originalContent).toString(),
       secureKey: secureKey && MD5(secureKey),
       secure: query.get('mode') === 'secure'
     }
@@ -65,7 +70,7 @@ const ModalContent: React.FC<IProps> = ({ register = () => void 0, data }) => {
 
     unblock()
     navigate('/manage/article/list')
-  }, [data])
+  }, [data, originalContent])
 
   // 向父组件的提交按钮, 注册`handleFinish`
   useEffect(() => {

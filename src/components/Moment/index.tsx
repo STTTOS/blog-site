@@ -317,9 +317,6 @@ const Moment: FC<MomentProps> = ({
                           return
                         }
                         await migrateMoment({
-                          content,
-                          createdAt,
-                          images,
                           timelineId,
                           momentId: id!
                         })
@@ -414,9 +411,6 @@ const Moment: FC<MomentProps> = ({
     likes,
     user,
     options,
-    content,
-    createdAt,
-    images,
     mode
   ])
 

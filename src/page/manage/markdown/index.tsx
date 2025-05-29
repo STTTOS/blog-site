@@ -43,7 +43,12 @@ const Index = () => {
       width: 600,
       title: id ? '更新文章' : '发布文章',
       centered: true,
-      content: <ModalContent data={value!} />
+      content: (
+        <ModalContent
+          data={value!}
+          originalContent={ref.current?.content || ''}
+        />
+      )
     })
   }
 

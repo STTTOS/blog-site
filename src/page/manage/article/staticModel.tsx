@@ -104,7 +104,7 @@ const getColumns = (
       dataIndex: 'authorName'
     },
     {
-      title: '可见用户',
+      title: '协同编辑用户',
       dataIndex: 'coAuthorIds',
       render: (_, { coAuthorIds }) =>
         coAuthorIds

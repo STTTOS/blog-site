@@ -58,7 +58,9 @@ async function deleteArticle(params: Pick<Article, 'id'>) {
   message.success(msg)
 }
 
-async function updateArticle(params: Omit<Article, 'createdAt'>) {
+async function updateArticle(
+  params: Omit<Article, 'createdAt'> & { hash: string }
+) {
   const { msg } = await request<null>('api/article/update', params)
 
   message.success(msg)

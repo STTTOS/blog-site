@@ -58,7 +58,7 @@ interface Article {
    */
   length: number
   /**
-   * 可见用户
+   * 协同编辑用户
    */
   coAuthorIds?: string
   /**
