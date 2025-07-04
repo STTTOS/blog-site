@@ -5,10 +5,11 @@
 
   main {
     flex-grow: 1;
+    overflow: auto;
   }
 }
 
-.date {
+.left {
   flex-shrink: 0;
   width: 90px;
 }
@@ -96,5 +97,12 @@
       background-color: rgba(204, 193, 193, 0.2) !important;
       cursor: pointer;
     }
+  }
+}
+
+/* 移动设备样式 */
+@media (max-width: 520px) {
+  .left {
+    width: 66px;
   }
 }

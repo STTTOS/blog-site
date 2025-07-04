@@ -35,14 +35,14 @@ const menuItems: MenuItem[] = [
     ]
   },
   {
-    key: 'moments',
-    label: '动态',
-    icon: <ShareAltOutlined />
-  },
-  {
     key: 'timeline',
     label: '时间轴',
     icon: <InstagramOutlined />
+  },
+  {
+    key: 'moments',
+    label: '动态',
+    icon: <ShareAltOutlined />
   },
   {
     key: 'tool',

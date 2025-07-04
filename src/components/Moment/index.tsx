@@ -30,6 +30,7 @@ import UserProfile from '../UserProfile'
 import { User } from '@/service/user/types'
 import { Editor, Viewer } from '../Markdown'
 import useFormModal from '@/hooks/useFormModal'
+import { readableDateStr } from '../MessageBox'
 import DateDisplay from '@/components/DateDisplay'
 import AsyncButton from '@/components/AsyncButton'
 import { history } from '@/components/BrowserRouter'
@@ -419,7 +420,8 @@ const Moment: FC<MomentProps> = ({
     if (isAdd)
       return (
         <DatePicker
-          style={{ height: 40, width: 120 }}
+          format="MM-DD"
+          style={{ height: 40 }}
           size="small"
           placeholder="日期"
           defaultValue={dayjs()}
@@ -474,7 +476,7 @@ const Moment: FC<MomentProps> = ({
       className={classNames(styles.wrapper)}
       id={id ? String(id) : undefined}
     >
-      <div style={{ minWidth: 96, flexShrink: 0 }}>
+      <div className={styles.left}>
         {dateElement}
 
         {profile && (
@@ -610,7 +612,7 @@ const Moment: FC<MomentProps> = ({
                       </div>
 
                       <div className={styles.comments_item_date}>
-                        {item.createdAt}
+                        {readableDateStr(item.createdAt)}
                       </div>
                     </div>
 

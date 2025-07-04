@@ -1,6 +1,5 @@
 import type { MenuInfo } from 'rc-menu/lib/interface'
 
-import { useRequest } from 'ahooks'
 import { Menu, Badge, Layout } from 'antd'
 import { useMemo, useState, useEffect } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
@@ -8,18 +7,15 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import menuItems from './menuItems'
 import styles from './index.module.less'
 import { logoImg } from '@/globalConfig'
-import { getUser } from '@/service/user'
-import Loading from '@/components/Loading'
+import { useUnreadMomentsCount } from '@/model'
 import PopoverHandle from '@/layout/popoverHandle'
-import { useUserInfo, useUnreadMomentsCount } from '@/model'
+import withLoginCheck from '@/wrapper/withLoginCheck'
 import { setUnreadMomentCount } from '@/model/useUnreadMomentsCount'
 
 const { Content, Header, Footer, Sider } = Layout
 
 const ManageLayout = () => {
-  const { set } = useUserInfo()
   const { fetch, count } = useUnreadMomentsCount()
-  const { loading, data } = useRequest(() => getUser('manage'))
 
   const navigate = useNavigate()
   const { pathname } = useLocation()
@@ -37,8 +33,6 @@ const ManageLayout = () => {
   }
 
   const children = useMemo(() => {
-    if (loading) return <Loading />
-
     if (pathname.includes('markdown')) return <Outlet />
 
     return (
@@ -89,13 +83,7 @@ const ManageLayout = () => {
         </Layout>
       </Layout>
     )
-  }, [loading, pathname, collapsed, activeKey])
-
-  // useNewFeatureInfo()
-
-  useEffect(() => {
-    if (data) set(data)
-  }, [data])
+  }, [pathname, collapsed, activeKey])
 
   useEffect(() => {
     fetch()
@@ -103,4 +91,4 @@ const ManageLayout = () => {
   return children
 }
 
-export default ManageLayout
+export default withLoginCheck(ManageLayout)

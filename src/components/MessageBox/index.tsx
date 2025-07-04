@@ -47,7 +47,7 @@ interface MessageBoxProps {
   [key: string]: any
 }
 
-const readableDateStr = (time: string) => {
+export const readableDateStr = (time: string) => {
   const date = dayjs(time)
   const currentDate = dayjs()
 

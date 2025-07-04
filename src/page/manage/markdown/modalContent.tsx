@@ -53,17 +53,18 @@ const ModalContent: React.FC<IProps> = ({
   const { formStructure, form } = createForm(config)
 
   const handleFinish = useCallback(async () => {
-    const { secureKey, ...res } = await form.validateFields()
+    const values = await form.validateFields()
     const params = {
       ...data,
-      ...res,
-      hash: MD5(originalContent).toString(),
-      secureKey: secureKey && MD5(secureKey),
+      ...values,
       secure: query.get('mode') === 'secure'
     }
 
     if (isEditing) {
-      await updateArticle(params)
+      await updateArticle({
+        ...params,
+        hash: MD5(originalContent).toString()
+      })
     } else {
       await addArticle(params)
     }
